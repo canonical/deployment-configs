@@ -1,0 +1,61 @@
+# Ingress router for www.ubuntu.com
+# ===
+# Tell ingress to route to requests for www.ubuntu.com
+# through to the "http" port of the "www-ubuntu-com" service
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: www-ubuntu-com
+spec:
+  rules:
+  - host: ubuntu.kubernetes.demo.haus
+    http:
+      paths:
+      - backend:
+          serviceName: www-ubuntu-com
+          servicePort: http
+---
+
+# Service: www-ubuntu-com
+# ==
+# Draw together all the applications named "www-ubuntu-com"
+# into a single service, exposing their http ports on port 80
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: www-ubuntu-com
+spec:
+  selector:
+    app: www-ubuntu-com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+---
+
+# Deployment: www-ubuntu-come
+# ==
+# Deploy 3 replicas of the application, called www-ubuntu-com
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: www-ubuntu-com
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: www-ubuntu-com
+    spec:
+      containers:
+        - name: www-ubuntu-com
+#          image: prod-comms.docker-registry.canonical.com/www.ubuntu.com
+          image: canonicalwebteam/www.ubuntu.com
+          ports:
+            - name: http
+              containerPort: 80
+---
+
