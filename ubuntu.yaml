@@ -52,8 +52,7 @@ spec:
     spec:
       containers:
         - name: www-ubuntu-com
-#          image: prod-comms.docker-registry.canonical.com/www.ubuntu.com
-          image: canonicalwebteam/www.ubuntu.com
+          image: prod-comms.docker-registry.canonical.com/www.ubuntu.com
           ports:
             - name: http
               containerPort: 80
