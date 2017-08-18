@@ -56,5 +56,10 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          env:
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
 ---
 
