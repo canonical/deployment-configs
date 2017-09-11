@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: staging-ubuntu-docs-tls
+  namespace: default
+data:
+  tls.crt: dGVzdAo= #CERT_HERE
+  tls.key: dGVzdAo= #KEY_HERE
+  #ca.crt: dGVzdAo= #CHAIN_HERE
