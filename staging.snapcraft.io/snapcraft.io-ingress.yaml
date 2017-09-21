@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: staging-snapcraft-io
+  namespace: default
+  labels:
+    app: staging-snapcraft-io
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - secretName: staging-snapcraft-io
+    hosts:
+    - staging.snapcraft.io
+  rules:
+  - host: staging.snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-snapcraft-io-static-pages
+          servicePort: 80
+      - path: /docs
+        backend:
+          serviceName: staging-snapcraft-io-static-pages
+          servicePort: 80
+      - path: /.+
+        backend:
+          serviceName: staging-snapcraft-io
+          servicePort: 80
+
