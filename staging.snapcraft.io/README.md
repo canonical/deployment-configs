@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: staging-ubuntu-docs-tls
+  name: staging-snapcraft-io-tls
   namespace: default
 data:
   tls.crt: dGVzdAo= # Base64 cert

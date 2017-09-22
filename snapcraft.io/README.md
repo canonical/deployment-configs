@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: ubuntu-docs-tls
+  name: snapcraft-io-tls
   namespace: default
 data:
   tls.crt: dGVzdAo= # Base64 cert
