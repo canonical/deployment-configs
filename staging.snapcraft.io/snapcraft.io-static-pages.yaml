@@ -27,7 +27,7 @@ spec:
         app: staging-snapcraft-io-static-pages
     spec:
       containers:
-        - name: staging-ubuntu-docs-core
+        - name: staging-snapcraft-io-static-pages
           image: prod-comms.docker-registry.canonical.com/snapcraft.io-static-pages
           ports:
             - name: http
