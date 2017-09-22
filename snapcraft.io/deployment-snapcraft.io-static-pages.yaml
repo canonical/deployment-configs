@@ -20,7 +20,7 @@ kind: Deployment
 metadata:
   name: snapcraft-io-static-pages
 spec:
-  replicas: 1
+  replicas: 5
   template:
     metadata:
       labels:
