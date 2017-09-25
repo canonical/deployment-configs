@@ -1,0 +1,30 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: snapcraft-io
+  namespace: default
+  labels:
+    app: snapcraft-io
+
+spec:
+  tls:
+  - secretName: snapcraft-io-tls
+    hosts:
+    - snapcraft.io
+  rules:
+  - host: snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: snapcraft-io
+          servicePort: 80
+      - path: /css/
+        backend:
+          serviceName: snapcraft-io-static-pages
+          servicePort: 80
+      - path: /docs/
+        backend:
+          serviceName: snapcraft-io-static-pages
+          servicePort: 80
