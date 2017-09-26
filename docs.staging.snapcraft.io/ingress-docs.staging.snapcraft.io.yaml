@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: docs-staging-snapcraft-io
+  namespace: default
+  labels:
+    app: docs-staging-snapcraft-io
+
+spec:
+  tls:
+  - secretName: docs-staging-snapcraft-io-tls
+    hosts:
+    - docs.staging.snapcraft.io
+  rules:
+  - host: docs.staging.snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: docs-staging-snapcraft-io
+          servicePort: 80
