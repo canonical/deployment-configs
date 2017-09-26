@@ -1,0 +1,40 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: docs-staging-snapcraft-io
+  labels:
+    app: docs-staging-snapcraft-io
+spec:
+  selector:
+    app: docs-staging-snapcraft-io
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+---
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: docs-staging-snapcraft-io
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: docs-staging-snapcraft-io
+    spec:
+      containers:
+        - name: docs-staging-snapcraft-io
+          image: prod-comms.docker-registry.canonical.com/docs.snapcraft.io
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
