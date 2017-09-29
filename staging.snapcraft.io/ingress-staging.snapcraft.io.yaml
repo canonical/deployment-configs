@@ -20,11 +20,3 @@ spec:
         backend:
           serviceName: staging-snapcraft-io
           servicePort: 80
-      - path: /css/
-        backend:
-          serviceName: staging-snapcraft-io-static-pages
-          servicePort: 80
-      - path: /docs/
-        backend:
-          serviceName: staging-snapcraft-io-static-pages
-          servicePort: 80
