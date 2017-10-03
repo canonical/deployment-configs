@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: design-ubuntu-com
+  namespace: default
+  labels:
+    app: design-ubuntu-com
+
+spec:
+  tls:
+  - secretName: design-ubuntu-com-tls
+    hosts:
+    - design.ubuntu.com
+  rules:
+  - host: design.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: design-ubuntu-com
+          servicePort: 80

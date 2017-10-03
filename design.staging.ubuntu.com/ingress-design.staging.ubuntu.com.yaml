@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: design-staging-ubuntu-com
+  namespace: default
+  labels:
+    app: design-staging-ubuntu-com
+
+spec:
+  tls:
+  - secretName: design-staging-ubuntu-com-tls
+    hosts:
+    - design.staging.ubuntu.com
+  rules:
+  - host: design.staging.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: design-staging-ubuntu-com
+          servicePort: 80
