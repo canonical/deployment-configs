@@ -1,13 +1,14 @@
 ---
+
 kind: Service
 apiVersion: v1
 metadata:
-  name: staging-snapcraft-io
+  name: docs-snapcraft-io
   labels:
-    app: staging-snapcraft-io
+    app: docs-snapcraft-io
 spec:
   selector:
-    app: staging-snapcraft-io
+    app: docs-snapcraft-io
   ports:
     - name: http
       protocol: TCP
@@ -18,17 +19,17 @@ spec:
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: staging-snapcraft-io
+  name: docs-snapcraft-io
 spec:
-  replicas: 3
+  replicas: 5
   template:
     metadata:
       labels:
-        app: staging-snapcraft-io
+        app: docs-snapcraft-io
     spec:
       containers:
-        - name: staging-snapcraft-io
-          image: prod-comms.docker-registry.canonical.com/snapcraft.io
+        - name: docs-snapcraft-io
+          image: ${IMAGE_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
@@ -44,3 +45,5 @@ spec:
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 5
+
+---

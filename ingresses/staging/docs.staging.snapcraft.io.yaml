@@ -1,12 +1,14 @@
 ---
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: docs-staging-snapcraft-io
-  namespace: default
-  labels:
-    app: docs-staging-snapcraft-io
-
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
 spec:
   tls:
   - secretName: docs-staging-snapcraft-io-tls
@@ -18,5 +20,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: docs-staging-snapcraft-io
+          serviceName: docs-snapcraft-io
           servicePort: 80
+
+---
