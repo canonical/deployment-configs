@@ -3,10 +3,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: snapcraft-io
+  name: docs-ubuntu-com
 spec:
   selector:
-    app: snapcraft.io
+    app: docs.ubuntu.com
   ports:
     - name: http
       protocol: TCP
@@ -18,17 +18,17 @@ spec:
 kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
-  name: snapcraft-io
+  name: docs-ubuntu-com
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        app: snapcraft.io
+        app: docs.ubuntu.com
     spec:
       containers:
-        - name: snapcraft-io
-          image: prod-comms.docker-registry.canonical.com/snapcraft.io:${TAG_TO_DEPLOY}
+        - name: docs-ubuntu-com
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com:${TAG_TO_DEPLOY}
           imagePullPolicy: Always
           ports:
             - name: http

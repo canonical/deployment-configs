@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: docs-ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: docs-ubuntu-com-tls
+    hosts:
+    - docs.ubuntu.com
+  rules:
+  - host: docs.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: docs-ubuntu-com
+          servicePort: 80
+
+---

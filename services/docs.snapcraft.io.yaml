@@ -29,7 +29,8 @@ spec:
     spec:
       containers:
         - name: docs-snapcraft-io
-          image: ${IMAGE_TO_DEPLOY}
+          image: prod-comms.docker-registry.canonical.com/docs.snapcraft.io:${TAG_TO_DEPLOY}
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80
