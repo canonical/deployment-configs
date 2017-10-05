@@ -31,7 +31,7 @@ E.g. to deploy the snapcraft.io service to staging from scratch:
 
 ``` bash
 # E.g. To deploy the snapcraft.io services to staging
-export IMAGE_TO_DEPLOY=canonicalwebteam/snapcraft.io
+export TAG_TO_DEPLOY=a264efb326485
 envsubst < services/snapcraft.io.yaml | kubectl apply --namespace staging --filename -
 ```
 
@@ -41,6 +41,6 @@ Or to update an existing snapcraft.io service without changing the deployed imag
 
 ``` bash
 # E.g. for snapcraft.io
-export IMAGE_TO_DEPLOY=$(kubectl get deployment snapcraft-io -o jsonpath="{.spec.template.spec.containers[*].image}")
+export TAG_TO_DEPLOY=$(kubectl get deployment snapcraft-io -o jsonpath="{.spec.template.spec.containers[*].image}" | grep -P -o '(?<=:)[^:]*$')
 envsubst < services/snapcraft.io.yaml | kubectl apply --namespace staging --filename -
 ```

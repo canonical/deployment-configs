@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com
-          image: ${IMAGE_TO_DEPLOY}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com:${TAG_TO_DEPLOY}
           imagePullPolicy: Always
           ports:
             - name: http
