@@ -1,12 +1,14 @@
 ---
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: design-staging-ubuntu-com
-  namespace: default
-  labels:
-    app: design-staging-ubuntu-com
-
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
 spec:
   tls:
   - secretName: design-staging-ubuntu-com-tls
@@ -18,5 +20,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: design-staging-ubuntu-com
+          serviceName: design-ubuntu-com
           servicePort: 80
+
+---

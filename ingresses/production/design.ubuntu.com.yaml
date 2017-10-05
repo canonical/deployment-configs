@@ -1,12 +1,12 @@
 ---
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: design-ubuntu-com
-  namespace: default
-  labels:
-    app: design-ubuntu-com
-
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
   - secretName: design-ubuntu-com-tls
@@ -20,3 +20,5 @@ spec:
         backend:
           serviceName: design-ubuntu-com
           servicePort: 80
+
+---
