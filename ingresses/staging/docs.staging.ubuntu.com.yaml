@@ -13,9 +13,9 @@ spec:
   tls:
   - secretName: docs-staging-ubuntu-com-tls
     hosts:
-    - docs.staging.snapcraft.io
+    - docs.staging.ubuntu.com
   rules:
-  - host: docs.staging.snapcraft.io
+  - host: docs.staging.ubuntu.com
     http:
       paths:
       - path: /
