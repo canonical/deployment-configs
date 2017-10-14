@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: staging-insights-ubuntu-com
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: staging-insights-ubuntu-com-tls
+    hosts:
+    - insights.staging.ubuntu.com
+  rules:
+  - host: insights.staging.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: insights.staging.ubuntu.com
+          servicePort: 80
+
+---
