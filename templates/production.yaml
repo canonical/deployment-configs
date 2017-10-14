@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: PROJECTNAME
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: PROJECTNAME-tls
+    hosts:
+    - PROJECTDOMAIN
+  rules:
+  - host: PROJECTDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: PROJECTNAME
+          servicePort: 80
+
+---
