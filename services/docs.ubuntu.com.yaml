@@ -15,6 +15,21 @@ spec:
 
 ---
 
+kind: Service
+apiVersion: v1
+metadata:
+  name: docs-ubuntu-com-phone
+spec:
+  selector:
+    app: docs.ubuntu.com-phone
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
 kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
@@ -29,6 +44,39 @@ spec:
       containers:
         - name: docs-ubuntu-com
           image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com:${TAG_TO_DEPLOY}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 3
+            successThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
+
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: docs-ubuntu-com-phone
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: docs.ubuntu.com-phone
+    spec:
+      containers:
+        - name: docs-ubuntu-com-phone
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY}
           imagePullPolicy: Always
           ports:
             - name: http
