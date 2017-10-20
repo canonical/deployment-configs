@@ -25,6 +25,20 @@ The [ingress resources](https://kubernetes.io/docs/concepts/services-networking/
 
 ## Deploying
 
+### Using create-project
+
+When creating a new project you can either copy an existing projects service and ingress files. Then replace the config strings with the new project configs. 
+
+Or, use `./create-project`. To auto generate the files for a new project. Run `./create-project project.name` and the tool will create the config files for you. 
+
+For example:
+`./create-project www.ubuntu.com`
+
+Will create:
+ - /service/www.ubuntu.com.yaml
+ - /ingresses/staging/www.staging.ubuntu.com.yaml
+ - /ingresses/production/www.ubuntu.com.yaml
+
 ### To deploy a new service
 
 E.g. to deploy the snapcraft.io service to staging from scratch:
