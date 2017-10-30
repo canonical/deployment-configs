@@ -76,7 +76,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com-phone
-          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY_phone}
           imagePullPolicy: Always
           ports:
             - name: http
