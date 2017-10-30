@@ -22,5 +22,9 @@ spec:
         backend:
           serviceName: docs-ubuntu-com
           servicePort: 80
+      - path: /phone
+        backend:
+          serviceName: docs-ubuntu-com-phone
+          servicePort: 80
 
 ---
