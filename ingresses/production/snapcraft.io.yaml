@@ -7,6 +7,7 @@ metadata:
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
   tls:
   - secretName: snapcraft-io-tls
