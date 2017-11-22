@@ -91,7 +91,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com-core
-          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core:${TAG_TO_DEPLOY_core}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core:${TAG_TO_DEPLOY_CORE}
           imagePullPolicy: Always
           ports:
             - name: http
@@ -124,7 +124,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com-phone
-          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY_phone}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY_PHONE}
           imagePullPolicy: Always
           ports:
             - name: http
