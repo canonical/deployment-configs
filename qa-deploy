@@ -11,6 +11,7 @@ USAGE="Usage
 Description
 ---
 Deploy locally to minikube.
+You must be connected to the Canonical VPN to use this script.
 "
 
 function invalid() {
@@ -21,6 +22,28 @@ function invalid() {
     exit 1
 }
 
+function add_docker_credentials_minikube() {
+    if ! kubectl get secret registry-access &> /dev/null; then
+
+        username=""
+        password=""
+        while [[ -z "${username}" || -z "${password}" ]]; do
+            echo "##############"
+            echo "Docker registry credentials"
+            echo
+            echo -n "Username: "
+            read username
+            echo -n "Password: "
+            read -s password
+            echo -e "\n##############"
+        done
+
+        kubectl create secret docker-registry registry-access --docker-server=prod-comms.docker-registry.canonical.com --docker-username="${username}" --docker-password="${password}" --docker-email=root@localhost
+
+        kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "registry-access"}]}' --namespace default
+    fi
+}
+
 function run_minikube() {
     # Run minikube
     if ! minikube ip &> /dev/null; then
@@ -28,13 +51,14 @@ function run_minikube() {
     fi
 
     minikube addons enable ingress
+
     kubectl config set-context minikube
 }
 
 function deploy_service() {
     service="${1}"
 
-    cat "services/${service}.yaml" | sed 's|prod-comms.docker-registry.canonical.com|canonicalwebteam|' | sed 's|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]||' | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | kubectl apply --filename -
+    cat "services/${service}.yaml" | sed 's|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]||' | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | kubectl apply --filename -
 }
 
 function deploy_ingress() {
@@ -44,11 +68,18 @@ function deploy_ingress() {
 }
 
 function run() {
+    echo -n "Are you connected to the VPN? [Y/n] "
+    read vpn
+
+    if [ "${vpn}" == "n" ]; then exit 0; fi
+
     production="${1:-}"
     staging="${2:-}"
     if [ -z "${production}" ]; then invalid "Missing production url"; fi
 
     run_minikube
+
+    add_docker_credentials_minikube
 
     deploy_service "${production}"
 
