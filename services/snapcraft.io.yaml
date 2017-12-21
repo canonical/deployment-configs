@@ -33,6 +33,12 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: secret_key
           readinessProbe:
             httpGet:
               path: /
