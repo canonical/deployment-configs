@@ -50,6 +50,10 @@ function add_docker_credentials_minikube() {
     fi
 }
 
+function apply_configuration() {
+    kubectl apply -f config.global.yaml
+}
+
 function run_minikube() {
     # Run minikube
     if ! minikube ip &> /dev/null; then
@@ -93,6 +97,7 @@ function run() {
     deploy_ingress "production/${production}"
 
     if [ -n "${staging}" ]; then deploy_ingress "staging/${staging}"; fi
+    apply_configuration
 }
 
 run ${@}
