@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  map-hash-bucket-size: "128"
+  proxy-buffer-size: 8k
+  proxy-buffers: 4 8k
+kind: ConfigMap
+metadata:
+  name: nginx-load-balancer-conf
+  namespace: kube-system
