@@ -22,6 +22,12 @@ function invalid() {
     exit 1
 }
 
+function add_secret_key() {
+    if ! kubectl get secret snapcraft-io-config &> /dev/null; then
+        kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin
+    fi
+}
+
 function add_docker_credentials_minikube() {
     if ! kubectl get secret registry-access &> /dev/null; then
 
@@ -78,6 +84,7 @@ function run() {
     if [ -z "${production}" ]; then invalid "Missing production url"; fi
 
     run_minikube
+    add_secret_key
 
     add_docker_credentials_minikube
 
