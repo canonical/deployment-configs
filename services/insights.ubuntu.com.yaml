@@ -4,8 +4,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: insights-ubuntu-com
-  labels:
-    useProxy: "true"
 spec:
   selector:
     app: insights.ubuntu.com
@@ -29,6 +27,7 @@ spec:
     metadata:
       labels:
         app: insights.ubuntu.com
+        useProxy: "true"
     spec:
       containers:
         - name: insights-ubuntu-com
