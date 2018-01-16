@@ -36,6 +36,10 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: proxy-config
+                optional: true
           readinessProbe:
             httpGet:
               path: /
