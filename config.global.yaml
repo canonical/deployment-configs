@@ -6,4 +6,3 @@ data:
 kind: ConfigMap
 metadata:
   name: nginx-load-balancer-conf
-  namespace: kube-system

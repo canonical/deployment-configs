@@ -51,7 +51,7 @@ function add_docker_credentials_minikube() {
 }
 
 function apply_configuration() {
-    kubectl apply -f config.global.yaml
+    kubectl apply -f config.global.yaml --namespace kube-system
 }
 
 function run_minikube() {
