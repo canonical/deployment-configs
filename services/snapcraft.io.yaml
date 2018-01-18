@@ -39,6 +39,11 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: secret_key
+            - name: WTF_CSRF_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: csrf_secret_key
           readinessProbe:
             httpGet:
               path: /
