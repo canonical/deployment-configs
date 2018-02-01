@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: docs-conjure-up-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: docs-conjure-up-io-tls
+    hosts:
+    - docs.conjure-up.io
+  rules:
+  - host: docs.conjure-up.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: docs-conjure-up-io
+          servicePort: 80
+
+---
