@@ -6,6 +6,7 @@ from shutil import copyfile
 
 project = sys.argv[1]
 
+
 def create_service(project):
     service_file_name = 'services/%s.yaml' % project
     copyfile('templates/service.yaml', service_file_name)
@@ -14,15 +15,15 @@ def create_service(project):
 
 def create_ingresses(project, enviroments):
     project_split = project.split('.')
-    
+
     for enviroment in enviroments:
-        
+
         # Add the enviroment between the domain if subdomain
         if len(project_split) > 2:
             file_name = '%s.%s.%s.%s.yaml' % (
-                project_split[0], 
+                project_split[0],
                 enviroment,
-                project_split[1], 
+                project_split[1],
                 project_split[2]
             )
         else:
@@ -30,13 +31,13 @@ def create_ingresses(project, enviroments):
                 enviroment,
                 project
             )
-        
+
         src = 'templates/%s.yaml' % enviroment
         dst = 'ingresses/%s/%s' % (
             enviroment,
             file_name
         )
-        
+
         # Remove production from the file and project naming
         if enviroment == 'production':
             file_name = file_name.replace('production.', '')
@@ -64,4 +65,3 @@ def update_file(file_name, project):
 
 create_service(project)
 create_ingresses(project, ['staging', 'production'])
-
