@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: beta-ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: beta-ubuntu-com-tls
+    hosts:
+    - beta.ubuntu.com
+  rules:
+  - host: beta.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: beta-ubuntu-com
+          servicePort: 80
+
+---
