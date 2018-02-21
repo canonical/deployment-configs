@@ -6,7 +6,7 @@ set -euo pipefail
 USAGE="Usage
 ===
 
-  $ ./qa-deploy PRODUCTION_URL [STAGING_URL]
+  $ ./qa-deploy --tag IMAGE_TAG --production PRODUCTION_URL [--staging STAGING_URL]
 
 Description
 ---
@@ -67,8 +67,9 @@ function run_minikube() {
 
 function deploy_service() {
     service="${1}"
+    tag="${2}"
 
-    cat "services/${service}.yaml" | sed 's|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]||' | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | kubectl apply --filename -
+    cat "services/${service}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | kubectl apply --filename -
 }
 
 function deploy_ingress() {
@@ -78,25 +79,48 @@ function deploy_ingress() {
 }
 
 function run() {
+    # Arguments
+    while [[ -n "${1:-}" ]] && [[ "${1:0:1}" == "-" ]]; do
+        key="$1"
+        case $key in
+            -t|--tag)
+                if [ -z "${2:-}" ]; then invalid "Missing image tag. Usage: --tag XXXX"; fi
+                tag_to_deploy=${2}
+                shift
+            ;;
+            -p|--production)
+                if [ -z "${2:-}" ]; then invalid "Missing production. Usage: --production XXXX"; fi
+                production=${2}
+                shift
+            ;;
+            -s|--staging)
+                if [ -z "${2:-}" ]; then invalid "Missing staging. Usage: --staging XXXX"; fi
+                staging=${2}
+                shift
+            ;;
+            *) invalid "Option '${key}' not recognised." ;;
+        esac
+        shift
+    done
+
+    # Mandatory arguments
+    if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
+    if [ -z "${tag_to_deploy:-}" ]; then invalid "No image tag specified (e.g. 'latest' or 'a34dca23')"; fi
+
     echo -n "Are you connected to the VPN? [Y/n] "
     read vpn
-
     if [ "${vpn}" == "n" ]; then exit 0; fi
-
-    production="${1:-}"
-    staging="${2:-}"
-    if [ -z "${production}" ]; then invalid "Missing production url"; fi
 
     run_minikube
     add_secret_key
 
     add_docker_credentials_minikube
 
-    deploy_service "${production}"
+    deploy_service "${production}" "${tag_to_deploy}"
 
     deploy_ingress "production/${production}"
 
-    if [ -n "${staging}" ]; then deploy_ingress "staging/${staging}"; fi
+    if [ -n "${staging:-}" ]; then deploy_ingress "staging/${staging}"; fi
     apply_configuration
 }
 
