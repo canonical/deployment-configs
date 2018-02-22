@@ -46,15 +46,17 @@ spec:
                   key: csrf_secret_key
           readinessProbe:
             httpGet:
-              path: /
+              path: /status
               port: 80
             periodSeconds: 3
             successThreshold: 3
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
-              path: /
+              path: /status
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 3
 
 ---
