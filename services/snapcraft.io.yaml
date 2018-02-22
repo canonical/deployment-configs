@@ -47,9 +47,10 @@ spec:
             successThreshold: 3
           livenessProbe:
             httpGet:
-              path: /
+              path: /status
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 3
 
 ---
