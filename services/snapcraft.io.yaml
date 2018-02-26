@@ -25,6 +25,7 @@ spec:
     metadata:
       labels:
         app: snapcraft.io
+        useProxy: "true"
     spec:
       containers:
         - name: snapcraft-io
