@@ -25,7 +25,6 @@ spec:
     metadata:
       labels:
         app: snapcraft.io
-        useProxy: "true"
     spec:
       containers:
         - name: snapcraft-io
@@ -50,10 +49,6 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: sentry_dsn
-          envFrom:
-            - configMapRef:
-                name: proxy-config
-                optional: true
           readinessProbe:
             httpGet:
               path: /status
