@@ -6,6 +6,7 @@ metadata:
 data:
   HTTP_PROXY: 'http://squid.internal:3128/'
   HTTPS_PROXY: 'http://squid.internal:3128/'
+  NO_PROXY: '.snapcraft.io,.ubuntu.com,localhost'
 
 ---
 
@@ -17,6 +18,7 @@ metadata:
 data:
   HTTP_PROXY: 'http://squid.internal:3128/'
   HTTPS_PROXY: 'http://squid.internal:3128/'
+  NO_PROXY: '.snapcraft.io,.ubuntu.com,localhost'
 
 ---
 
