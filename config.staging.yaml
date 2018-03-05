@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: proxy-config
-  namespace: production
+  namespace: staging
 data:
   HTTP_PROXY: 'http://squid.internal:3128/'
   HTTPS_PROXY: 'http://squid.internal:3128/'
