@@ -19,12 +19,15 @@ kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
   name: snapcraft-io
+  labels:
+    useProxy: "true"
 spec:
   replicas: 5
   template:
     metadata:
       labels:
         app: snapcraft.io
+        useProxy: "true"
     spec:
       containers:
         - name: snapcraft-io
@@ -33,6 +36,10 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: proxy-config
+                optional: true
           env:
             - name: SECRET_KEY
               valueFrom:
