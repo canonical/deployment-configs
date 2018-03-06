@@ -56,6 +56,11 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: sentry_dsn
+            - name: SENTRY_PUBLIC_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: sentry_public_dsn
           readinessProbe:
             httpGet:
               path: /status
