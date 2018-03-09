@@ -26,6 +26,7 @@ spec:
       labels:
         app: usn.ubuntu.com
     spec:
+      terminationGracePeriodSeconds: 120
       containers:
         - name: usn-ubuntu-com
           image: prod-comms.docker-registry.canonical.com/usn.ubuntu.com:${TAG_TO_DEPLOY}
