@@ -5,6 +5,7 @@ data:
   map-hash-bucket-size: "128"
   proxy-buffer-size: 8k
   proxy-buffers: 4 8k
+  proxy-body-size: 1024m
 kind: ConfigMap
 metadata:
   name: nginx-load-balancer-conf
