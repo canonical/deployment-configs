@@ -1,0 +1,49 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: conjure-up-io
+spec:
+  selector:
+    app: conjure-up.io
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: conjure-up-io
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: conjure-up.io
+    spec:
+      containers:
+        - name: conjure-up-io
+          image: prod-comms.docker-registry.canonical.com/conjure-up.io:${TAG_TO_DEPLOY}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 3
+            successThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
