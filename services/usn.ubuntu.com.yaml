@@ -20,7 +20,7 @@ apiVersion: apps/v1beta1
 metadata:
   name: usn-ubuntu-com
 spec:
-  replicas: 5
+  replicas: 9
   template:
     metadata:
       labels:
