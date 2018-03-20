@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: maas-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: maas-io-tls
+    hosts:
+    - maas.io
+  rules:
+  - host: maas.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: maas-io
+          servicePort: 80
+
+---
