@@ -30,7 +30,6 @@ spec:
       containers:
         - name: usn-ubuntu-com
           image: prod-comms.docker-registry.canonical.com/usn.ubuntu.com:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80

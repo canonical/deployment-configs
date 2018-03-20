@@ -29,7 +29,6 @@ spec:
       containers:
         - name: docs-conjure-up-io
           image: prod-comms.docker-registry.canonical.com/docs.conjure-up.io:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80

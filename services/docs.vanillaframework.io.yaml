@@ -29,7 +29,6 @@ spec:
       containers:
         - name: docs-vanillaframework-io
           image: prod-comms.docker-registry.canonical.com/docs.vanillaframework.io:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80
