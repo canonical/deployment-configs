@@ -29,7 +29,6 @@ spec:
       containers:
         - name: tutorials-ubuntu-com
           image: prod-comms.docker-registry.canonical.com/tutorials.ubuntu.com:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80

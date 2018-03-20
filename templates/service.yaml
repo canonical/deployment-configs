@@ -29,7 +29,6 @@ spec:
       containers:
         - name: PROJECTNAME
           image: prod-comms.docker-registry.canonical.com/PROJECTDOMAIN:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80

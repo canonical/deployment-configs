@@ -29,7 +29,6 @@ spec:
       containers:
         - name: netplan-io
           image: prod-comms.docker-registry.canonical.com/netplan.io:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80

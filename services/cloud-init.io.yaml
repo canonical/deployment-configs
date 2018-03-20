@@ -29,7 +29,6 @@ spec:
       containers:
         - name: cloud-init-io
           image: prod-comms.docker-registry.canonical.com/cloud-init.io:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80

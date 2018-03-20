@@ -29,7 +29,6 @@ spec:
       containers:
         - name: design-ubuntu-com
           image: prod-comms.docker-registry.canonical.com/design.ubuntu.com:${TAG_TO_DEPLOY}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80
