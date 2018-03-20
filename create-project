@@ -13,35 +13,23 @@ def create_service(project):
     update_file(service_file_name, project)
 
 
-def create_ingresses(project, enviroments):
-    project_split = project.split('.')
+def create_ingresses(project, environments):
+    for environment in environments:
+        domain_parts = project.split('.')
 
-    for enviroment in enviroments:
+        # Add the environment between the domain if subdomain
+        if not environment == 'production':
+            domain_parts.insert((len(domain_parts)-2), environment)
 
-        # Add the enviroment between the domain if subdomain
-        if len(project_split) > 2:
-            file_name = '%s.%s.%s.%s.yaml' % (
-                project_split[0],
-                enviroment,
-                project_split[1],
-                project_split[2]
-            )
-        else:
-            file_name = '%s.%s.yaml' % (
-                enviroment,
-                project
-            )
-
-        src = 'templates/%s.yaml' % enviroment
-        dst = 'ingresses/%s/%s' % (
-            enviroment,
-            file_name
+        file_name = '{domain}.yaml'.format(
+            domain='.'.join(domain_parts)
         )
 
-        # Remove production from the file and project naming
-        if enviroment == 'production':
-            file_name = file_name.replace('production.', '')
-            dst = dst.replace('production.', '')
+        src = 'templates/%s.yaml' % environment
+        dst = 'ingresses/%s/%s' % (
+            environment,
+            file_name
+        )
 
         copyfile(src, dst)
         update_file(dst, file_name)
