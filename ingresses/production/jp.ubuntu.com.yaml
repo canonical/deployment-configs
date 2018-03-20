@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: jp-ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: jp-ubuntu-com-tls
+    hosts:
+    - jp.ubuntu.com
+  rules:
+  - host: jp.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jp-ubuntu-com
+          servicePort: 80
+
+---
