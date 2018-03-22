@@ -7,13 +7,25 @@ metadata:
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'www.netplan.io' ) {
+        rewrite ^ https://netplan.io$request_uri permanent;
+      }
 spec:
   tls:
   - secretName: netplan-io-tls
     hosts:
     - netplan.io
+    - www.netplan.io
   rules:
   - host: netplan.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: netplan-io
+          servicePort: 80
+  - host: www.netplan.io
     http:
       paths:
       - path: /
