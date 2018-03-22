@@ -1,0 +1,36 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: www-canonical-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'canonical.com' ) {
+        rewrite ^ https://www.canonical.com$request_uri permanent;
+      }
+spec:
+  tls:
+  - secretName: www-canonical-com-tls
+    hosts:
+    - www.canonical.com
+    - canonical.com
+  rules:
+  - host: www.canonical.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: www-canonical-com
+          servicePort: 80
+  - host: canonical.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: www-canonical-com
+          servicePort: 80
+
+---
