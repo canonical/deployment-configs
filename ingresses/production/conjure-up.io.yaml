@@ -7,13 +7,25 @@ metadata:
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'www.conjure-up.io' ) {
+        rewrite ^ https://conjure-up.io$request_uri permanent;
+      }
 spec:
   tls:
   - secretName: conjure-up-io-tls
     hosts:
     - conjure-up.io
+    - www.conjure-up.io
   rules:
   - host: conjure-up.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: conjure-up-io
+          servicePort: 80
+  - host: www.conjure-up.io
     http:
       paths:
       - path: /
