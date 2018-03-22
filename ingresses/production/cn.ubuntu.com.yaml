@@ -7,6 +7,10 @@ metadata:
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'ubuntu-china.cn' ) {
+        rewrite ^ https://cn.ubuntu.com$request_uri permanent;
+      }
 spec:
   tls:
   - secretName: cn-ubuntu-com-tls
@@ -20,5 +24,11 @@ spec:
         backend:
           serviceName: cn-ubuntu-com
           servicePort: 80
-
+  - host: ubuntu-china.cn
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cn-ubuntu-com
+          servicePort: 80
 ---
