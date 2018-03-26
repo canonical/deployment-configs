@@ -1,0 +1,55 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: manager-assets-ubuntu-com
+spec:
+  selector:
+    app: manager.assets.ubuntu.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: manager-assets-ubuntu-com
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: manager.assets.ubuntu.com
+    spec:
+      containers:
+        - name: manager-assets-ubuntu-com
+          image: prod-comms.docker-registry.canonical.com/manager.assets.ubuntu.com:${TAG_TO_DEPLOY}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: WEBSERVICE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: manager-assets-ubuntu-com-config
+                  key: WEBSERVICE_URL
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 3
+            successThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
