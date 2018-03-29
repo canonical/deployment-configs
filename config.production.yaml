@@ -7,3 +7,13 @@ data:
   HTTP_PROXY: 'http://squid.internal:3128/'
   HTTPS_PROXY: 'http://squid.internal:3128/'
   NO_PROXY: 'ubuntu.com,.ubuntu.com,snapcraft.io,.snapcraft.io,jujucharms.com,.jujucharms.com,maas.io,.maas.io,conjure-up.io,.conjure-up.io,netplan.io,.netplan.io,canonical.com,.canonical.com,launchpad.net,.launchpad.net,linuxcontainers.org,.linuxcontainers.org,cloud-init.io,.cloud-init.io,vanillaframework.io,.vanillaframework.io'
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-config
+  namespace: production
+data:
+  environment: "production"
