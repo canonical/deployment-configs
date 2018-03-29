@@ -12,8 +12,16 @@ spec:
   - secretName: cloud-init-io-tls
     hosts:
     - cloud-init.io
+    - cloud-init.org
   rules:
   - host: cloud-init.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cloud-init-io
+          servicePort: 80
+  - host: cloud-init.org
     http:
       paths:
       - path: /
