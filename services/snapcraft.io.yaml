@@ -39,10 +39,12 @@ spec:
             - configMapRef:
                 name: proxy-config
                 optional: true
-            - configMapRef:
-                name: global-config
-                optional: true
           env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: environment
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
