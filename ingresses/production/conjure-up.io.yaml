@@ -7,7 +7,7 @@ metadata:
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    ingress.kubernetes.io/configuration-snippet: |
+    nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($host = 'www.conjure-up.io' ) {
         rewrite ^ https://conjure-up.io$request_uri permanent;
       }
