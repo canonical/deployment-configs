@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: blog-ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: blog-ubuntu-com-tls
+    hosts:
+    - blog.ubuntu.com
+  rules:
+  - host: blog.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: blog-ubuntu-com
+          servicePort: 80
+
+---
