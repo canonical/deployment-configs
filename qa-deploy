@@ -67,7 +67,7 @@ function run_minikube() {
 
     minikube addons enable ingress
 
-    kubectl config set-context minikube
+    kubectl config use-context minikube
 }
 
 function deploy_service() {
