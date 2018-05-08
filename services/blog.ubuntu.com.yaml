@@ -34,15 +34,17 @@ spec:
               containerPort: 80
           readinessProbe:
             httpGet:
-              path: /
+              path: /_status/check
               port: 80
-            periodSeconds: 3
+            timeoutSeconds: 3
+            periodSeconds: 5
             successThreshold: 3
           livenessProbe:
             httpGet:
-              path: /
+              path: /_status/check
               port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            timeoutSeconds: 10
+            initialDelaySeconds: 15
+            periodSeconds: 15
 
 ---
