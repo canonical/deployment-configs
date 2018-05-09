@@ -6,12 +6,17 @@ set -euo pipefail
 USAGE="Usage
 ===
 
-  $ ./qa-deploy --tag IMAGE_TAG --production PRODUCTION_URL [--staging STAGING_URL]
+  $ ./qa-deploy --production PRODUCTION_URL [--tag IMAGE_TAG] [--staging STAGING_URL]
+
 
 Description
 ---
 Deploy locally to minikube.
 You must be connected to the Canonical VPN to use this script.
+
+--production: Deploy this ingress from the ingresses/production folder
+--staging: Deploy this ingress from the ingresses/staging folder
+--tag: Deploy the service for the 'production' domain from the services/ folder, at this Docker tag
 "
 
 function invalid() {
@@ -62,7 +67,7 @@ function run_minikube() {
 
     minikube addons enable ingress
 
-    kubectl config set-context minikube
+    kubectl config use-context minikube
 }
 
 function deploy_service() {
@@ -105,7 +110,6 @@ function run() {
 
     # Mandatory arguments
     if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
-    if [ -z "${tag_to_deploy:-}" ]; then invalid "No image tag specified (e.g. 'latest' or 'a34dca23')"; fi
 
     echo -n "Are you connected to the VPN? [Y/n] "
     read vpn
@@ -116,7 +120,9 @@ function run() {
 
     add_docker_credentials_minikube
 
-    deploy_service "${production}" "${tag_to_deploy}"
+    if [ -n "${tag_to_deploy:-}" ]; then
+        deploy_service "${production}" "${tag_to_deploy}"
+    fi
 
     deploy_ingress "production/${production}"
 
