@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
       if ($host = 'staging.canonical.com' ) {
-        rewrite ^ https://www.staging.canonical.com$request_uri permanent;
+        rewrite ^ https://www.staging.canonical.com$request_uri? permanent;
       }
 spec:
   tls:
@@ -20,6 +20,13 @@ spec:
     - staging.canonical.com
   rules:
   - host: www.staging.canonical.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: www-canonical-com
+          servicePort: 80
+  - host: staging.canonical.com
     http:
       paths:
       - path: /
