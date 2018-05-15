@@ -16,8 +16,6 @@ spec:
   - secretName: developer-ubuntu-com-tls
     hosts:
     - developer.ubuntu.com
-    - developers.ubuntu.com
-    - dev.ubuntu.com
   rules:
   - host: developer.ubuntu.com
     http:
