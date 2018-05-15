@@ -9,7 +9,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
-      rewrite ^ http://blog.staging.ubuntu.com$request_uri permanent;
+      rewrite ^ https://blog.staging.ubuntu.com$request_uri? permanent;
 spec:
   tls:
   - secretName: insights-staging-ubuntu-com-tls
