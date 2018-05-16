@@ -9,7 +9,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($host = 'www.snapcraft.io' ) {
-        rewrite ^ https://snapcraft.io$request_uri permanent;
+        rewrite ^ https://snapcraft.io$request_uri? permanent;
       }
 spec:
   tls:
@@ -21,13 +21,15 @@ spec:
   - host: snapcraft.io
     http:
       paths:
-      - backend:
+      - path: /
+        backend:
           serviceName: snapcraft-io
           servicePort: 80
   - host: www.snapcraft.io
     http:
       paths:
-      - backend:
+      - path: /
+        backend:
           serviceName: snapcraft-io
           servicePort: 80
 

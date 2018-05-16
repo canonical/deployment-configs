@@ -3,34 +3,34 @@
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: netplan-io
+  name: www-canonical-com
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($host = 'www.netplan.io' ) {
-        rewrite ^ https://netplan.io$request_uri? permanent;
+      if ($host = 'canonical.com' ) {
+        rewrite ^ https://www.canonical.com$request_uri? permanent;
       }
 spec:
   tls:
-  - secretName: netplan-io-tls
+  - secretName: www-canonical-com-tls
     hosts:
-    - netplan.io
-    - www.netplan.io
+    - www.canonical.com
+    - canonical.com
   rules:
-  - host: netplan.io
+  - host: www.canonical.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: netplan-io
+          serviceName: www-canonical-com
           servicePort: 80
-  - host: www.netplan.io
+  - host: canonical.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: netplan-io
+          serviceName: www-canonical-com
           servicePort: 80
 
 ---
