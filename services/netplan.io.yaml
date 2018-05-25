@@ -34,13 +34,13 @@ spec:
               containerPort: 80
           readinessProbe:
             httpGet:
-              path: /_status/check
+              path: /
               port: 80
             timeoutSeconds: 3
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /_status/check
+              path: /
               port: 80
             timeoutSeconds: 10
             initialDelaySeconds: 15
