@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: threesixty-canonical-com
-          image: prod-comms.docker-registry.canonical.com/360.canonical.com:7c113f23f222d66b156203e090970cba2c87e947-1526552815
+          image: prod-comms.docker-registry.canonical.com/360.canonical.com:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
