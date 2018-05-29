@@ -29,7 +29,7 @@ function invalid() {
 
 function add_secret_key() {
     if ! kubectl get secret snapcraft-io-config &> /dev/null; then
-        kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin
+        kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin --from-literal='sentry_dsn=' --from-literal='sentry_public_dsn='
     fi
 }
 
@@ -57,6 +57,7 @@ function add_docker_credentials_minikube() {
 
 function apply_configuration() {
     kubectl apply -f config.global.yaml --namespace kube-system
+    kubectl apply -f config.qa.yaml
 }
 
 function run_minikube() {
