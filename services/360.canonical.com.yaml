@@ -32,6 +32,10 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: threesixty-canonical-com-config
+                optional: true
           env:
             - name: DATABASE_URL
               valueFrom:
