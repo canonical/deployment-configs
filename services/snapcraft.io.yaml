@@ -45,6 +45,12 @@ spec:
                 configMapKeyRef:
                   name: global-config
                   key: environment
+            - name: BLOG_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: snapcraft-io
+                  optional: True
+                  key: blog_enabled
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
