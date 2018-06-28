@@ -11,7 +11,7 @@ USAGE="Usage
 
 Description
 ---
-Deploy locally to minikube.
+Deploy locally to microk8s.
 You must be connected to the Canonical VPN to use this script.
 
 --production: Deploy this ingress from the ingresses/production folder
@@ -28,13 +28,13 @@ function invalid() {
 }
 
 function add_secret_key() {
-    if ! kubectl get secret snapcraft-io-config &> /dev/null; then
-        kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin --from-literal='sentry_dsn=' --from-literal='sentry_public_dsn='
+    if ! microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then
+        microk8s.kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin --from-literal='sentry_dsn=' --from-literal='sentry_public_dsn='
     fi
 }
 
-function add_docker_credentials_minikube() {
-    if ! kubectl get secret registry-access &> /dev/null; then
+function add_docker_credentials_microk8s() {
+    if ! microk8s.kubectl get secret registry-access &> /dev/null; then
 
         username=""
         password=""
@@ -49,39 +49,40 @@ function add_docker_credentials_minikube() {
             echo -e "\n##############"
         done
 
-        kubectl create secret docker-registry registry-access --docker-server=prod-comms.docker-registry.canonical.com --docker-username="${username}" --docker-password="${password}" --docker-email=root@localhost
+        microk8s.kubectl create secret docker-registry registry-access --docker-server=prod-comms.docker-registry.canonical.com --docker-username="${username}" --docker-password="${password}" --docker-email=root@localhost
 
-        kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "registry-access"}]}' --namespace default
+        microk8s.kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "registry-access"}]}' --namespace default
     fi
 }
 
 function apply_configuration() {
-    kubectl apply -f config.global.yaml --namespace kube-system
-    kubectl apply -f config.qa.yaml
+    microk8s.kubectl apply -f config.global.yaml --namespace kube-system
+    microk8s.kubectl apply -f config.qa.yaml
 }
 
-function run_minikube() {
-    # Run minikube
-    if ! minikube ip &> /dev/null; then
-        minikube start
+function run_microk8s() {
+    # Run microk8s
+    if ! command -v microk8s.kubectl &> /dev/null; then
+	echo "Please install or enable microk8s (https://github.com/juju-solutions/microk8s)"
+	echo ""
+	echo "    snap install microk8s --classic --edge"
+	exit 1
     fi
 
-    minikube addons enable ingress
-
-    kubectl config use-context minikube
+    microk8s.enable ingress
 }
 
 function deploy_service() {
     service="${1}"
     tag="${2}"
 
-    cat "services/${service}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | kubectl apply --filename -
+    cat "services/${service}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | microk8s.kubectl apply --filename -
 }
 
 function deploy_ingress() {
     ingress="${1}"
     # Create the ingress domains
-    cat "ingresses/${ingress}.yaml" | sed '/namespace:/d' | kubectl apply --filename -
+    cat "ingresses/${ingress}.yaml" | sed '/namespace:/d' | microk8s.kubectl apply --filename -
 }
 
 function run() {
@@ -116,10 +117,10 @@ function run() {
     read vpn
     if [ "${vpn}" == "n" ]; then exit 0; fi
 
-    run_minikube
+    run_microk8s
     add_secret_key
 
-    add_docker_credentials_minikube
+    add_docker_credentials_microk8s
 
     if [ -n "${tag_to_deploy:-}" ]; then
         deploy_service "${production}" "${tag_to_deploy}"
