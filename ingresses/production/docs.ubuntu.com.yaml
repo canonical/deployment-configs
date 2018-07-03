@@ -28,5 +28,9 @@ spec:
         backend:
           serviceName: docs-ubuntu-com-phone
           servicePort: 80
+      - path: /security-certs
+        backend:
+          serviceName: docs-ubuntu-com-security-certs
+          servicePort: 80
 
 ---
