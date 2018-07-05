@@ -3,20 +3,19 @@
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: beta-ubuntu-com
-  namespace: production
+  name: mongoose-staging-ubuntu-com
+  namespace: staging
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
-      rewrite ^ http://mongoose.ubuntu.com$request_uri? redirect;
 spec:
   tls:
-  - secretName: beta-ubuntu-com-tls
+  - secretName: mongoose-staging-ubuntu-com-tls
     hosts:
-    - beta.ubuntu.com
+    - mongoose.staging.ubuntu.com
   rules:
-  - host: beta.ubuntu.com
+  - host: mongoose.staging.ubuntu.com
     http:
       paths:
       - path: /
