@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: vanillaframework-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: vanillaframework-io-tls
+    hosts:
+    - vanillaframework.io
+  rules:
+  - host: vanillaframework.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vanillaframework-io
+          servicePort: 80
+
+---
