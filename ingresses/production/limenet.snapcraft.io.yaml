@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: limenet-snapcraft-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: limenet-snapcraft-io-tls
+    hosts:
+    - limenet.snapcraft.io
+  rules:
+  - host: limenet.snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: limenet-snapcraft-io
+          servicePort: 80
+
+---
