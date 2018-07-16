@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: staging-microk8s-io
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: staging-microk8s-io-tls
+    hosts:
+    - staging.microk8s.io
+  rules:
+  - host: staging.microk8s.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: microk8s-io
+          servicePort: 80
+
+---
