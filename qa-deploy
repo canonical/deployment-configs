@@ -12,7 +12,6 @@ USAGE="Usage
 Description
 ---
 Deploy locally to microk8s.
-You must be connected to the Canonical VPN to use this script.
 
 --production: Deploy this ingress from the ingresses/production folder
 --staging: Deploy this ingress from the ingresses/staging folder
@@ -115,10 +114,6 @@ function run() {
 
     # Mandatory arguments
     if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
-
-    echo -n "Are you connected to the VPN? [Y/n] "
-    read vpn
-    if [ "${vpn}" == "n" ]; then exit 0; fi
 
     run_microk8s
     add_secret_key
