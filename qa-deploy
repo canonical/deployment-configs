@@ -65,8 +65,8 @@ function run_microk8s() {
         if ls /snap/microk8s &> /dev/null; then
             echo "Enabling microk8s"
             snap enable microk8s
-	    echo "> Waiting for microk8s to wake up ..."
-	    sleep 10
+            echo "> Waiting for microk8s to wake up ..."
+            sleep 10
         else
             echo "Please install or enable microk8s (https://github.com/juju-solutions/microk8s)"
             echo ""
