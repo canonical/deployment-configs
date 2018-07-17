@@ -12,7 +12,6 @@ USAGE="Usage
 Description
 ---
 Deploy locally to microk8s.
-You must be connected to the Canonical VPN to use this script.
 
 --production: Deploy this ingress from the ingresses/production folder
 --staging: Deploy this ingress from the ingresses/staging folder
@@ -63,10 +62,17 @@ function apply_configuration() {
 function run_microk8s() {
     # Run microk8s
     if ! command -v microk8s.kubectl &> /dev/null; then
-	echo "Please install or enable microk8s (https://github.com/juju-solutions/microk8s)"
-	echo ""
-	echo "    snap install microk8s --classic --edge"
-	exit 1
+        if ls /snap/microk8s &> /dev/null; then
+            echo "Enabling microk8s"
+            snap enable microk8s
+	    echo "> Waiting for microk8s to wake up ..."
+	    sleep 10
+        else
+            echo "Please install or enable microk8s (https://github.com/juju-solutions/microk8s)"
+            echo ""
+            echo "    snap install microk8s --classic --edge"
+            exit 1
+        fi
     fi
 
     if ! microk8s.kubectl get service/default-http-backend &> /dev/null; then
@@ -115,10 +121,6 @@ function run() {
 
     # Mandatory arguments
     if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
-
-    echo -n "Are you connected to the VPN? [Y/n] "
-    read vpn
-    if [ "${vpn}" == "n" ]; then exit 0; fi
 
     run_microk8s
     add_secret_key
