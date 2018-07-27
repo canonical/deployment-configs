@@ -13,11 +13,6 @@ metadata:
       }
 
 spec:
-  tls:
-  - secretName: ubuntu-com-tls
-    hosts:
-    - ubuntu.com
-    - www.ubuntu.com
   rules:
   - host: ubuntu.com
     http:
