@@ -1,0 +1,37 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'www.ubuntu.com' ) {
+        rewrite ^ https://ubuntu.com$request_uri? permanent;
+      }
+
+spec:
+  tls:
+  - secretName: ubuntu-com-tls
+    hosts:
+    - ubuntu.com
+    - www.ubuntu.com
+  rules:
+  - host: ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ubuntu-com
+          servicePort: 80
+  - host: www.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ubuntu-com
+          servicePort: 80
+
+---
