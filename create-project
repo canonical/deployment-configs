@@ -1,55 +1,56 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 
+import re
 import sys
-
 from shutil import copyfile
 
-project = sys.argv[1]
+
+def create_service(domain):
+    service_name = domain.replace('.', '-')
+    copyfile('templates/service.yaml', f'services/{service_name}.yaml')
+    update_file(f'services/{service_name}.yaml', service_name, domain)
 
 
-def create_service(project):
-    service_file_name = 'services/%s.yaml' % project
-    copyfile('templates/service.yaml', service_file_name)
-    update_file(service_file_name, project)
+def create_ingresses(domain):
+    match = re.match(r"((?P<subdomain>\w+)\.)?(?P<apex>\w+\.\w+)", domain)
+
+    if not match:
+        raise Exception("{domain} is a weird domain")
+
+    sub = match.group('subdomain')
+    apex = match.group('apex')
+    service_name = domain.replace('.', '-')
+    production_filename = f'ingresses/production/{service_name}.yaml'
+    staging_domain = f'{sub}.staging.{apex}' if sub else f'staging.{apex}'
+    staging_service_name = staging_domain.replace('.', '-')
+    staging_filename = f'ingresses/staging/{staging_service_name}.yaml'
+
+    # Create staging ingress config file
+    copyfile('templates/staging.yaml', staging_filename)
+    update_file(staging_filename, staging_service_name, staging_domain)
+
+    # Create production ingress config file
+    if sub:
+        copyfile('templates/production-subdomain.yaml', production_filename)
+    else:
+        copyfile('templates/production-apex.yaml', production_filename)
+
+    update_file(production_filename, service_name, domain)
 
 
-def create_ingresses(project, environments):
-    for environment in environments:
-        domain_parts = project.split('.')
-
-        # Add the environment between the domain if subdomain
-        if not environment == 'production':
-            domain_parts.insert((len(domain_parts)-2), environment)
-
-        file_name = '{domain}.yaml'.format(
-            domain='.'.join(domain_parts)
-        )
-
-        src = 'templates/%s.yaml' % environment
-        dst = 'ingresses/%s/%s' % (
-            environment,
-            file_name
-        )
-
-        copyfile(src, dst)
-        update_file(dst, file_name)
-
-
-def update_file(file_name, project):
-    project = project.replace('.yaml', '')
-    project_name = project.replace('.', '-')
-    project_domain = project
-    prod_project_name = project_name.replace('staging-', '')
+def update_file(file_name, service_name, domain=None):
     with open(file_name) as file_handle:
         file_contents = file_handle.read()
 
-    file_contents = file_contents.replace('PRODPROJECTNAME', prod_project_name)
-    file_contents = file_contents.replace('PROJECTNAME', project_name)
-    file_contents = file_contents.replace('PROJECTDOMAIN', project_domain)
+    file_contents = file_contents.replace('{service_name}', service_name)
+    file_contents = file_contents.replace('{domain}', domain)
 
     with open(file_name, 'w') as file_handle:
         file_handle.write(file_contents)
 
 
-create_service(project)
-create_ingresses(project, ['staging', 'production'])
+if __name__ == "__main__":
+    domain = sys.argv[1]
+
+    create_service(domain)
+    create_ingresses(domain)

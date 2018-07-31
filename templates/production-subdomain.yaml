@@ -1,24 +1,24 @@
 ---
 
 kind: Ingress
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: multipass-run
+  name: {service_name}
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
-  - secretName: multipass-run-tls
+  - secretName: {service_name}-tls
     hosts:
-    - multipass.run
+    - {domain}
   rules:
-  - host: multipass.run
+  - host: {domain}
     http:
       paths:
       - path: /
         backend:
-          serviceName: multipass-run
+          serviceName: {service_name}
           servicePort: 80
 
 ---

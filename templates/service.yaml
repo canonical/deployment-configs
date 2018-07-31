@@ -1,12 +1,12 @@
 ---
 
 kind: Service
-apiVersion: v1
+apiVersion: v1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: PROJECTNAME
+  name: {service_name}
 spec:
   selector:
-    app: PROJECTDOMAIN
+    app: {domain}
   ports:
     - name: http
       protocol: TCP
@@ -16,19 +16,19 @@ spec:
 ---
 
 kind: Deployment
-apiVersion: apps/v1beta1
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: PROJECTNAME
+  name: {service_name}
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        app: PROJECTDOMAIN
+        app: {domain}
     spec:
       containers:
-        - name: PROJECTNAME
-          image: prod-comms.docker-registry.canonical.com/PROJECTDOMAIN:${TAG_TO_DEPLOY}
+        - name: {service_name}
+          image: prod-comms.docker-registry.canonical.com/{domain}:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80

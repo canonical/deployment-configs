@@ -85,13 +85,13 @@ function deploy_service() {
     service="${1}"
     tag="${2}"
 
-    cat "services/${service}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | microk8s.kubectl apply --filename -
+    cat "services/${service//./-}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | microk8s.kubectl apply --filename -
 }
 
 function deploy_ingress() {
     ingress="${1}"
     # Create the ingress domains
-    cat "ingresses/${ingress}.yaml" | sed '/namespace:/d' | microk8s.kubectl apply --filename -
+    cat "ingresses/${ingress//./-}.yaml" | sed '/namespace:/d' | microk8s.kubectl apply --filename -
 }
 
 function run() {
