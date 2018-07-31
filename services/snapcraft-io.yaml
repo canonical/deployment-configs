@@ -1,0 +1,88 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: snapcraft-io
+spec:
+  selector:
+    app: snapcraft.io
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: snapcraft-io
+  labels:
+    useProxy: "true"
+spec:
+  replicas: 9
+  template:
+    metadata:
+      labels:
+        app: snapcraft.io
+        useProxy: "true"
+    spec:
+      containers:
+        - name: snapcraft-io
+          image: prod-comms.docker-registry.canonical.com/snapcraft.io:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: proxy-config
+                optional: true
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: global-config
+                  key: environment
+            - name: BLOG_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: snapcraft-io
+                  optional: True
+                  key: blog_enabled
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: secret_key
+            - name: WTF_CSRF_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: csrf_secret_key
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: sentry_dsn
+            - name: SENTRY_PUBLIC_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: sentry_public_dsn
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 10
+            initialDelaySeconds: 15
+            periodSeconds: 15
+
+---

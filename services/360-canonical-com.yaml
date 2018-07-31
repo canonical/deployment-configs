@@ -1,0 +1,67 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: threesixty-canonical-com
+spec:
+  selector:
+    app: 360.canonical.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: threesixty-canonical-com
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: 360.canonical.com
+    spec:
+      containers:
+        - name: threesixty-canonical-com
+          image: prod-comms.docker-registry.canonical.com/360.canonical.com:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: threesixty-canonical-com-config
+                optional: true
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: threesixty-database-url
+                  key: database_url
+          volumeMounts:
+            - name: employee-data
+              mountPath: '/srv/data'
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /_status/ping
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /_status/ping
+              port: 80
+            timeoutSeconds: 10
+            initialDelaySeconds: 15
+            periodSeconds: 15
+      volumes:
+      - name: employee-data
+        secret:
+          secretName: threesixty-employee-data
+
+---

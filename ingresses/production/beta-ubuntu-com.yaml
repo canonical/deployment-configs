@@ -1,0 +1,36 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: beta-ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+      if ($host != 'mongoose.ubuntu.com' ) {
+        rewrite ^ https://mongoose.ubuntu.com$request_uri? redirect;
+      }
+spec:
+  tls:
+  - secretName: beta-ubuntu-com-tls
+    hosts:
+    - beta.ubuntu.com
+  - secretName: mongoose-ubuntu-com-tls
+    hosts:
+    - mongoose.ubuntu.com
+  rules:
+  - host: beta.ubuntu.com
+    http: &beta-ubuntu-com_service
+      paths:
+      - path: /
+        backend:
+          serviceName: beta-ubuntu-com
+          servicePort: 80
+
+    # Alias domains
+  - host: mongoose.ubuntu.com
+    http: *beta-ubuntu-com_service
+
+---

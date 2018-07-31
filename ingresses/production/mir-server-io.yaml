@@ -1,0 +1,40 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: mir-server-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+      if ($host != 'mir-server.io' ) {
+        rewrite ^ https://mir-server.io$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: mir-server-io-tls
+    hosts:
+    - mir-server.io
+    - www.mir-server.io
+  - secretName: mirserver-io-tls
+    hosts:
+    - mirserver.io
+    - www.mirserver.io
+  rules:
+  - host: mir-server.io
+    http: &mir-server-io_service
+      paths:
+      - path: /
+        backend:
+          serviceName: mir-server-io
+          servicePort: 80
+
+  # Alias domains
+  - host: www.mir-server.io
+    http: *mir-server-io_service
+  - host: mirserver.io
+    http: *mir-server-io_service
+  - host: www.mirserver.io
+    http: *mir-server-io_service
+
+---
