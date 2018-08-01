@@ -16,8 +16,6 @@ spec:
     hosts:
     - mir-server.io
     - www.mir-server.io
-  - secretName: mirserver-io-tls
-    hosts:
     - mirserver.io
     - www.mirserver.io
   rules:
