@@ -4,11 +4,9 @@ kind: Ingress
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
   name: {service_name}
-  namespace: staging
+  namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Robots-Tag: noindex";
 spec:
   tls:
   - secretName: {service_name}-tls

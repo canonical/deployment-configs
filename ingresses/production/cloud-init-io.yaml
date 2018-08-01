@@ -1,0 +1,41 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: cloud-init-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'cloud-init.io' ) {
+        rewrite ^ https://cloud-init.io$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: cloud-init-io-tls
+    hosts:
+    - cloud-init.io
+    - www.cloud-init.io
+  - secretName: cloud-init-org-tls
+    hosts:
+    - cloud-init.org
+    - www.cloud-init.org
+  rules:
+  - host: cloud-init.io
+    http: &cloud-init-io_service
+      paths:
+      - path: /
+        backend:
+          serviceName: cloud-init-io
+          servicePort: 80
+
+  # Alias domains
+  - host: www.cloud-init.io
+    http: *cloud-init-io_service
+  - host: cloud-init.org
+    http: *cloud-init-io_service
+  - host: www.cloud-init.org
+    http: *cloud-init-io_service
+
+---

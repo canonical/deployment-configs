@@ -1,0 +1,33 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: conjure-up-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'conjure-up.io' ) {
+        rewrite ^ https://conjure-up.io$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: conjure-up-io-tls
+    hosts:
+    - conjure-up.io
+    - www.conjure-up.io
+  rules:
+  - host: conjure-up.io
+    http: &conjure-up-io_service
+      paths:
+      - path: /
+        backend:
+          serviceName: conjure-up-io
+          servicePort: 80
+
+  # Alias domains
+  - host: www.conjure-up.io
+    http: *conjure-up-io_service
+
+---

@@ -4,23 +4,30 @@ kind: Ingress
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
   name: {service_name}
-  namespace: staging
+  namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Robots-Tag: noindex";
+      if ($host != '{domain}' ) {
+        rewrite ^ https://{domain}$request_uri? permanent;
+      }
 spec:
   tls:
   - secretName: {service_name}-tls
     hosts:
     - {domain}
+    - www.{domain}
   rules:
   - host: {domain}
-    http:
+    http: &{service_name}_service
       paths:
       - path: /
         backend:
           serviceName: {service_name}
           servicePort: 80
+
+  # Alias domains
+  - host: www.{domain}
+    http: *{service_name}_service
 
 ---

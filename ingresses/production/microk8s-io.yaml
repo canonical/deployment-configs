@@ -1,0 +1,33 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: microk8s-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'microk8s.io' ) {
+        rewrite ^ https://microk8s.io$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: microk8s-io-tls
+    hosts:
+    - microk8s.io
+    - www.microk8s.io
+  rules:
+  - host: microk8s.io
+    http: &microk8s_service
+      paths:
+      - path: /
+        backend:
+          serviceName: microk8s-io
+          servicePort: 80
+
+  # Alias domains
+  - host: www.microk8s.io
+    http: *microk8s_service
+
+---

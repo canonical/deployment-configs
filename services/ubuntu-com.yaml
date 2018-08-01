@@ -1,12 +1,12 @@
 ---
 
 kind: Service
-apiVersion: v1  # See https://bit.ly/2KdOtrZ
+apiVersion: v1
 metadata:
-  name: {service_name}
+  name: ubuntu-com
 spec:
   selector:
-    app: {domain}
+    app: ubuntu.com
   ports:
     - name: http
       protocol: TCP
@@ -16,19 +16,19 @@ spec:
 ---
 
 kind: Deployment
-apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+apiVersion: extensions/v1beta1
 metadata:
-  name: {service_name}
+  name: ubuntu-com
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        app: {domain}
+        app: ubuntu.com
     spec:
       containers:
-        - name: {service_name}
-          image: prod-comms.docker-registry.canonical.com/{domain}:${TAG_TO_DEPLOY}
+        - name: ubuntu-com
+          image: prod-comms.docker-registry.canonical.com/ubuntu.com:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
@@ -45,5 +45,11 @@ spec:
             timeoutSeconds: 10
             initialDelaySeconds: 15
             periodSeconds: 15
+          env:
+            - name: SEARCH_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: google-api
+                  key: search-api-key
 
 ---

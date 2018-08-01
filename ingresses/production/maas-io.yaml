@@ -1,0 +1,33 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: maas-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'maas.io' ) {
+        rewrite ^ https://maas.io$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: maas-io-tls
+    hosts:
+    - maas.io
+    - www.maas.io
+  rules:
+  - host: maas.io
+    http: &maas-io_service
+      paths:
+      - path: /
+        backend:
+          serviceName: maas-io
+          servicePort: 80
+  
+  # Alias domains
+  - host: www.maas.io
+    http: *maas-io_service
+
+---

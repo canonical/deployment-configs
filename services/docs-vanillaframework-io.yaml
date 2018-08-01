@@ -1,12 +1,12 @@
 ---
 
 kind: Service
-apiVersion: v1  # See https://bit.ly/2KdOtrZ
+apiVersion: v1
 metadata:
-  name: {service_name}
+  name: docs-vanillaframework-io
 spec:
   selector:
-    app: {domain}
+    app: docs.vanillaframework.io
   ports:
     - name: http
       protocol: TCP
@@ -16,31 +16,31 @@ spec:
 ---
 
 kind: Deployment
-apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+apiVersion: extensions/v1beta1
 metadata:
-  name: {service_name}
+  name: docs-vanillaframework-io
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        app: {domain}
+        app: docs.vanillaframework.io
     spec:
       containers:
-        - name: {service_name}
-          image: prod-comms.docker-registry.canonical.com/{domain}:${TAG_TO_DEPLOY}
+        - name: docs-vanillaframework-io
+          image: prod-comms.docker-registry.canonical.com/docs.vanillaframework.io:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
           readinessProbe:
             httpGet:
-              path: /_status/check
+              path: /
               port: 80
             timeoutSeconds: 3
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /_status/check
+              path: /
               port: 80
             timeoutSeconds: 10
             initialDelaySeconds: 15
