@@ -3,13 +3,13 @@
 kind: Ingress
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: {service_name}
+  name: {ingress_name}
   namespace: production
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
-  - secretName: {service_name}-tls
+  - secretName: {ingress_name}-tls
     hosts:
     - {domain}
   rules:
