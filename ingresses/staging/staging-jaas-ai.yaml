@@ -3,7 +3,7 @@
 kind: Ingress
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: {ingress_name}
+  name: staging-jaas-ai
   namespace: staging
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -11,16 +11,16 @@ metadata:
       more_set_headers "X-Robots-Tag: noindex";
 spec:
   tls:
-  - secretName: {ingress_name}-tls
+  - secretName: staging-jaas-ai-tls
     hosts:
-    - {domain}
+    - staging.jaas.ai
   rules:
-  - host: {domain}
+  - host: staging.jaas.ai
     http:
       paths:
       - path: /
         backend:
-          serviceName: {service_name}
+          serviceName: jaas-ai
           servicePort: 80
 
 ---
