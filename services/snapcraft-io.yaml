@@ -45,6 +45,12 @@ spec:
                 configMapKeyRef:
                   name: global-config
                   key: environment
+            - name: BSI_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: snapcraft-io
+                  optional: true
+                  key: bsi_url
             - name: BLOG_ENABLED
               valueFrom:
                 configMapKeyRef:
