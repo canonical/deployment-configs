@@ -1,0 +1,49 @@
+---
+
+kind: Service
+apiVersion: v1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: jaas-ai
+spec:
+  selector:
+    app: jaas.ai
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: jaas-ai
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: jaas.ai
+    spec:
+      containers:
+        - name: jaas-ai
+          image: prod-comms.docker-registry.canonical.com/jaas.ai:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 10
+            initialDelaySeconds: 15
+            periodSeconds: 15
+
+---
