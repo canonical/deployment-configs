@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com-core
-          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core:${TAG_TO_DEPLOY_CORE}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80

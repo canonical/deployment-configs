@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com-phone
-          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY_PHONE}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80

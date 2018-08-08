@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: docs-ubuntu-com-security-certs
-          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs:${TAG_TO_DEPLOY_SECURITY_CERTS}
+          image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
