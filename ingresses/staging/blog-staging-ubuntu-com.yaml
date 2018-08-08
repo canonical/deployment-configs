@@ -9,18 +9,26 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
+      if ($host != 'blog.staging.ubuntu.com' ) {
+        rewrite ^ https://blog.staging.ubuntu.com$request_uri? permanent;
+      }
 spec:
   tls:
   - secretName: blog-staging-ubuntu-com-tls
     hosts:
     - blog.staging.ubuntu.com
+  - secretName: insights-staging-ubuntu-com-tls
+    hosts:
+    - insights.staging.ubuntu.com
   rules:
   - host: blog.staging.ubuntu.com
-    http:
+    http: &blog-ubuntu-com_service
       paths:
       - path: /
         backend:
           serviceName: blog-ubuntu-com
           servicePort: 80
+  - host: insights.staging.ubuntu.com
+    http: *blog-ubuntu-com_service
 
 ---
