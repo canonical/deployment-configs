@@ -17,8 +17,6 @@ spec:
     hosts:
     - cloud-init.io
     - www.cloud-init.io
-  - secretName: cloud-init-org-tls
-    hosts:
     - cloud-init.org
     - www.cloud-init.org
   rules:
