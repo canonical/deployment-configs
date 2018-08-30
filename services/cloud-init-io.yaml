@@ -38,5 +38,7 @@ spec:
               port: 80
             timeoutSeconds: 3
             periodSeconds: 5
-
+          resources:
+            limits:
+              memory: "256Mi"
 ---

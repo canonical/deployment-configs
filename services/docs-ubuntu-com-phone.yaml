@@ -40,6 +40,6 @@ spec:
             successThreshold: 3
           resources:
             limits:
-              memory: "128Mi"
+              memory: "256Mi"
 
 ---

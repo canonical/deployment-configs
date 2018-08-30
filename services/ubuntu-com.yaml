@@ -44,5 +44,8 @@ spec:
                 secretKeyRef:
                   name: google-api
                   key: search-api-key
+          resources:
+            limits:
+              memory: "256Mi"
 
 ---
