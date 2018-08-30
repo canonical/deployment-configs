@@ -38,13 +38,6 @@ spec:
               port: 80
             timeoutSeconds: 3
             periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /_status/check
-              port: 80
-            timeoutSeconds: 10
-            initialDelaySeconds: 15
-            periodSeconds: 15
           env:
             - name: SEARCH_API_KEY
               valueFrom:
