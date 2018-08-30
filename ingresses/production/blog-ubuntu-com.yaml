@@ -8,10 +8,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($host = 'design.canonical.com') {
-        rewrite ^ https://blog.ubuntu.com/topics/design;
-      }
-
       if ($host != 'blog.ubuntu.com' ) {
         rewrite ^ https://blog.ubuntu.com$request_uri? permanent;
       }
@@ -20,8 +16,9 @@ spec:
   - secretName: blog-ubuntu-com-tls
     hosts:
     - blog.ubuntu.com
+  - secretName: insights-ubuntu-com-tls
+    hosts:
     - insights.ubuntu.com
-    - design.canonical.com
   rules:
   - host: blog.ubuntu.com
     http: &blog-ubuntu-com_service
@@ -33,8 +30,6 @@ spec:
 
   # Alias domains
   - host: insights.ubuntu.com
-    http: *blog-ubuntu-com_service
-  - host: design.canonical.com
     http: *blog-ubuntu-com_service
 
 ---
