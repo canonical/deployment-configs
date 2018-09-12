@@ -18,10 +18,10 @@ def create_service(domain):
 
 
 def create_ingresses(domain):
-    match = re.match(r"((?P<subdomain>\w+)\.)?(?P<apex>\w+\.\w+)", domain)
+    match = re.match(r"((?P<subdomain>[\w-]+)\.)?(?P<apex>[\w-]+\.\w+)", domain)
 
     if not match:
-        raise Exception("{domain} is a weird domain")
+        raise Exception(f"{domain} is a weird domain")
 
     sub = match.group('subdomain')
     apex = match.group('apex')
@@ -75,3 +75,4 @@ if __name__ == "__main__":
 
     create_service(domain)
     create_ingresses(domain)
+
