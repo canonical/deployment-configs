@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: discourse-docs-staging-snapcraft-io
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: discourse-docs-staging-snapcraft-io-tls
+    hosts:
+    - discourse-docs.staging.snapcraft.io
+  rules:
+  - host: discourse-docs.staging.snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: discourse-docs-snapcraft-io
+          servicePort: 80
+
+---
