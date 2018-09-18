@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: limesdr-snapcraft-io
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: limesdr-snapcraft-io-tls
+    hosts:
+    - limesdr.snapcraft.io
+  rules:
+  - host: limesdr.snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: limesdr-snapcraft-io
+          servicePort: 80
+
+---
