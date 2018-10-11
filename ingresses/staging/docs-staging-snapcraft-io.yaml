@@ -9,6 +9,9 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
+      if ($host != 'docs.staging.snapcraft.io' ) {
+        rewrite ^ https://snapcraft.io$request_uri? permanent;
+      }
 spec:
   tls:
   - secretName: docs-staging-snapcraft-io-tls
@@ -16,11 +19,13 @@ spec:
     - docs.staging.snapcraft.io
   rules:
   - host: docs.staging.snapcraft.io
-    http:
+    http: &docs-snapcraft-io_service
       paths:
       - path: /
         backend:
           serviceName: docs-snapcraft-io
           servicePort: 80
+  - host: discourse-docs.staging.snapcraft.io
+    http: *docs-snapcraft-io_service
 
 ---
