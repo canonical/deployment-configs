@@ -6,7 +6,7 @@ set -euo pipefail
 USAGE="Usage
 ===
 
-  $ ./qa-deploy --production PRODUCTION_URL [--tag IMAGE_TAG] [--staging STAGING_URL]
+  $ ./qa-deploy [--production PRODUCTION_URL] [--tag IMAGE_TAG] [--staging STAGING_URL]
 
 
 Description
@@ -120,7 +120,7 @@ function run() {
     done
 
     # Mandatory arguments
-    if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
+    if [ -z "${production:-}" ] && [ -z "${staging:-}" ]; then invalid "No production or staging domain specified (e.g. 'example.com')"; fi
 
     run_microk8s
     add_secret_key
@@ -128,10 +128,14 @@ function run() {
     add_docker_credentials_microk8s
 
     if [ -n "${tag_to_deploy:-}" ]; then
-        deploy_service "${production}" "${tag_to_deploy}"
+        if [ -n "${production:-}" ]; then
+            deploy_service "${production}" "${tag_to_deploy}"
+        else
+            deploy_service "${staging}" "${tag_to_deploy}"
+        fi
     fi
 
-    deploy_ingress "production/${production}"
+    if [ -n "${production:-}" ]; then deploy_ingress "production/${production}"; fi
 
     if [ -n "${staging:-}" ]; then deploy_ingress "staging/${staging}"; fi
     apply_configuration
