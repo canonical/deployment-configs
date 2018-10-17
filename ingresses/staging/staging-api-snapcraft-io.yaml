@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: staging-api-snapcraft-io
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: staging-api-snapcraft-io-tls
+    hosts:
+    - staging-api.snapcraft.io
+  rules:
+  - host: staging-api.snapcraft.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-api-snapcraft-io
+          servicePort: 80
+
+---
