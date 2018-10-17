@@ -43,6 +43,15 @@ spec:
                 optional: true
             - secretRef:
                 name: snapcraft-io-config
+          env:
+            - name: MAINTENANCE_MODE_STORE
+              value: ${MAINTENANCE_MODE_STORE}
+            - name: MAINTENANCE_MODE_PUBLISHER
+              value: ${MAINTENANCE_MODE_PUBLISHER}
+            - name: MAINTENANCE_MODE_BLOG
+              value: ${MAINTENANCE_MODE_BLOG}
+            - name: MAITENANCE_MODE_LOGIN
+              value: ${MAINTENANCE_MODE_LOGIN}
           readinessProbe:
             httpGet:
               path: /_status/check
