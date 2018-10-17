@@ -16,4 +16,4 @@ metadata:
   name: global-config
   namespace: staging
 data:
-  environment: "staging"
+  ENVIRONMENT: "staging"

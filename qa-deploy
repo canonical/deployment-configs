@@ -28,7 +28,7 @@ function invalid() {
 
 function add_secret_key() {
     if ! microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then
-        microk8s.kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin --from-literal='sentry_dsn=' --from-literal='sentry_public_dsn='
+        microk8s.kubectl create secret generic snapcraft-io-config --from-literal=SECRET_KEY=admin --from-literal=CSRF_SECRET_KEY=admin --from-literal='SENTRY_DSN=' --from-literal='SENTRY_PUBLIC_DSN='
     fi
 }
 

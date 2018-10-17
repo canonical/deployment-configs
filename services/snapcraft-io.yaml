@@ -19,15 +19,12 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: snapcraft-io
-  labels:
-    useProxy: "true"
 spec:
   replicas: 9
   template:
     metadata:
       labels:
         app: snapcraft.io
-        useProxy: "true"
     spec:
       containers:
         - name: snapcraft-io
@@ -39,44 +36,13 @@ spec:
             - configMapRef:
                 name: proxy-config
                 optional: true
-          env:
-            - name: ENVIRONMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: global-config
-                  key: environment
-            - name: BSI_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: snapcraft-io
-                  optional: true
-                  key: bsi_url
-            - name: BLOG_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: snapcraft-io
-                  optional: True
-                  key: blog_enabled
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: secret_key
-            - name: WTF_CSRF_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: csrf_secret_key
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: sentry_dsn
-            - name: SENTRY_PUBLIC_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: sentry_public_dsn
+            - configMapRef:
+                name: global-config
+            - configMapRef:
+                name: snapcraft-io
+                optional: true
+            - secretRef:
+                name: snapcraft-io-config
           readinessProbe:
             httpGet:
               path: /_status/check

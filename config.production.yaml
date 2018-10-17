@@ -16,4 +16,4 @@ metadata:
   name: global-config
   namespace: production
 data:
-  environment: "production"
+  ENVIRONMENT: "production"
