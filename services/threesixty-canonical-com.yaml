@@ -42,10 +42,6 @@ spec:
                 secretKeyRef:
                   name: threesixty-database-url
                   key: database_url
-          volumeMounts:
-            - name: employee-data
-              mountPath: '/srv/data'
-              readOnly: true
           readinessProbe:
             httpGet:
               path: /_status/ping
@@ -55,9 +51,4 @@ spec:
           resources:
             limits:
               memory: "256Mi"
-      volumes:
-      - name: employee-data
-        secret:
-          secretName: threesixty-employee-data
-
 ---
