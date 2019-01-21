@@ -55,8 +55,12 @@ function add_docker_credentials_microk8s() {
 }
 
 function apply_configuration() {
-    microk8s.kubectl apply -f config.global.yaml --namespace kube-system
     microk8s.kubectl apply -f config.qa.yaml
+
+    # On the version of the ingress controller we have we need to change the
+    # name to be able to apply the configuration. By default the nginx ingress
+    # controller is searching for a config-map called: nginx-load-balancer-conf
+    cat "config.global.yaml" | sed 's|name: nginx-configuration|name: nginx-load-balancer-conf|' | microk8s.kubectl apply --filename - --namespace default
 }
 
 function run_microk8s() {
@@ -74,10 +78,12 @@ function run_microk8s() {
             exit 1
         fi
     fi
+}
 
+function enable_ingress() {
     if ! microk8s.kubectl get service/default-http-backend &> /dev/null; then
         echo "HTTP backend not found: Enabling ingress addon"
-        microk8s.enable ingress
+        microk8s.enable ingress dns
     fi
 }
 
@@ -123,6 +129,10 @@ function run() {
     if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
 
     run_microk8s
+    # The configuration needs to run before the ingress controller starts 
+    # because it doesn't restart when applying the configuration after.
+    apply_configuration
+    enable_ingress
     add_secret_key
 
     add_docker_credentials_microk8s
@@ -134,7 +144,6 @@ function run() {
     deploy_ingress "production/${production}"
 
     if [ -n "${staging:-}" ]; then deploy_ingress "staging/${staging}"; fi
-    apply_configuration
 }
 
 run ${@}
