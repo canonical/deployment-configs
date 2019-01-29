@@ -1,11 +1,12 @@
 apiVersion: v1
 data:
   # Change redirect code to 301 as 308 is not understood by social media bots
+  body-size: "0"
   http-redirect-code: "301"
   map-hash-bucket-size: "128"
-  proxy-buffer-size: 8k
-  proxy-buffers: 4 8k
-  proxy-body-size: 1024m
+  proxy-body-size: "0"
+  proxy-buffer-size: "8k"
+  proxy-buffers: "4 8k"
 kind: ConfigMap
 metadata:
-  name: nginx-load-balancer-conf
+  name: nginx-configuration
