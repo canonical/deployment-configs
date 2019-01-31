@@ -1,0 +1,22 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: landscape-brochure-staging-internal
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  rules:
+  - host: landscape-brochure.staging.internal
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: landscape-brochure-internal
+          servicePort: 80
+
+---
