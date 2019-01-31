@@ -1,0 +1,33 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: landscape-brochure-internal
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'landscape-brochure.internal' ) {
+        rewrite ^ https://landscape-brochure.internal$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: landscape-brochure-internal-tls
+    hosts:
+    - landscape-brochure.internal
+    - www.landscape-brochure.internal
+  rules:
+  - host: landscape-brochure.internal
+    http: &landscape-brochure-internal_service
+      paths:
+      - path: /
+        backend:
+          serviceName: landscape-brochure-internal
+          servicePort: 80
+
+  # Alias domains
+  - host: www.landscape-brochure.internal
+    http: *landscape-brochure-internal_service
+
+---
