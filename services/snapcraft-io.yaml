@@ -57,6 +57,11 @@ spec:
                   name: snapcraft-io
                   optional: True
                   key: blog_enabled
+            - name: SPREADSHEET_REPORT_SNAP
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io
+                  key: spreadsheet_report_snap
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
