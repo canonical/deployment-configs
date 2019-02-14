@@ -22,7 +22,7 @@ metadata:
   labels:
     useProxy: "true"
 spec:
-  replicas: 9
+  replicas: 5
   template:
     metadata:
       labels:
