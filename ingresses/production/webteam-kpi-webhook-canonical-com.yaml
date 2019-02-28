@@ -1,0 +1,24 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: webteam-kpi-webhook-canonical-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: webteam-kpi-webhook-canonical-com-tls
+    hosts:
+    - webteam-kpi-webhook.canonical.com
+  rules:
+  - host: webteam-kpi-webhook.canonical.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: webteam-kpi-webhook-canonical-com
+          servicePort: 80
+
+---

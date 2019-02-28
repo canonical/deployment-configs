@@ -1,0 +1,71 @@
+---
+
+kind: Service
+apiVersion: v1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: webteam-kpi-webhook-canonical-com
+spec:
+  selector:
+    app: webteam-kpi-webhook.canonical.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: webteam-kpi-webhook-canonical-com
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: webteam-kpi-webhook.canonical.com
+    spec:
+      containers:
+        - name: webteam-kpi-webhook-canonical-com
+          image: prod-comms.docker-registry.canonical.com/webteam-kpi-webhook.canonical.com:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: "256Mi"
+          env:
+            - name: INFLUXDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: influxdb_user
+            - name: INFLUXDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: influxdb_password
+            - name: INFLUXDB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: influxdb_host
+            - name: INFLUXDB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: influxdb_port
+            - name: INFLUXDB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: influxdb_database
+
+---
