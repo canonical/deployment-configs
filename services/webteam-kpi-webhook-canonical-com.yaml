@@ -67,5 +67,10 @@ spec:
                 secretKeyRef:
                   name: influxdb-credentials
                   key: influxdb_database
+            - name: GITHUB_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: github-webhook-token
+                  key: github_secret_key
 
 ---
