@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: old-docs-jujucharms-com
-          image: prod-comms.docker-registry.canonical.com/docs.jujucharms.com:${TAG_TO_DEPLOY}
+          image: prod-comms.docker-registry.canonical.com/old-docs.jujucharms.com:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
