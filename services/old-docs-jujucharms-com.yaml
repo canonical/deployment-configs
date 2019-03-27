@@ -1,0 +1,45 @@
+---
+
+kind: Service
+apiVersion: v1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: old-docs-jujucharms-com
+spec:
+  selector:
+    app: old-docs.jujucharms.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: old-docs-jujucharms-com
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: old-docs.jujucharms.com
+    spec:
+      containers:
+        - name: old-docs-jujucharms-com
+          image: prod-comms.docker-registry.canonical.com/old-docs.jujucharms.com:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: "256Mi"
+
+---
