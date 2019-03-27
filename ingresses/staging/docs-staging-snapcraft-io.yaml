@@ -25,7 +25,5 @@ spec:
         backend:
           serviceName: docs-snapcraft-io
           servicePort: 80
-  - host: discourse-docs.staging.snapcraft.io
-    http: *docs-snapcraft-io_service
 
 ---
