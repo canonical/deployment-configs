@@ -1,8 +1,8 @@
 apiVersion: v1
 data:
-  # Change redirect code to 301 as 308 is not understood by social media bots
   body-size: "0"
-  http-redirect-code: "301"
+  # Change redirect code to 301 as 308 is not understood by social media bots
+  http-redirect-code: 301
   map-hash-bucket-size: "128"
   proxy-body-size: "0"
   proxy-buffer-size: "8k"
