@@ -44,7 +44,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: google-api
-                  key: snapcraft-io-search-key
+                  key: google-custom-search-key
           readinessProbe:
             httpGet:
               path: /
