@@ -39,7 +39,6 @@ spec:
                 secretKeyRef:
                   name: sentry-dsn
                   key: docs-snapcraft-io
-          env:
             - name: SEARCH_API_KEY
               valueFrom:
                 secretKeyRef:
