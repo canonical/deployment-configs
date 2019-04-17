@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: staging-multipass-run
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: staging-multipass-run-tls
+    hosts:
+    - staging.multipass.run
+  rules:
+  - host: staging.multipass.run
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: multipass-run
+          servicePort: 80
+
+---
