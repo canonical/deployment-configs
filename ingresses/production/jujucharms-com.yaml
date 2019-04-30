@@ -1,0 +1,33 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: jujucharms-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'jujucharms.com' ) {
+        rewrite ^ https://jujucharms.com$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: jujucharms-com-tls
+    hosts:
+    - jujucharms.com
+    - www.jujucharms.com
+  rules:
+  - host: jujucharms.com
+    http: &jujucharms-com_service
+      paths:
+      - path: /
+        backend:
+          serviceName: jujucharms-com
+          servicePort: 80
+
+  # Alias domains
+  - host: www.jujucharms.com
+    http: *jujucharms-com_service
+
+---
