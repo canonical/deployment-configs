@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        app: releases-demo-haus
+        app: releases.demo.haus
     spec:
       containers:
         - name: releases-demo-haus
