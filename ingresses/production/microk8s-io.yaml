@@ -17,6 +17,10 @@ spec:
     hosts:
     - microk8s.io
     - www.microk8s.io
+  - secretName: microk8s-com-tls
+    hosts:
+    - microk8s.com
+    - www.microk8s.com
   rules:
   - host: microk8s.io
     http: &microk8s_service
@@ -28,6 +32,14 @@ spec:
 
   # Alias domains
   - host: www.microk8s.io
+    http: *microk8s_service
+
+  # Alias domains
+  - host: microk8s.com
+    http: *microk8s_service
+
+  # Alias domains
+  - host: www.microk8s.com
     http: *microk8s_service
 
 ---
