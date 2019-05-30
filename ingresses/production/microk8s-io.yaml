@@ -33,12 +33,8 @@ spec:
   # Alias domains
   - host: www.microk8s.io
     http: *microk8s_service
-
-  # Alias domains
   - host: microk8s.com
     http: *microk8s_service
-
-  # Alias domains
   - host: www.microk8s.com
     http: *microk8s_service
 
