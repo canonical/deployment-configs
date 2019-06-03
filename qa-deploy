@@ -59,8 +59,8 @@ function apply_configuration() {
 
     # On the version of the ingress controller we have we need to change the
     # name to be able to apply the configuration. By default the nginx ingress
-    # controller is searching for a config-map called: nginx-load-balancer-conf
-    cat "config.global.yaml" | sed 's|name: nginx-configuration|name: nginx-load-balancer-conf|' | microk8s.kubectl apply --filename - --namespace default
+    # controller is searching for a config-map called: nginx-load-balancer-microk8s-conf
+    cat "config.global.yaml" | sed 's|name: nginx-configuration|name: nginx-load-balancer-microk8s-conf|' | microk8s.kubectl apply --filename - --namespace default
 }
 
 function run_microk8s() {
