@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   body-size: "0"
   # Change redirect code to 301 as 308 is not understood by social media bots
-  http-redirect-code: 301
+  http-redirect-code: "301"
   # We can't include subdomains for canonical.com
   # It only seems possible to set this globally
   hsts-include-subdomains: "false"
