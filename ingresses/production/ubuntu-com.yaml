@@ -1,0 +1,41 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'ubuntu.com' ) {
+        rewrite ^ https://ubuntu.com$request_uri? permanent;
+      }
+
+spec:
+  rules:
+  - host: ubuntu.com
+    http: &ubuntu-com_service
+      paths:
+      - path: /
+        backend:
+          serviceName: ubuntu-com
+          servicePort: 80
+
+  # Alias domains
+  - host: www.ubuntu.com
+    http: *ubuntu-com_service
+  - host: ubuntu.net
+    http: *ubuntu-com_service
+  - host: www.ubuntu.net
+    http: *ubuntu-com_service
+  - host: ubunut.com
+    http: *ubuntu-com_service
+  - host: www.ubunut.com
+    http: *ubuntu-com_service
+  - host: ubuntulinux.org
+    http: *ubuntu-com_service
+  - host: www.ubuntulinux.org
+    http: *ubuntu-com_service
+
+---
