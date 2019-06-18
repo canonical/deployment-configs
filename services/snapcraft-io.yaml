@@ -77,6 +77,21 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: sentry_public_dsn
+            - name: MARKETO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: snapcraft-io
+                  key: marketo_url
+            - name: MARKETO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: marketo_client_id
+            - name: MARKET_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: snapcraft-io-config
+                  key: marketo_client_secret
           readinessProbe:
             httpGet:
               path: /_status/check
