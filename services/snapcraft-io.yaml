@@ -87,7 +87,7 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: marketo_client_id
-            - name: MARKET_CLIENT_SECRET
+            - name: MARKETO_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: snapcraft-io-config
