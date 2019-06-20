@@ -9,6 +9,9 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
+      if ($host = 'blog.staging.ubuntu.com' ) {
+        rewrite ^ https://staging.ubuntu.com/blog$request_uri? permanent;
+      }
       if ($host != 'staging.ubuntu.com' ) {
         rewrite ^ https://staging.ubuntu.com$request_uri? permanent;
       }
@@ -17,6 +20,9 @@ spec:
   - secretName: staging-ubuntu-com-tls
     hosts:
     - staging.ubuntu.com
+  - secretName: blog-staging-ubuntu-com-tls
+    hosts:
+    - blog.staging.ubuntu.com
   rules:
   - host: staging.ubuntu.com
     http: &ubuntu-com_service
@@ -28,6 +34,8 @@ spec:
   
   # Alias domains
   - host: www.staging.ubuntu.com
+    http: *ubuntu-com_service
+  - host: blog.staging.ubuntu.com
     http: *ubuntu-com_service
 
 ---
