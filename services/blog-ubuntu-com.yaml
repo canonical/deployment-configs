@@ -1,0 +1,51 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: blog-ubuntu-com
+spec:
+  selector:
+    app: blog.ubuntu.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: blog-ubuntu-com
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: blog.ubuntu.com
+    spec:
+      containers:
+        - name: blog-ubuntu-com
+          image: prod-comms.docker-registry.canonical.com/blog.ubuntu.com:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: blog-ubuntu-com
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: "256Mi"
+
+---

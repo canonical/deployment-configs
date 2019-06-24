@@ -8,18 +8,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($host = 'blog.ubuntu.com' ) {
-        rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
-      }
       if ($host != 'ubuntu.com' ) {
         rewrite ^ https://ubuntu.com$request_uri? permanent;
       }
 
 spec:
-  tls:
-  - secretName: blog-ubuntu-com-tls
-    hosts:
-    - blog.ubuntu.com
   rules:
   - host: ubuntu.com
     http: &ubuntu-com_service
@@ -43,8 +36,6 @@ spec:
   - host: ubuntulinux.org
     http: *ubuntu-com_service
   - host: www.ubuntulinux.org
-    http: *ubuntu-com_service
-  - host: blog.ubuntu.com
     http: *ubuntu-com_service
 
 ---
