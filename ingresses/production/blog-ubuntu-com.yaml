@@ -8,9 +8,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($host != 'blog.ubuntu.com' ) {
-        rewrite ^ https://blog.ubuntu.com$request_uri? permanent;
-      }
+      rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
 spec:
   tls:
   - secretName: blog-ubuntu-com-tls
@@ -21,15 +19,15 @@ spec:
     - insights.ubuntu.com
   rules:
   - host: blog.ubuntu.com
-    http: &blog-ubuntu-com_service
+    http: &ubuntu-com_service
       paths:
       - path: /
         backend:
-          serviceName: blog-ubuntu-com
+          serviceName: ubuntu-com
           servicePort: 80
 
   # Alias domains
   - host: insights.ubuntu.com
-    http: *blog-ubuntu-com_service
+    http: *ubuntu-com_service
 
 ---
