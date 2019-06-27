@@ -1,7 +1,7 @@
 ---
 
 kind: Ingress
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
   name: staging-ubuntu-com
   namespace: staging
