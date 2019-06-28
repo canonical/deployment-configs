@@ -32,12 +32,21 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: proxy-config
+                optional: true
           env:
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:
                   name: sentry-dsn
                   key: maas-io
+            - name: SEARCH_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: google-api
+                  key: google-custom-search-key
           readinessProbe:
             httpGet:
               path: /_status/check
