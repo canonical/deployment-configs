@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: staging-kubeflow-news-com
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: staging-kubeflow-news-com-tls
+    hosts:
+    - staging.kubeflow-news.com
+  rules:
+  - host: staging.kubeflow-news.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kubeflow-news-com
+          servicePort: 80
+
+---
