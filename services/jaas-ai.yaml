@@ -38,6 +38,11 @@ spec:
                 secretKeyRef:
                   name: sentry-dsn
                   key: jaas-ai
+            - name: SEARCH_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: google-api
+                  key: google-custom-search-key
           readinessProbe:
             httpGet:
               path: /_status/check
