@@ -26,9 +26,27 @@ function invalid() {
     exit 1
 }
 
-function add_secret_key() {
+function add_secrets() {
+    # Fake snapcraft config
     if ! microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then
         microk8s.kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin --from-literal='sentry_dsn=' --from-literal='sentry_public_dsn='
+    fi
+
+    # Fake SENTRY_DSNs
+    if ! microk8s.kubectl get secret sentry-dsn &> /dev/null; then
+        microk8s.kubectl create secret generic sentry-dsn \
+            --from-literal=kubeflow-news-com='https://public:private@host:8000/1' \
+            --from-literal=maas-io='https://public:private@host:8000/1'  \
+            --from-literal=jaas-ai-com='https://public:private@host:8000/1'  \
+            --from-literal=canonical-com='https://public:private@host:8000/1'  \
+            --from-literal=docs-snapcraft-io='https://public:private@host:8000/1'  \
+            --from-literal=jp-ubuntu-com='https://public:private@host:8000/1'  \
+            --from-literal=ubuntu-com='https://public:private@host:8000/1'  
+    fi
+
+    # Fake google API key
+    if ! microk8s.kubectl get secret google-api &> /dev/null; then
+        microk8s.kubectl create secret generic google-api --from-literal=google-custom-search-key='notsosecret'
     fi
 }
 
@@ -133,7 +151,7 @@ function run() {
     # because it doesn't restart when applying the configuration after.
     apply_configuration
     enable_ingress
-    add_secret_key
+    add_secrets
 
     add_docker_credentials_microk8s
 
