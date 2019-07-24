@@ -9,18 +9,26 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "X-Robots-Tag: noindex";
+      if ($host = 'docs.staging.jujucharms.com' ) {
+        rewrite ^ https://staging.jaas.ai/docs$request_uri? permanent;
+      }
 spec:
   tls:
   - secretName: staging-jaas-ai-tls
     hosts:
     - staging.jaas.ai
+  - secretName: docs-staging-jujucharms-com-tls
+    hosts:
+    - docs.staging.jujucharms.com
   rules:
   - host: staging.jaas.ai
-    http:
+    http: &jaas-ai_service
       paths:
       - path: /
         backend:
           serviceName: jaas-ai
           servicePort: 80
+  - host: docs.staging.jujucharms.com
+    http: *jaas-ai_service
 
 ---
