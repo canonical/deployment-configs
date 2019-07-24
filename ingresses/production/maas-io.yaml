@@ -8,6 +8,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'docs.maas.io' ) {
+        rewrite ^ https://maas.io/docs$request_uri? permanent;
+      }
       if ($host != 'maas.io' ) {
         rewrite ^ https://maas.io$request_uri? permanent;
       }
@@ -17,6 +20,9 @@ spec:
     hosts:
     - maas.io
     - www.maas.io
+  - secretName: docs-maas-io-tls
+    hosts:
+    - docs.maas.io
   rules:
   - host: maas.io
     http: &maas-io_service
@@ -28,6 +34,8 @@ spec:
   
   # Alias domains
   - host: www.maas.io
+    http: *maas-io_service
+  - host: docs.maas.io
     http: *maas-io_service
 
 ---
