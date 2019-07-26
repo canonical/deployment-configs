@@ -8,6 +8,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'docs.snapcraft.io' ) {
+        rewrite ^ https://snapcraft.io/docs$request_uri? permanent;
+      }
       if ($host != 'snapcraft.io' ) {
         rewrite ^ https://snapcraft.io$request_uri? permanent;
       }
@@ -17,6 +20,9 @@ spec:
     hosts:
     - snapcraft.io
     - www.snapcraft.io
+  - secretName: docs-snapcraft-io-tls
+    hosts:
+    - docs.snapcraft.io
   rules:
   - host: snapcraft.io
     http: &snapcraft-io_service
@@ -26,6 +32,8 @@ spec:
           serviceName: snapcraft-io
           servicePort: 80
   - host: www.snapcraft.io
+    http: *snapcraft-io_service
+  - host: docs.snapcraft.io
     http: *snapcraft-io_service
 
 ---

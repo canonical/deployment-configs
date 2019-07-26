@@ -29,7 +29,13 @@ function invalid() {
 function add_secrets() {
     # Fake snapcraft config
     if ! microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then
-        microk8s.kubectl create secret generic snapcraft-io-config --from-literal=secret_key=admin --from-literal=csrf_secret_key=admin --from-literal='sentry_dsn=' --from-literal='sentry_public_dsn='
+        microk8s.kubectl create secret generic snapcraft-io-config \
+            --from-literal=secret_key=admin \
+            --from-literal=csrf_secret_key=admin \
+            --from-literal='sentry_dsn=' \
+            --from-literal='sentry_public_dsn=' \
+            --from-literal='marketo_client_id=' \
+            --from-literal='marketo_client_secret='
     fi
 
     # Fake SENTRY_DSNs
@@ -41,7 +47,7 @@ function add_secrets() {
             --from-literal=canonical-com='https://public:private@host:8000/1'  \
             --from-literal=docs-snapcraft-io='https://public:private@host:8000/1'  \
             --from-literal=jp-ubuntu-com='https://public:private@host:8000/1'  \
-            --from-literal=ubuntu-com='https://public:private@host:8000/1'  
+            --from-literal=ubuntu-com='https://public:private@host:8000/1'
     fi
 
     # Fake google API key
@@ -147,7 +153,7 @@ function run() {
     if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
 
     run_microk8s
-    # The configuration needs to run before the ingress controller starts 
+    # The configuration needs to run before the ingress controller starts
     # because it doesn't restart when applying the configuration after.
     apply_configuration
     enable_ingress
