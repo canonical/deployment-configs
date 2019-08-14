@@ -36,6 +36,12 @@ spec:
             - configMapRef:
                 name: proxy-config
                 optional: true
+          env:
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: certification-ubuntu-com
           readinessProbe:
             httpGet:
               path: /_status/check
