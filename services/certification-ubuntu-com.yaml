@@ -3,10 +3,10 @@
 kind: Service
 apiVersion: v1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: {service_name}
+  name: certification-ubuntu-com
 spec:
   selector:
-    app: {domain}
+    app: certification.ubuntu.com
   ports:
     - name: http
       protocol: TCP
@@ -18,17 +18,17 @@ spec:
 kind: Deployment
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: {service_name}
+  name: certification-ubuntu-com
 spec:
-  replicas: 5
+  replicas: 2
   template:
     metadata:
       labels:
-        app: {domain}
+        app: certification.ubuntu.com
     spec:
       containers:
-        - name: {service_name}
-          image: prod-comms.docker-registry.canonical.com/{domain}:${TAG_TO_DEPLOY}
+        - name: certification-ubuntu-com
+          image: prod-comms.docker-registry.canonical.com/certification.ubuntu.com:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
@@ -41,7 +41,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: sentry-dsn
-                  key: {service_name}
+                  key: certification-ubuntu-com
           readinessProbe:
             httpGet:
               path: /_status/check

@@ -3,10 +3,10 @@
 kind: Service
 apiVersion: v1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: {service_name}
+  name: etclite-io
 spec:
   selector:
-    app: {domain}
+    app: etclite.io
   ports:
     - name: http
       protocol: TCP
@@ -18,17 +18,17 @@ spec:
 kind: Deployment
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: {service_name}
+  name: etclite-io
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        app: {domain}
+        app: etclite.io
     spec:
       containers:
-        - name: {service_name}
-          image: prod-comms.docker-registry.canonical.com/{domain}:${TAG_TO_DEPLOY}
+        - name: etclite-io
+          image: prod-comms.docker-registry.canonical.com/etclite.io:${TAG_TO_DEPLOY}
           ports:
             - name: http
               containerPort: 80
@@ -41,7 +41,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: sentry-dsn
-                  key: {service_name}
+                  key: etclite-io
           readinessProbe:
             httpGet:
               path: /_status/check
