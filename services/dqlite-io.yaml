@@ -1,0 +1,55 @@
+---
+
+kind: Service
+apiVersion: v1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: dqlite-io
+spec:
+  selector:
+    app: dqlite.io
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: dqlite-io
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: dqlite.io
+    spec:
+      containers:
+        - name: dqlite-io
+          image: prod-comms.docker-registry.canonical.com/dqlite.io:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: proxy-config
+                optional: true
+          env:
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: dqlite-io
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: "256Mi"
+
+---
