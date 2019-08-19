@@ -20,7 +20,7 @@ apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
   name: certification-ubuntu-com
 spec:
-  replicas: 2
+  replicas: 5
   template:
     metadata:
       labels:
