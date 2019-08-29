@@ -42,6 +42,11 @@ spec:
                 secretKeyRef:
                   name: threesixty-database-url
                   key: database_url
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: threesixty
+                  key: secret_key
           readinessProbe:
             httpGet:
               path: /_status/ping
