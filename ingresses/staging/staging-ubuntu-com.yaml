@@ -21,11 +21,15 @@ spec:
   - host: staging.ubuntu.com
     http: &ubuntu-com_service
       paths:
+      - path: /blog
+        backend:
+          serviceName: ubuntu-com-blog
+          servicePort: 80
       - path: /
         backend:
           serviceName: ubuntu-com
           servicePort: 80
-  
+
   # Alias domains
   - host: www.staging.ubuntu.com
     http: *ubuntu-com_service

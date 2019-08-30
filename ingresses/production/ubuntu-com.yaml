@@ -18,6 +18,10 @@ spec:
   - host: ubuntu.com
     http: &ubuntu-com_service
       paths:
+      - path: /blog
+        backend:
+          serviceName: ubuntu-com-blog
+          servicePort: 80
       - path: /
         backend:
           serviceName: ubuntu-com
