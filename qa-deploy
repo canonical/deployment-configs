@@ -118,13 +118,25 @@ function deploy_service() {
     service="${1}"
     tag="${2}"
 
+    echo "Deploying service ${service}"
     cat "services/${service//./-}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | microk8s.kubectl apply --filename -
 }
 
 function deploy_ingress() {
     ingress="${1}"
+    tag="${2}"
+
+    ingress_file="ingresses/${ingress//./-}.yaml"
+
+    # Find the services in the ingress
+    services=$(grep 'serviceName' ${ingress_file} | sed -E 's/^ +serviceName: +([^ ]+)$/\1/')
+
+    for service in ${services}; do
+        deploy_service "${service}" "${tag}"
+    done
+
     # Create the ingress domains
-    cat "ingresses/${ingress//./-}.yaml" | sed '/namespace:/d' | microk8s.kubectl apply --filename -
+    cat "${ingress_file}" | sed '/namespace:/d' | microk8s.kubectl apply --filename -
 }
 
 function run() {
@@ -154,6 +166,7 @@ function run() {
 
     # Mandatory arguments
     if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
+    if [ -z "${tag_to_deploy:-}" ]; then tag_to_deploy="latest"; fi
 
     run_microk8s
     # The configuration needs to run before the ingress controller starts
@@ -164,13 +177,9 @@ function run() {
 
     add_docker_credentials_microk8s
 
-    if [ -n "${tag_to_deploy:-}" ]; then
-        deploy_service "${production}" "${tag_to_deploy}"
-    fi
+    deploy_ingress "production/${production}" "${tag_to_deploy}"
 
-    deploy_ingress "production/${production}"
-
-    if [ -n "${staging:-}" ]; then deploy_ingress "staging/${staging}"; fi
+    if [ -n "${staging:-}" ]; then deploy_ingress "staging/${staging}" "${tag_to_deploy}"; fi
 }
 
 run ${@}
