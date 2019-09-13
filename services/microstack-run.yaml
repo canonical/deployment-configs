@@ -1,0 +1,55 @@
+---
+
+kind: Service
+apiVersion: v1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: microstack-run
+spec:
+  selector:
+    app: microstack.run
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: microstack-run
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: microstack.run
+    spec:
+      containers:
+        - name: microstack-run
+          image: prod-comms.docker-registry.canonical.com/microstack.run:${TAG_TO_DEPLOY}
+          ports:
+            - name: http
+              containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: proxy-config
+                optional: true
+          env:
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: microstack-run
+          readinessProbe:
+            httpGet:
+              path: /_status/check
+              port: 80
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: "256Mi"
+
+---
