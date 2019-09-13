@@ -1,0 +1,33 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: microstack-run
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'microstack.run' ) {
+        rewrite ^ https://microstack.run$request_uri? permanent;
+      }
+spec:
+  tls:
+  - secretName: microstack-run-tls
+    hosts:
+    - microstack.run
+    - www.microstack.run
+  rules:
+  - host: microstack.run
+    http: &microstack-run_service
+      paths:
+      - path: /
+        backend:
+          serviceName: microstack-run
+          servicePort: 80
+
+  # Alias domains
+  - host: www.microstack.run
+    http: *microstack-run_service
+
+---

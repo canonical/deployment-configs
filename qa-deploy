@@ -28,35 +28,33 @@ function invalid() {
 
 function add_secrets() {
     # Fake snapcraft config
-    if ! microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then
-        microk8s.kubectl create secret generic snapcraft-io-config \
-            --from-literal=secret_key=admin \
-            --from-literal=csrf_secret_key=admin \
-            --from-literal='sentry_dsn=' \
-            --from-literal='sentry_public_dsn=' \
-            --from-literal='marketo_client_id=' \
-            --from-literal='marketo_client_secret='
-    fi
+    microk8s.kubectl delete secret snapcraft-io-config
+    microk8s.kubectl create secret generic snapcraft-io-config \
+        --from-literal=secret_key=admin \
+        --from-literal=csrf_secret_key=admin \
+        --from-literal='sentry_dsn=' \
+        --from-literal='sentry_public_dsn=' \
+        --from-literal='marketo_client_id=' \
+        --from-literal='marketo_client_secret='
 
     # Fake SENTRY_DSNs
-    if ! microk8s.kubectl get secret sentry-dsn &> /dev/null; then
-        microk8s.kubectl create secret generic sentry-dsn \
-            --from-literal=kubeflow-news-com='https://public:private@host:8000/1' \
-            --from-literal=maas-io='https://public:private@host:8000/1'  \
-            --from-literal=certification-ubuntu-com='https://public:private@host:8000/1'  \
-            --from-literal=dqlite-io='https://public:private@host:8000/1'  \
-            --from-literal=etclite-io='https://public:private@host:8000/1'  \
-            --from-literal=jaas-ai-com='https://public:private@host:8000/1'  \
-            --from-literal=canonical-com='https://public:private@host:8000/1'  \
-            --from-literal=docs-snapcraft-io='https://public:private@host:8000/1'  \
-            --from-literal=jp-ubuntu-com='https://public:private@host:8000/1'  \
-            --from-literal=ubuntu-com='https://public:private@host:8000/1'
-    fi
+    microk8s.kubectl delete secret sentry-dsn
+    microk8s.kubectl create secret generic sentry-dsn \
+        --from-literal=kubeflow-news-com='https://public:private@host:8000/1' \
+        --from-literal=maas-io='https://public:private@host:8000/1'  \
+        --from-literal=certification-ubuntu-com='https://public:private@host:8000/1'  \
+        --from-literal=dqlite-io='https://public:private@host:8000/1'  \
+        --from-literal=etclite-io='https://public:private@host:8000/1'  \
+        --from-literal=jaas-ai-com='https://public:private@host:8000/1'  \
+        --from-literal=canonical-com='https://public:private@host:8000/1'  \
+        --from-literal=docs-snapcraft-io='https://public:private@host:8000/1'  \
+        --from-literal=jp-ubuntu-com='https://public:private@host:8000/1'  \
+        --from-literal=ubuntu-com='https://public:private@host:8000/1'  \
+        --from-literal=microstack-run='https://public:private@host:8000/1'
 
     # Fake google API key
-    if ! microk8s.kubectl get secret google-api &> /dev/null; then
-        microk8s.kubectl create secret generic google-api --from-literal=google-custom-search-key='notsosecret'
-    fi
+    microk8s.kubectl delete secret google-api
+    microk8s.kubectl create secret generic google-api --from-literal=google-custom-search-key='notsosecret'
 }
 
 function add_docker_credentials_microk8s() {
