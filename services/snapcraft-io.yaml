@@ -37,13 +37,13 @@ spec:
               containerPort: 80
           envFrom:
             - configMapRef:
-                name: proxy-config
+                name: envvars
                 optional: true
           env:
             - name: ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
-                  name: global-config
+                  name: environment
                   key: environment
             - name: BSI_URL
               valueFrom:

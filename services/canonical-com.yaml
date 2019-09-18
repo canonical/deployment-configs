@@ -34,7 +34,7 @@ spec:
               containerPort: 80
           envFrom:
             - configMapRef:
-                name: proxy-config
+                name: envvars
                 optional: true
           env:
             - name: SENTRY_DSN
