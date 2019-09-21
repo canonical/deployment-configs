@@ -32,6 +32,10 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: envvars
+                optional: true
           env:
             - name: SENTRY_DSN
               value: https://5b54e6946be34749935c4dd2d9d01cb8@sentry.is.canonical.com//7
