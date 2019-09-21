@@ -38,10 +38,7 @@ spec:
                 optional: true
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: dqlite-io
+              value: https://426397ba83be483a8a8d1ed92b0f0623@sentry.is.canonical.com//17
           readinessProbe:
             httpGet:
               path: /_status/check

@@ -40,6 +40,8 @@ spec:
                 name: envvars
                 optional: true
           env:
+            - name: SENTRY_DSN
+              value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
             - name: ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
@@ -67,11 +69,6 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: csrf_secret_key
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: sentry_dsn
             - name: SENTRY_PUBLIC_DSN
               valueFrom:
                 secretKeyRef:

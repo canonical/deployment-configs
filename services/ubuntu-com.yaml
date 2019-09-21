@@ -43,10 +43,7 @@ spec:
                   name: google-api
                   key: google-custom-search-key
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: ubuntu-com
+              value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
           readinessProbe:
             httpGet:
               path: /_status/check

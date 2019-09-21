@@ -38,10 +38,7 @@ spec:
                 optional: true
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: kubeflow-news-com
+              value: https://3bbe58ab41ea43329b32292ccfd09d5e@sentry.is.canonical.com//15
           readinessProbe:
             httpGet:
               path: /_status/check

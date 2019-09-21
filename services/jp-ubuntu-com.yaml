@@ -34,10 +34,7 @@ spec:
               containerPort: 80
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: jp-ubuntu-com
+              value: https://5d270c51e9a946b6ae1bb0155498738d@sentry.is.canonical.com//12
           readinessProbe:
             httpGet:
               path: /

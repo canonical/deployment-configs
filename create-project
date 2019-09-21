@@ -8,11 +8,13 @@ from shutil import copyfile
 def create_service(domain):
     service_name = domain.replace('.', '-')
     copyfile('templates/service.yaml', f'services/{service_name}.yaml')
+    sentry_dsn = input("What's the SENTRY_DSN string? ").strip()
     update_file(
         f'services/{service_name}.yaml',
         {
             'service_name': service_name,
-            'domain': domain
+            'domain': domain,
+            'sentry_dsn': sentry_dsn
         }
     )
 
@@ -75,4 +77,3 @@ if __name__ == "__main__":
 
     create_service(domain)
     create_ingresses(domain)
-

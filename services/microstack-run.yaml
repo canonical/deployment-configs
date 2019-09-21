@@ -38,10 +38,7 @@ spec:
                 optional: true
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: microstack-run
+              value: https://6f972ce78ef34dceb3de87fd21adbb7f@sentry.is.canonical.com//19
           readinessProbe:
             httpGet:
               path: /_status/check

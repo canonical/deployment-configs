@@ -38,10 +38,7 @@ spec:
                 optional: true
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: certification-ubuntu-com
+              value: https://7de65f76107a4cfbb9e0815c7bae20b2@sentry.is.canonical.com//16
           readinessProbe:
             httpGet:
               path: /_status/check
