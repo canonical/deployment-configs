@@ -19,15 +19,12 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: snapcraft-io
-  labels:
-    useProxy: "true"
 spec:
   replicas: 5
   template:
     metadata:
       labels:
         app: snapcraft.io
-        useProxy: "true"
     spec:
       containers:
         - name: snapcraft-io
@@ -50,47 +47,22 @@ spec:
                 configMapKeyRef:
                   name: environment
                   key: environment
-            - name: BSI_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: snapcraft-io
-                  optional: true
-                  key: bsi_url
-            - name: BLOG_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: snapcraft-io
-                  optional: True
-                  key: blog_enabled
+
+            # Secrets
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: snapcraft-io-config
-                  key: secret_key
-            - name: WTF_CSRF_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: csrf_secret_key
-            - name: SENTRY_PUBLIC_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: sentry_public_dsn
-            - name: MARKETO_URL
-              valueFrom:
-                configMapKeyRef:
                   name: snapcraft-io
-                  key: marketo_url
+                  key: secret_key
             - name: MARKETO_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: snapcraft-io-config
+                  name: snapcraft-io
                   key: marketo_client_id
             - name: MARKETO_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: snapcraft-io-config
+                  name: snapcraft-io
                   key: marketo_client_secret
             - name: SEARCH_API_KEY
               valueFrom:
