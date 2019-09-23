@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: staging-juju-is
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: staging-juju-is-tls
+    hosts:
+    - staging.juju.is
+  rules:
+  - host: staging.juju.is
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: juju-is
+          servicePort: 80
+
+---
