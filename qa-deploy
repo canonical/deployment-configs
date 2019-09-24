@@ -28,7 +28,7 @@ function invalid() {
 
 function add_secrets() {
     # Fake snapcraft config
-    microk8s.kubectl delete secret snapcraft-io-config
+    if microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then microk8s.kubectl delete secret snapcraft-io-config; fi
     microk8s.kubectl create secret generic snapcraft-io-config \
         --from-literal=secret_key=admin \
         --from-literal=csrf_secret_key=admin \
@@ -37,23 +37,8 @@ function add_secrets() {
         --from-literal='marketo_client_id=' \
         --from-literal='marketo_client_secret='
 
-    # Fake SENTRY_DSNs
-    microk8s.kubectl delete secret sentry-dsn
-    microk8s.kubectl create secret generic sentry-dsn \
-        --from-literal=kubeflow-news-com='https://public:private@host:8000/1' \
-        --from-literal=maas-io='https://public:private@host:8000/1'  \
-        --from-literal=certification-ubuntu-com='https://public:private@host:8000/1'  \
-        --from-literal=dqlite-io='https://public:private@host:8000/1'  \
-        --from-literal=etclite-io='https://public:private@host:8000/1'  \
-        --from-literal=jaas-ai-com='https://public:private@host:8000/1'  \
-        --from-literal=canonical-com='https://public:private@host:8000/1'  \
-        --from-literal=docs-snapcraft-io='https://public:private@host:8000/1'  \
-        --from-literal=jp-ubuntu-com='https://public:private@host:8000/1'  \
-        --from-literal=ubuntu-com='https://public:private@host:8000/1'  \
-        --from-literal=microstack-run='https://public:private@host:8000/1'
-
     # Fake google API key
-    microk8s.kubectl delete secret google-api
+    if microk8s.kubectl get secret google-api &> /dev/null; then microk8s.kubectl delete secret google-api; fi
     microk8s.kubectl create secret generic google-api --from-literal=google-custom-search-key='notsosecret'
 }
 
@@ -85,7 +70,7 @@ function apply_configuration() {
     # On the version of the ingress controller we have we need to change the
     # name to be able to apply the configuration. By default the nginx ingress
     # controller is searching for a config-map called: nginx-load-balancer-microk8s-conf
-    cat "config.global.yaml" | sed 's|name: nginx-configuration|name: nginx-load-balancer-microk8s-conf|' | microk8s.kubectl apply --filename - --namespace default
+    cat "configmaps/nginx-configuration.yaml" | sed 's|name: nginx-configuration|name: nginx-load-balancer-microk8s-conf|' | microk8s.kubectl apply --filename - --namespace default
 }
 
 function run_microk8s() {

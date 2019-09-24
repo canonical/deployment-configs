@@ -38,6 +38,10 @@ spec:
               exec:
                 # SIGTERM triggers a quick exit; gracefully terminate instead
                 command: ["/usr/sbin/nginx","-s","quit"]
+          envFrom:
+            - configMapRef:
+                name: global-envvars
+                optional: true
           readinessProbe:
             httpGet:
               path: /

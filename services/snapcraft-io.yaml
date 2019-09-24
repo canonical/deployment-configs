@@ -37,13 +37,18 @@ spec:
               containerPort: 80
           envFrom:
             - configMapRef:
+                name: global-envvars
+                optional: true
+            - configMapRef:
                 name: proxy-config
                 optional: true
           env:
+            - name: SENTRY_DSN
+              value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
             - name: ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
-                  name: global-config
+                  name: environment
                   key: environment
             - name: BSI_URL
               valueFrom:
@@ -67,11 +72,6 @@ spec:
                 secretKeyRef:
                   name: snapcraft-io-config
                   key: csrf_secret_key
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: snapcraft-io-config
-                  key: sentry_dsn
             - name: SENTRY_PUBLIC_DSN
               valueFrom:
                 secretKeyRef:

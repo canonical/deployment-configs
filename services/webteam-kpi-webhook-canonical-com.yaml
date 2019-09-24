@@ -41,6 +41,10 @@ spec:
           resources:
             limits:
               memory: "256Mi"
+          envFrom:
+            - configMapRef:
+                name: global-envvars
+                optional: true
           env:
             - name: INFLUXDB_USER
               valueFrom:

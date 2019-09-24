@@ -34,14 +34,14 @@ spec:
               containerPort: 80
           envFrom:
             - configMapRef:
+                name: envvars
+                optional: true
+            - configMapRef:
                 name: proxy-config
                 optional: true
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: {service_name}
+              value: {sentry_dsn}
           readinessProbe:
             httpGet:
               path: /_status/check
