@@ -36,6 +36,9 @@ spec:
             - configMapRef:
                 name: envvars
                 optional: true
+            - configMapRef:
+                name: proxy-config
+                optional: true
           env:
             - name: SENTRY_DSN
               value: {sentry_dsn}

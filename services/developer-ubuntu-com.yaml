@@ -34,7 +34,7 @@ spec:
               containerPort: 80
           envFrom:
             - configMapRef:
-                name: envvars
+                name: global-envvars
                 optional: true
           readinessProbe:
             httpGet:

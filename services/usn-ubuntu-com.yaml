@@ -40,7 +40,7 @@ spec:
                 command: ["/usr/sbin/nginx","-s","quit"]
           envFrom:
             - configMapRef:
-                name: envvars
+                name: global-envvars
                 optional: true
           readinessProbe:
             httpGet:
