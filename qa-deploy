@@ -40,6 +40,12 @@ function add_secrets() {
     # Fake google API key
     if microk8s.kubectl get secret google-api &> /dev/null; then microk8s.kubectl delete secret google-api; fi
     microk8s.kubectl create secret generic google-api --from-literal=google-custom-search-key='notsosecret'
+
+    # Fake IRC creds
+    if microk8s.kubectl get secret irc-secrets &> /dev/null; then microk8s.kubectl delete secret irc-secrets; fi
+    microk8s.kubectl create secret generic irc-secrets --from-literal=hubot-auth-admin=fake \
+                                                       --from-literal=hubot-irc-password=fake \
+                                                       --from-literal=hubot-release-notification-secret=fake
 }
 
 function add_docker_credentials_microk8s() {
