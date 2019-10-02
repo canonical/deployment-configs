@@ -38,10 +38,7 @@ spec:
                 optional: true
           env:
             - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: sentry-dsn
-                  key: juju-is
+              value: https://a9c1a18b2a0a40bdae6177bb29331a2a@sentry.is.canonical.com//20
           readinessProbe:
             httpGet:
               path: /_status/check
