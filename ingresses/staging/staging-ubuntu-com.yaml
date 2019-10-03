@@ -8,10 +8,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Robots-Tag: noindex";
       if ($host != 'staging.ubuntu.com' ) {
         rewrite ^ https://staging.ubuntu.com$request_uri? permanent;
       }
+      more_set_headers "X-Robots-Tag: noindex";
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://www.google-analytics.com>; rel=preconnect; crossorigin, <https://www.gstatic.com>; rel=preconnect; crossorigin, <https://res.cloudinary.com>; rel=preconnect; crossorigin";
 spec:
   tls:
   - secretName: staging-ubuntu-com-tls
