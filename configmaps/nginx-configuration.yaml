@@ -11,6 +11,7 @@ data:
   proxy-buffer-size: "8k"
   proxy-buffers: "4 8k"
   use-http2: "false"
+  enable-brotli: "true"
 kind: ConfigMap
 metadata:
   name: nginx-configuration
