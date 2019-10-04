@@ -12,6 +12,7 @@ metadata:
       if ($host != 'landscape-brochure.internal' ) {
         rewrite ^ http://landscape-brochure.internal$request_uri? permanent;
       }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   rules:
   - host: landscape-brochure.internal

@@ -11,6 +11,7 @@ metadata:
       if ($host != 'etclite.io' ) {
         rewrite ^ https://etclite.io$request_uri? permanent;
       }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   tls:
   - secretName: etclite-io-tls

@@ -11,6 +11,7 @@ metadata:
       if ($host != 'cn.ubuntu.com' ) {
         rewrite ^ https://cn.ubuntu.com$request_uri? permanent;
       }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   tls:
   - secretName: cn-ubuntu-com-tls

@@ -12,8 +12,7 @@ metadata:
       if ($host != 'ubuntu.com' ) {
         rewrite ^ https://ubuntu.com$request_uri? permanent;
       }
-      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://www.google-analytics.com>; rel=preconnect, <https://www.gstatic.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";
-
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";
 spec:
   rules:
   - host: ubuntu.com

@@ -12,6 +12,7 @@ metadata:
       if ($host != 'old-docs.staging.maas.io' ) {
         rewrite ^ https://old-docs.staging.maas.io$request_uri? permanent;
       }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   tls:
   - secretName: old-docs-staging-maas-io-tls

@@ -14,6 +14,7 @@ metadata:
       if ($host != 'maas.io' ) {
         rewrite ^ https://maas.io$request_uri? permanent;
       }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   tls:
   - secretName: maas-io-tls
