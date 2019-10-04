@@ -12,6 +12,7 @@ metadata:
         rewrite ^ https://staging.maas.io/docs$request_uri? permanent;
       }
       more_set_headers "X-Robots-Tag: noindex";
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   tls:
   - secretName: staging-maas-io-tls

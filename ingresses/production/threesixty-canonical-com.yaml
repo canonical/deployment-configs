@@ -11,6 +11,7 @@ metadata:
       if ($host != '360.canonical.com' ) {
         rewrite ^ https://360.canonical.com$request_uri? permanent;
       }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 spec:
   tls:
   - secretName: threesixty-canonical-com-tls
