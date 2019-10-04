@@ -28,8 +28,8 @@ function invalid() {
 
 function add_secrets() {
     # Fake snapcraft config
-    if microk8s.kubectl get secret snapcraft-io-config &> /dev/null; then microk8s.kubectl delete secret snapcraft-io-config; fi
-    microk8s.kubectl create secret generic snapcraft-io-config \
+    if microk8s.kubectl get secret snapcraft-io &> /dev/null; then microk8s.kubectl delete secret snapcraft-io; fi
+    microk8s.kubectl create secret generic snapcraft-io \
         --from-literal=secret_key=admin \
         --from-literal=csrf_secret_key=admin \
         --from-literal='sentry_dsn=' \
@@ -71,8 +71,9 @@ function add_docker_credentials_microk8s() {
 }
 
 function apply_configuration() {
-    microk8s.kubectl apply -f config.qa.yaml
-
+    if ! microk8s.kubectl get configmap environment &> /dev/null; then
+        microk8s.kubectl create configmap environment --from-literal environment=qa;
+    fi
     # On the version of the ingress controller we have we need to change the
     # name to be able to apply the configuration. By default the nginx ingress
     # controller is searching for a config-map called: nginx-load-balancer-microk8s-conf
