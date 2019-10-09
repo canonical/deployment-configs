@@ -9,11 +9,28 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'blog.ubuntu.com' ) {
+        rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+      }
+      if ($host = 'insights.ubuntu.com' ) {
+        rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+      }
       if ($host != 'ubuntu.com' ) {
         rewrite ^ https://ubuntu.com$request_uri? permanent;
       }
       more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";
 spec:
+  tls:
+  - secretName: ubuntu-com-tls
+    hosts:
+    - ubuntu.com
+    - www.ubuntu.com
+  - secretName: blog-ubuntu-com-tls
+    hosts:
+    - blog.ubuntu.com
+  - secretName: insights-ubuntu-com-tls
+    hosts:
+    - insights.ubuntu.com
   rules:
   - host: ubuntu.com
     http: &ubuntu-com_service
@@ -31,6 +48,10 @@ spec:
   - host: www.ubuntu.com
     http: *ubuntu-com_service
   - host: ubuntu.net
+    http: *ubuntu-com_service
+  - host: blog.ubuntu.com
+    http: *ubuntu-com_service
+  - host: insights.ubuntu.com
     http: *ubuntu-com_service
   - host: www.ubuntu.net
     http: *ubuntu-com_service
