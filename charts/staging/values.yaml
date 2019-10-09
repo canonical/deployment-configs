@@ -1,0 +1,15 @@
+## Important!
+## This file is just an example to follow the structure of a yaml chart
+## It contains all the possibles values and modifications for the defined templates
+## If you want to check the values of each project check /sites
+
+name: canonical-com
+domain: canonical.com
+
+staging:
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    if ($host != 'staging.canonical.com' ) {
+      rewrite ^ https://staging.canonical.com$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

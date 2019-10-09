@@ -1,0 +1,40 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.production.replicas | default 5 }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.domain }}
+    spec:
+      containers:
+        - name: {{ .Values.name }}
+          image: {{ .Values.production.container.image }}:{{ .Values.production.container.tag }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.production.port | default 80 }}
+          envFrom:
+            - configMapRef:
+                name: global-envvars
+                optional: true
+            {{ if .Values.production.useSquid }}
+            - configMapRef:
+                name: proxy-config
+                optional: true
+            {{ end }}
+          {{ if .Values.production.sentryDsn }}
+          env:
+            - name: SENTRY_DSN
+              value: { .Values.production.sentryDsn }}
+          {{ end }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.production.readinessPath | default "/_status/check" | quote }}
+              port: {{ .Values.production.port | default 80 }}
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: "256Mi"
