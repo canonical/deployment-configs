@@ -38,7 +38,7 @@ spec:
                 optional: true
           env:
             - name: HUBOT_IRC_NICK
-              value: "robototo"
+              value: "webbot"
             - name: HUBOT_IRC_SERVER
               value: "irc.canonical.com"
             - name: HUBOT_IRC_PORT
@@ -48,7 +48,7 @@ spec:
             - name: HUBOT_IRC_ROOMS
               value: "#sukha,#web-team"
             - name: HUBOT_RELEASE_NOTIFICATION_ROOMS
-              value: "#sukha"
+              value: "#web-team,#is"
             - name: HUBOT_IRC_DEBUG
               value: "true"
             - name: HUBOT_AUTH_ADMIN
