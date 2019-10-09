@@ -27,7 +27,7 @@ spec:
           {{ if .Values.production.sentryDsn }}
           env:
             - name: SENTRY_DSN
-              value: { .Values.production.sentryDsn }}
+              value: {{ .Values.production.sentryDsn }}
           {{ end }}
           readinessProbe:
             httpGet:
