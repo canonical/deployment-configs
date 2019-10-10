@@ -7,6 +7,9 @@ name: canonical-com
 domain: canonical.com
 
 staging:
+  ## (Optional)
+  namespace: staging
+
   nginxConfig:  |
     more_set_headers "X-Robots-Tag: noindex";
     if ($host != 'staging.canonical.com' ) {

@@ -9,6 +9,9 @@ port: 80
 
 production:
   ## (Optional)
+  namespace: production
+
+  ## (Optional)
   replicas: 5
 
   container:

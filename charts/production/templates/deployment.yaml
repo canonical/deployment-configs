@@ -2,6 +2,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: {{ .Values.name }}
+  namespace: {{ .Values.production.namespace | default "production" }}
 spec:
   replicas: {{ .Values.production.replicas | default 5 }}
   template:

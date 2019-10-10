@@ -1,7 +1,8 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: base
+  name: {{ .Values.name }}
+  namespace: {{ .Values.production.namespace | default "production" }}
 spec:
   selector:
     app: {{ .Values.domain }}

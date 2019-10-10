@@ -2,10 +2,10 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: staging-{{ .Values.name }}
-  namespace: staging
+  namespace: {{ .Values.staging.namespace | default "staging" }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/configuration-snippet:  |
+    nginx.ingress.kubernetes.io/configuration-snippet: |
 {{ .Values.staging.nginxConfig | indent 6 }}
 spec:
   tls:
@@ -17,7 +17,7 @@ spec:
   - host: staging.{{ .Values.domain }}
     http: &http_service
       paths:
-       - path: /
+      - path: /
         backend:
           serviceName: {{ .Values.name }}
           servicePort: {{ .Values.staging.port | default 80 }}
