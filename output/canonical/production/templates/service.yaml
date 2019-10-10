@@ -3,7 +3,8 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: base
+  name: canonical-com
+  namespace: production
 spec:
   selector:
     app: canonical.com
