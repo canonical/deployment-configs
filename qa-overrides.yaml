@@ -1,0 +1,2 @@
+kubernetesNamespace: default
+replicas: 1
