@@ -2,7 +2,6 @@ name: canonical-com
 domain: canonical.com
 
 # Production
-replicas: 20
 containerImage: prod-comms.docker-registry.canonical.com/canonical.com
 containerTag: latest
 
