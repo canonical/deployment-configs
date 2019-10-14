@@ -1,0 +1,27 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ name }}
+  namespace: {{ kubernetesNamespace|default('production', true) }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      {{ nginxConfig|indent(6) }}
+spec:
+  tls:
+  - secretName: {{ name }}-tls
+    hosts:
+    - {{ domain }}
+    - www.{{ domain }}
+  rules:
+  - host: {{ domain }}
+    http: &http_service
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ name }}
+          servicePort: {{ port|default('80', true) }}
+
+  # Alias domains
+  - host: www.{{ name }}
+    http: *http_service

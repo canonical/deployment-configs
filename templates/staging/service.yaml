@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ name }}
+  namespace: {{ kubernetesNamespace|default('staging', true) }}
+spec:
+  selector:
+    app: {{ domain }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ port|default('80', true) }}
+      targetPort: http

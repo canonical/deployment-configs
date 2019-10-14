@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ name }}
+  namespace: {{ kubernetesNamespace|default('production', true) }}
+spec:
+  replicas: {{ replicas|default('5', true) }}
+  template:
+    metadata:
+      labels:
+        app: {{ domain }}
+    spec:
+      containers:
+        - name: {{ name }}
+          image: {{ containerImage }}:{{ containerTag|default('latest', true) }}
+          ports:
+            - name: http
+              containerPort: {{ port|default('80', true) }}
+          envFrom:
+            - configMapRef:
+                name: global-envvars
+                optional: true
+            {% if useSquid %}
+            - configMapRef:
+                name: proxy-config
+                optional: true
+            {% endif %}
+          {% if sentryDsn %}
+          env:
+            - name: SENTRY_DSN
+              value: {{ sentryDsn }}
+          {% endif %}
+          readinessProbe:
+            httpGet:
+              path: {{ readinessPath|default('/_status/check', true) }}
+              port: {{ port|default('80', true) }}
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: {{ memory|default('"256Mi"', true) }}
