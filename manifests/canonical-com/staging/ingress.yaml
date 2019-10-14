@@ -1,0 +1,32 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: staging-canonical-com
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+      if ($host != 'staging.canonical.com' ) {
+        rewrite ^ https://staging.canonical.com$request_uri? permanent;
+      }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+spec:
+  tls:
+  - secretName: staging-canonical-com-tls
+    hosts:
+    - staging.canonical.com
+    - www.staging.canonical.com
+  rules:
+  - host: staging.canonical.com
+    http: &http_service
+      paths:
+      - path: /
+        backend:
+          serviceName: staging-canonical-com
+          servicePort: 80
+
+  # Alias domains
+  - host: www.staging-canonical-com
+    http: *http_service

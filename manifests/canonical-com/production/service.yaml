@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: canonical-com
+  namespace: production
+spec:
+  selector:
+    app: canonical.com
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
