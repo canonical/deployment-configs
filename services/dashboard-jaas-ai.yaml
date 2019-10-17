@@ -39,9 +39,6 @@ spec:
             - configMapRef:
                 name: proxy-config
                 optional: true
-          env:
-            - name: SENTRY_DSN
-              value: 
           readinessProbe:
             httpGet:
               path: /_status/check
