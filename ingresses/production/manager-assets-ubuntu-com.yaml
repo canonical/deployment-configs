@@ -1,0 +1,27 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: manager-assets-ubuntu-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: manager-assets-ubuntu-com-tls
+    hosts:
+    - manager.assets.ubuntu.com
+  rules:
+  - host: manager.assets.ubuntu.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: manager-assets-ubuntu-com
+          servicePort: 80
+
+---
