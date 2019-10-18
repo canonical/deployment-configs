@@ -46,9 +46,9 @@ spec:
             - name: HUBOT_IRC_USESSL
               value: "true"
             - name: HUBOT_IRC_ROOMS
-              value: "#sukha,#web-team"
+              value: "#sukha,#web-team,#is-outage"
             - name: HUBOT_RELEASE_NOTIFICATION_ROOMS
-              value: "#web-team,#is"
+              value: "#web-team,#is-outage"
             - name: HUBOT_IRC_DEBUG
               value: "true"
             - name: HUBOT_AUTH_ADMIN
