@@ -10,8 +10,8 @@ data:
   proxy-body-size: "0"
   proxy-buffer-size: "8k"
   proxy-buffers: "4 8k"
-  use-http2: "false"
   enable-brotli: "true"
+  ssl-protocols: "TLSv1.3 TLSv1.2"
 kind: ConfigMap
 metadata:
   name: nginx-configuration
