@@ -1,0 +1,26 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: dashboard-staging-jaas-ai
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex";
+spec:
+  tls:
+  - secretName: dashboard-staging-jaas-ai-tls
+    hosts:
+    - dashboard.staging.jaas.ai
+  rules:
+  - host: dashboard.staging.jaas.ai
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dashboard-jaas-ai
+          servicePort: 80
+
+---
