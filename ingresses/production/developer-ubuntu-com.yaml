@@ -25,10 +25,4 @@ spec:
           serviceName: developer-ubuntu-com
           servicePort: 80
 
-  # Alias domains
-  - host: developers.ubuntu.com
-    http: *developer-ubuntu-com_service
-  - host: dev.ubuntu.com
-    http: *developer-ubuntu-com_service
-
 ---
