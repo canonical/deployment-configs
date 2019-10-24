@@ -17,6 +17,7 @@ spec:
   - secretName: cn-ubuntu-com-tls
     hosts:
     - cn.ubuntu.com
+    - ubuntu-china.cn
   rules:
   - host: cn.ubuntu.com
     http: &cn-ubuntu-com_service
