@@ -1,0 +1,63 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ data.name }}
+  namespace: {{ data.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    {%- if data.nginxConfig %}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      {{ data.nginxConfig | indent(6) }}
+    {%- endif %}
+spec:
+  tls:
+  - secretName:
+    {%- if data.tlsSecretName %}
+      {{ data.tlsSecretName }}
+    {% else %}
+      {{ data.name }}-tls
+    {%- endif %}
+    hosts:
+      - {{ data.domain }}
+    {%- if data.wwwPrefixHost != false %}
+      - www.{{ data.domain }}
+    {%- endif %}
+
+    {%- for host in data.extraHosts %}
+      {%- if not host.tlsSecret %}
+      - {{ host.domain }}
+      {%- endif %}
+    {% endfor %}
+
+  {%- for host in data.extraHosts %}
+  {%- if host.tlsSecret %}
+  - secretName: {{ host.tlsSecret }}
+    hosts:
+      - {{ host.domain }}
+  {%- endif %}
+  {% endfor %}
+  rules:
+  - host: {{ data.domain }}
+    http: &http_service
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ data.name }}
+          servicePort: {{ data.port | default(80) }}
+
+      {%- for path in data.extraPaths %}
+      - path: {{ data.path }}
+        backend:
+          serviceName: {{ path.serviceName }}
+          servicePort: {{ path.servicePort | default(80) }}
+      {% endfor %}
+
+  {%- if data.wwwPrefixHost != false %}
+  - host: www.{{ data.domain }}
+    http: *http_service
+  {%- endif %}
+
+  {%- for host in data.extraHosts %}
+  - host: {{ host.domain }}
+    http: *http_service
+  {% endfor %}

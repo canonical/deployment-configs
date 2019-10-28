@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ data.name }}
+  namespace: {{ data.namespace }}
+spec:
+  selector:
+    app: {{ data.domain }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ data.port | default(80) }}
+      targetPort: http

@@ -1,0 +1,64 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ data.name }}
+  namespace: {{ data.namespace }}
+spec:
+  replicas: {{ data.replicas | default(5) }}
+  template:
+    metadata:
+      labels:
+        app: {{ data.domain }}
+    spec:
+      containers:
+        - name: {{ data.name }}
+          image: {{ data.container.image }}:{{ data.container.tag | default("latest", true) }}
+          ports:
+            - name: http
+              containerPort: {{ data.port | default(80) }}
+          envFrom:
+            {%- if data.globalEnvVars != false %}
+            - configMapRef:
+                name: global-envvars
+                optional: true
+            {%- endif %}
+
+            {%- if data.useSquid %}
+            - configMapRef:
+                name: proxy-config
+                optional: true
+            {%- endif %}
+
+          {%- if data.envSecrets %}
+          env:
+            {%- if data.envSecrets.sentryDsn %}
+            - name: SENTRY_DSN
+              value: {{ data.envSecrets.sentryDsn }}
+            {%- endif %}
+
+            {%- if data.envSecrets.useGoogleApiKey %}
+            - name: SEARCH_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: google-api
+                  key: google-custom-search-key
+            {%- endif %}
+
+            {%- if data.envSecrets.useSecretKey %}
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prototype-secret-key
+                  key: secret_key
+            {%- endif %}
+          {%- endif %}
+
+          readinessProbe:
+            httpGet:
+              path: {{ data.readinessPath | default("/_status/check") }}
+              port: {{ data.port | default(80) }}
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            limits:
+              memory: {{ data.memory | default("256Mi") }}
