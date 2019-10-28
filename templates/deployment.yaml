@@ -1,25 +1,42 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ data.name }}
+  name: {{ name }}
   namespace: {{ data.namespace }}
 spec:
   replicas: {{ data.replicas | default(5) }}
   template:
     metadata:
       labels:
-        app: {{ data.domain }}
+        app: {{ domain }}
     spec:
+      terminationGracePeriodSeconds: {{ data.terminationGracePeriodSeconds | default(30) }}
       containers:
-        - name: {{ data.name }}
+        - name: {{ name }}
           image: {{ data.container.image }}:{{ data.container.tag | default("latest", true) }}
+
+          {%- if data.lifecycle %}
+          lifecycle:
+            {%- for lifecycle in data.lifecycle %}
+            {%- if lifecycle.preStopCommand %}
+            preStop:
+              exec:
+                command:
+                  {%- for command in lifecycle.preStopCommand %}
+                  - {{ command }}
+                  {%- endfor %}
+            {%- endif %}
+            {%- endfor %}
+          {%- endif %}
+
           ports:
             - name: http
-              containerPort: {{ data.port | default(80) }}
+              containerPort: {{ data.container.port | default(80) }}
+
           envFrom:
             {%- if data.globalEnvVars != false %}
             - configMapRef:
-                name: global-envvars
+                name: {{ data.globalEnvVars | default("global-envvars") }}
                 optional: true
             {%- endif %}
 
@@ -29,36 +46,47 @@ spec:
                 optional: true
             {%- endif %}
 
+            {%- for env in data.envFrom %}
+            {%- if env.configMapRef %}
+            - configMapRef:
+                name: {{ env.configMapRef.name }}
+            {%- endif %}
+            {%- endfor %}
+
           {%- if data.envSecrets %}
           env:
-            {%- if data.envSecrets.sentryDsn %}
-            - name: SENTRY_DSN
-              value: {{ data.envSecrets.sentryDsn }}
-            {%- endif %}
+            {%- for env in data.envSecrets %}
+            - name: {{ env.name }}
+              {%- if env.value %}
+              value: "{{ env.value }}"
+              {%- endif %}
 
-            {%- if data.envSecrets.useGoogleApiKey %}
-            - name: SEARCH_API_KEY
+              {%- if env.secretKeyRef %}
               valueFrom:
                 secretKeyRef:
-                  name: google-api
-                  key: google-custom-search-key
-            {%- endif %}
+                  key: {{ env.secretKeyRef.key }}
+                  name: {{ env.secretKeyRef.name }}
+              {%- endif %}
 
-            {%- if data.envSecrets.useSecretKey %}
-            - name: SECRET_KEY
+              {%- if env.configMapKeyRef %}
               valueFrom:
-                secretKeyRef:
-                  name: prototype-secret-key
-                  key: secret_key
-            {%- endif %}
+                configMapKeyRef:
+                  key: {{ env.configMapKeyRef.key }}
+                  name: {{ env.configMapKeyRef.name }}
+              {%- endif %}
+            {%- endfor %}
           {%- endif %}
 
+          {%- if data.readinessProbe != false %}
           readinessProbe:
             httpGet:
               path: {{ data.readinessPath | default("/_status/check") }}
               port: {{ data.port | default(80) }}
-            timeoutSeconds: 3
-            periodSeconds: 5
+            periodSeconds: {{ data.readinessPeriodSeconds | default(5) }}
+            successThreshold: {{ data.readinessSuccessThreshold | default(1) }}
+            timeoutSeconds: {{ data.readinessTimeoutSeconds | default(3) }}
+          {%- endif %}
+
           resources:
             limits:
               memory: {{ data.memory | default("256Mi") }}

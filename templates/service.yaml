@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ data.name }}
+  name: {{ name }}
   namespace: {{ data.namespace }}
 spec:
   selector:
-    app: {{ data.domain }}
+    app: {{ domain }}
   ports:
     - name: http
       protocol: TCP

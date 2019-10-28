@@ -1,7 +1,8 @@
+{%- if not data.noIngress %}
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ data.name }}
+  name: {{ stagingPrefix('name', '-') }}
   namespace: {{ data.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -9,55 +10,75 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       {{ data.nginxConfig | indent(6) }}
     {%- endif %}
+    {%- if data.nginxSslRedirect is defined %}
+    nginx.ingress.kubernetes.io/ssl-redirect: "{{ data.nginxSslRedirect|lower }}"
+    {%- endif %}
+
 spec:
+  {%- if not data.noTls and data.noTls is not defined %}
   tls:
   - secretName:
     {%- if data.tlsSecretName %}
-      {{ data.tlsSecretName }}
+      {{- " " + data.tlsSecretName | indent(1, true) }}
     {% else %}
-      {{ data.name }}-tls
+      {{- stagingPrefix('name', '-') | indent(1, true) }}-tls
     {%- endif %}
+
     hosts:
-      - {{ data.domain }}
+      - {{ stagingPrefix('domain') }}
     {%- if data.wwwPrefixHost != false %}
-      - www.{{ data.domain }}
+      - www.{{ stagingPrefix('domain') }}
     {%- endif %}
 
     {%- for host in data.extraHosts %}
-      {%- if not host.tlsSecret %}
-      - {{ host.domain }}
+      {%- if not host.tlsSecret and not host.noTls %}
+      {%- for domain in host.host %}
+      - {{ domain }}
+      {%- endfor %}
       {%- endif %}
     {% endfor %}
+  {%- endif %}
 
   {%- for host in data.extraHosts %}
   {%- if host.tlsSecret %}
   - secretName: {{ host.tlsSecret }}
     hosts:
-      - {{ host.domain }}
+      {%- for domain in host.host %}
+      - {{ domain }}
+      {% endfor %}
   {%- endif %}
   {% endfor %}
+
   rules:
-  - host: {{ data.domain }}
+  - host: {{ stagingPrefix('domain') }}
     http: &http_service
       paths:
+      {%- if data.includeRootPath != False %}
       - path: /
         backend:
-          serviceName: {{ data.name }}
+          serviceName: {{ name }}
           servicePort: {{ data.port | default(80) }}
+      {%- endif %}
 
       {%- for path in data.extraPaths %}
-      - path: {{ data.path }}
+      - path: {{ path.path }}
         backend:
           serviceName: {{ path.serviceName }}
           servicePort: {{ path.servicePort | default(80) }}
       {% endfor %}
 
+
   {%- if data.wwwPrefixHost != false %}
-  - host: www.{{ data.domain }}
+  - host: www.{{ stagingPrefix('domain') }}
     http: *http_service
   {%- endif %}
 
   {%- for host in data.extraHosts %}
-  - host: {{ host.domain }}
+  {%- for domain in host.host %}
+  {%- if host.pathRules != false %}
+  - host: {{ domain }}
     http: *http_service
+  {% endif %}
   {% endfor %}
+  {% endfor %}
+{% endif %}
