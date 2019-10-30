@@ -20,7 +20,7 @@ spec:
     - staging.maas.io
   - secretName: docs-staging-maas-io-tls
     hosts:
-    - docs-staging.maas.io
+    - docs.staging.maas.io
   rules:
   - host: staging.maas.io
     http: &maas-io_service
