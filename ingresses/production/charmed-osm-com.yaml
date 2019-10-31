@@ -1,0 +1,34 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
+metadata:
+  name: charmed-osm-com
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'charmed-osm.com' ) {
+        rewrite ^ https://charmed-osm.com$request_uri? permanent;
+      }
+      more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+spec:
+  tls:
+  - secretName: charmed-osm-com-tls
+    hosts:
+    - charmed-osm.com
+    - www.charmed-osm.com
+  rules:
+  - host: charmed-osm.com
+    http: &charmed-osm-com_service
+      paths:
+      - path: /
+        backend:
+          serviceName: charmed-osm-com
+          servicePort: 80
+
+  # Alias domains
+  - host: www.charmed-osm.com
+    http: *charmed-osm-com_service
+
+---
