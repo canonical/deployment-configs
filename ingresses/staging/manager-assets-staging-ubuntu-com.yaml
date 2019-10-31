@@ -3,7 +3,7 @@
 kind: Ingress
 apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
 metadata:
-  name: manager-staging-assets-ubuntu-com
+  name: manager-assets-staging-ubuntu-com
   namespace: staging
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -12,11 +12,11 @@ metadata:
       more_set_headers "X-Robots-Tag: noindex";
 spec:
   tls:
-  - secretName: manager-staging-assets-ubuntu-com-tls
+  - secretName: manager-assets-staging-ubuntu-com-tls
     hosts:
-    - manager.staging.assets.ubuntu.com
+    - manager.assets.staging.ubuntu.com
   rules:
-  - host: manager.staging.assets.ubuntu.com
+  - host: manager.assets.staging.ubuntu.com
     http:
       paths:
       - path: /
