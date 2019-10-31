@@ -18,9 +18,6 @@ spec:
   - secretName: old-docs-staging-maas-io-tls
     hosts:
     - old-docs.staging.maas.io
-  - secretName: docs-staging-maas-io-tls
-    hosts:
-    - docs.staging.maas.io
   rules:
   - host: old-docs.staging.maas.io
     http: &old-docs-maas-io_service
