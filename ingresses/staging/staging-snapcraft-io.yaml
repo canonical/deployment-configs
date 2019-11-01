@@ -20,7 +20,7 @@ spec:
     - staging.snapcraft.io
   - secretName: docs-staging-snapcraft-io-tls
     hosts:
-    - docs-staging.snapcraft.io
+    - docs.staging.snapcraft.io
   rules:
   - host: staging.snapcraft.io
     http: &snapcraft-io_service
