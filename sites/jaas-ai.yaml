@@ -1,0 +1,47 @@
+name: jaas-ai
+domain: jaas.ai
+
+container:
+  image: prod-comms.docker-registry.canonical.com/jaas.ai
+
+useSquid: false
+
+envSecrets:
+  - name: SENTRY_DSN
+    value: https://5b54e6946be34749935c4dd2d9d01cb8@sentry.is.canonical.com//7
+
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
+extraHosts:
+  - host:
+    - docs.jujucharms.com
+    tlsSecret: docs-jujucharms-com-tls
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    if ($host = 'docs.jujucharms.com' ) {
+      rewrite ^ https://jaas.ai/docs$request_uri? permanent;
+    }
+    if ($host != 'jaas.ai' ) {
+      rewrite ^ https://jaas.ai$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  wwwPrefixHost: false
+  extraHosts:
+    - host:
+      - docs.staging.jujucharms.com
+      tlsSecret: docs-staging-jujucharms-com-tls
+
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    if ($host = 'docs.staging.jujucharms.com' ) {
+      rewrite ^ https://staging.jaas.ai/docs$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

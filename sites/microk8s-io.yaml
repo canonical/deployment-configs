@@ -1,0 +1,27 @@
+name: microk8s-io
+domain: microk8s.io
+
+container:
+  image: prod-comms.docker-registry.canonical.com/microk8s.io
+
+# Overrides for production
+production:
+  extraHosts:
+    - host:
+      - microk8s.com
+      - www.microk8s.com
+      tlsSecret: microk8s-com-tls
+
+  nginxConfig:  |
+    if ($host != 'microk8s.io' ) {
+      rewrite ^ https://microk8s.io$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  wwwPrefixHost: false
+
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

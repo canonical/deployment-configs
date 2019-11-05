@@ -1,0 +1,27 @@
+name: engage-canonical-com
+domain: engage.canonical.com
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/engage.canonical.com
+
+useSquid: false
+
+envSecrets:
+  - name: SECRET_KEY
+    secretKeyRef:
+      key: secret_key
+      name: prototype-secret-key
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: engage-staging-canonical-com
+  domain: engage.staging.canonical.com
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

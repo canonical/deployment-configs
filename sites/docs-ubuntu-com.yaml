@@ -1,0 +1,31 @@
+name: docs-ubuntu-com
+domain: docs.ubuntu.com
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com
+
+useSquid: false
+
+readinessPath: "/"
+
+extraPaths:
+  - path: /core
+    serviceName: docs-ubuntu-com-core
+  - path: /phone
+    serviceName: docs-ubuntu-com-phone
+  - path: /security-certs
+    serviceName: docs-ubuntu-com-security-certs
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: docs-staging-ubuntu-com
+  domain: docs.staging.ubuntu.com
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

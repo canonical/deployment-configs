@@ -1,0 +1,27 @@
+name: landscape-brochure-internal
+domain: landscape-brochure.internal
+wwwPrefixHost: false
+noTls: true
+
+container:
+  image: prod-comms.docker-registry.canonical.com/landscape-brochure.internal
+
+useSquid: false
+
+# Overrides for production
+production:
+  nginxSslRedirect: false
+  nginxConfig:  |
+    if ($host != 'landscape-brochure.internal' ) {
+      rewrite ^ http://landscape-brochure.internal$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: landscape-brochure-staging-internal
+  domain: landscape-brochure.staging.internal
+  nginxSslRedirect: false
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

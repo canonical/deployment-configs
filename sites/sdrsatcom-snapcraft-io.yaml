@@ -1,0 +1,22 @@
+name: sdrsatcom-snapcraft-io
+domain: sdrsatcom.snapcraft.io
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/sdrsatcom.snapcraft.io
+
+memory: 512Mi
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: sdrsatcom-staging-snapcraft-io
+  domain: sdrsatcom.staging.snapcraft.io
+
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

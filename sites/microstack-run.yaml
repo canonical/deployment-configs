@@ -1,0 +1,27 @@
+name: microstack-run
+domain: microstack.run
+
+container:
+  image: prod-comms.docker-registry.canonical.com/microstack.run
+
+useSquid: true
+
+envSecrets:
+  - name: SENTRY_DSN
+    value: https://6f972ce78ef34dceb3de87fd21adbb7f@sentry.is.canonical.com//19
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    if ($host != 'microstack.run' ) {
+      rewrite ^ https://microstack.run$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  wwwPrefixHost: false
+
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

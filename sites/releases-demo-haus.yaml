@@ -1,0 +1,24 @@
+name: releases-demo-haus
+domain: releases.demo.haus
+
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/releases.demo.haus
+
+memory: 128Mi
+
+noTls: true
+
+# Overrides for production
+production:
+  noIngress: true
+
+# Overrides for staging
+staging:
+  name: releases-demo-haus
+  domain: releases.demo.haus
+
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

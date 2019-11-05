@@ -1,0 +1,26 @@
+name: certification-ubuntu-com
+domain: certification.ubuntu.com
+
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/certification.ubuntu.com
+
+useSquid: true
+
+envSecrets:
+  - name: SENTRY_DSN
+    value: https://7de65f76107a4cfbb9e0815c7bae20b2@sentry.is.canonical.com//16
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: certification-staging-ubuntu-com
+  domain: certification.staging.ubuntu.com
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

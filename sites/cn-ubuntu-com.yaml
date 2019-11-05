@@ -1,0 +1,31 @@
+name: cn-ubuntu-com
+domain: cn.ubuntu.com
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/cn.ubuntu.com
+
+useSquid: false
+
+readinessPath: "/_status/ping"
+
+# Overrides for production
+production:
+  extraHosts:
+    - host:
+      - ubuntu-china.cn
+
+  nginxConfig:  |
+    if ($host != 'cn.ubuntu.com' ) {
+      rewrite ^ https://cn.ubuntu.com$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: cn-staging-ubuntu-com
+  domain: cn.staging.ubuntu.com
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

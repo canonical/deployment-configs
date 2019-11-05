@@ -1,0 +1,39 @@
+name: manager-assets-ubuntu-com
+domain: manager.assets.ubuntu.com
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/manager.assets.ubuntu.com
+
+useSquid: true
+
+globalEnvVars: "envvars"
+
+envSecrets:
+  - name: ASSET_SERVER_URL
+    value: https://assets.ubuntu.com/v1/
+
+  - name: ASSET_SERVER_TOKEN
+    secretKeyRef:
+      key: asset_server_token
+      name: manager-assets-ubuntu-com
+
+  - name: SECRET_KEY
+    secretKeyRef:
+      key: secret_key
+      name: manager-assets-ubuntu-com
+
+nginxSslRedirect: true
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+
+# Overrides for staging
+staging:
+  name: manager-assets-staging-ubuntu-com
+  domain: manager.assets.staging.ubuntu.com
+
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";

@@ -1,0 +1,43 @@
+name: webteam-ircbot-canonical-com
+domain: webteam-ircbot.canonical.com
+
+wwwPrefixHost: false
+
+useSquid: true
+
+globalEnvVars: false
+readinessProbe: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/webteam-ircbot.canonical.com
+  port: 8080
+
+memory: 128Mi
+
+envSecrets:
+  - name: HUBOT_IRC_NICK
+    value: "webbot"
+  - name: HUBOT_IRC_SERVER
+    value: "irc.canonical.com"
+  - name: HUBOT_IRC_PORT
+    value: "6697"
+  - name: HUBOT_IRC_USESSL
+    value: "true"
+  - name: HUBOT_IRC_ROOMS
+    value: "#sukha,#web-team,#is-outage"
+  - name: HUBOT_RELEASE_NOTIFICATION_ROOMS
+    value: "#web-team,#is-outage"
+  - name: HUBOT_IRC_DEBUG
+    value: "true"
+  - name: HUBOT_AUTH_ADMIN
+    secretKeyRef:
+      key: hubot-auth-admin
+      name: irc-secrets
+  - name: HUBOT_IRC_PASSWORD
+    secretKeyRef:
+      key: hubot-irc-password
+      name: irc-secrets
+  - name: HUBOT_RELEASE_NOTIFICATION_SECRET
+    secretKeyRef:
+      key: hubot-release-notification-secret
+      name: irc-secrets

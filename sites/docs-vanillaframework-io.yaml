@@ -1,0 +1,23 @@
+name: docs-vanillaframework-io
+domain: docs.vanillaframework.io
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/docs.vanillaframework.io
+
+useSquid: false
+
+readinessPath: "/"
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: docs-staging-vanillaframework-io
+  domain: docs.staging.vanillaframework.io
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

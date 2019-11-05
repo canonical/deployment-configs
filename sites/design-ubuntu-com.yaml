@@ -1,0 +1,23 @@
+name: design-ubuntu-com
+domain: design.ubuntu.com
+wwwPrefixHost: false
+
+container:
+  image: prod-comms.docker-registry.canonical.com/design.ubuntu.com
+
+useSquid: false
+
+readinessPath: "/"
+
+# Overrides for production
+production:
+  nginxConfig:  |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: design-staging-ubuntu-com
+  domain: design.staging.ubuntu.com
+  nginxConfig:  |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
