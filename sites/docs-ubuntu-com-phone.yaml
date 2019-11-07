@@ -6,6 +6,3 @@ container:
   image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
 
 readinessPath: "/"
-readinessPeriodSeconds: 3
-readinessSuccessThreshold: 3
-readinessTimeoutSeconds: 1

@@ -42,7 +42,7 @@ noIngress: true
 ## container
 **(Mandatory)**
 
-This property is for container related configurations. Here you can set the (image)[#image] and the (tag)[#tag].
+This property is for container related configurations. Here you can set the [image](#image) and the [tag](#tag).
 
 ### image
 **(Mandatory)**
@@ -178,7 +178,7 @@ memory: 512Mi
 
 ## envSecrets
 
-This property is for environment related configurations. Here you can set the (name)[#name] and the (value)[#value] or (secretKeyRef)[#secretKeyRef].
+This property is for environment related configurations. Here you can set the [name](#name-1) and the [value](#value) or [secretKeyRef](#secretKeyRef).
 
 ### name
 
