@@ -1,16 +1,14 @@
-name: conjure-up-io
 domain: conjure-up.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/conjure-up.io
+image: prod-comms.docker-registry.canonical.com/conjure-up.io
 
-useSquid: false
+useProxy: false
 
 readinessPath: "/"
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'conjure-up.io' ) {
       rewrite ^ https://conjure-up.io$request_uri? permanent;
     }
@@ -18,7 +16,6 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

@@ -1,12 +1,10 @@
-name: multipass-run
 domain: multipass.run
 
-container:
-  image: prod-comms.docker-registry.canonical.com/multipass.run
+image: prod-comms.docker-registry.canonical.com/multipass.run
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'multipass.run' ) {
       rewrite ^ https://multipass.run$request_uri? permanent;
     }
@@ -14,8 +12,6 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

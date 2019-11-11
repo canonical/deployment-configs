@@ -1,23 +1,18 @@
-name: docs-conjure-up-io
 domain: docs.conjure-up.io
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/docs.conjure-up.io
+image: prod-comms.docker-registry.canonical.com/docs.conjure-up.io
 
-useSquid: false
+useProxy: false
 
 readinessPath: "/"
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
 staging:
-  name: docs-staging-conjure-up-io
-  domain: docs.staging.conjure-up.io
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

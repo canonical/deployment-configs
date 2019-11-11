@@ -1,8 +1,0 @@
-name: docs-ubuntu-com-core
-domain: docs.ubuntu.com-core
-noIngress: true
-
-container:
-  image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
-
-readinessPath: "/"

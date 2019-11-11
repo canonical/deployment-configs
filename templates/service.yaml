@@ -1,7 +1,9 @@
+---
+
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ name }}
+  name: {{ getSiteName() }}
   namespace: {{ data.namespace }}
 spec:
   selector:
@@ -9,5 +11,5 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: {{ data.port | default(80) }}
+      port: 80
       targetPort: http

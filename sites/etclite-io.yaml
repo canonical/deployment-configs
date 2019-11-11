@@ -1,18 +1,14 @@
-name: etclite-io
 domain: etclite.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/etclite.io
+image: prod-comms.docker-registry.canonical.com/etclite.io
 
-useSquid: true
-
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://666537260f914491bf98b13c5a2e50ff@sentry.is.canonical.com//18
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'etclite.io' ) {
       rewrite ^ https://etclite.io$request_uri? permanent;
     }
@@ -20,9 +16,6 @@ production:
 
 # Overrides for staging
 staging:
-  name: staging-etclite-io
-  domain: staging.etclite.io
-  wwwPrefixHost: false
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

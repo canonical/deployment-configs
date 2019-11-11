@@ -5,15 +5,35 @@ import jinja2
 import argparse
 
 
-# Custom Jinja2 function
+# Custom Jinja2 functions
 @jinja2.contextfunction
-def stagingPrefix(context, s, glue="."):
+def getSiteName(context, addStaginPrefix=False):
+    if context['data'].get('name'):
+        name = context['data'].get('name')
+    else:
+        domain = context['domain'].split(".")
+
+        if addStaginPrefix and context["deploymentEnv"] == "staging":
+            domain.insert(-2, 'staging')
+
+        name = "-".join(domain)
+
+    return name
+
+
+@jinja2.contextfilter
+def siteDomain(context, s):
+    domain = s.split(".")
+
     if context["deploymentEnv"] == "staging":
-        return (
-            context["data"].get("staging", {}).get(s)
-            or "staging" + glue + context["data"][s]
-        )
-    return context["data"][s]
+        domain.insert(-2, 'staging')
+
+    return ".".join(domain)
+
+
+@jinja2.contextfilter
+def isApexDomain(context, s):
+    return s.count('.') == 1
 
 
 class Konf:
@@ -22,18 +42,18 @@ class Konf:
         values_file,
         env,
         local_qa=False,
-        docker_tag=None,
-        templates=["service", "deployment", "ingress"]
+        docker_tag=None
     ):
-        self.templates = templates
         self.deploymentEnv = env
 
         # Init Jinja2 environment
-        templateLoader = jinja2.FileSystemLoader(searchpath="./templates")
+        templateLoader = jinja2.FileSystemLoader("./templates")
         self.tplEnv = jinja2.Environment(loader=templateLoader)
 
-        # Add custom jinja2 function
-        self.tplEnv.globals["stagingPrefix"] = stagingPrefix
+        # Add custom jinja2 functions and filters
+        self.tplEnv.globals['getSiteName'] = getSiteName
+        self.tplEnv.filters['siteDomain'] = siteDomain
+        self.tplEnv.filters['isApexDomain'] = isApexDomain
 
         # Load project datadocker_tag
         self.load_values(values_file, local_qa, docker_tag)
@@ -50,7 +70,7 @@ class Konf:
 
         self.values = yaml.load(values_file, Loader=yaml.FullLoader)
 
-        self.name = self.values["name"]
+        self.name = self.values.get("name")
         self.domain = self.values["domain"]
 
         # Environment overrides
@@ -67,20 +87,19 @@ class Konf:
             self.values.update(qa_values[self.deploymentEnv])
 
         if docker_tag:
-            self.values["container"]["tag"] = docker_tag
+            self.values["tag"] = docker_tag
 
     def render(self):
         """Returns templates rendered."""
         output = ""
 
-        for k8s_template in self.templates:
-            template = self.tplEnv.get_template(k8s_template + ".yaml")
-            output += "\n---\n" + template.render(
-                name=self.name,
-                domain=self.domain,
-                data=self.values,
-                deploymentEnv=self.deploymentEnv,
-            )
+        template = self.tplEnv.get_template("site.yaml")
+        output += template.render(
+            name=self.name,
+            domain=self.domain,
+            data=self.values,
+            deploymentEnv=self.deploymentEnv,
+        )
 
         return output
 
@@ -113,15 +132,6 @@ if __name__ == "__main__":
         help="Docker tag to deploy",
         default="latest",
         dest="docker_tag"
-    )
-
-    parser.add_argument(
-        "--templates",
-        nargs="*",
-        type=str,
-        help="Templates to be rendered",
-        default=["service", "deployment", "ingress"],
-        dest="templates",
     )
 
     args = parser.parse_args()

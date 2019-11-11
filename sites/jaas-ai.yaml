@@ -1,12 +1,10 @@
-name: jaas-ai
 domain: jaas.ai
 
-container:
-  image: prod-comms.docker-registry.canonical.com/jaas.ai
+image: prod-comms.docker-registry.canonical.com/jaas.ai
 
-useSquid: false
+useProxy: false
 
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://5b54e6946be34749935c4dd2d9d01cb8@sentry.is.canonical.com//7
 
@@ -16,13 +14,11 @@ envSecrets:
       name: google-api
 
 extraHosts:
-  - host:
-    - docs.jujucharms.com
-    tlsSecret: docs-jujucharms-com-tls
+  - domain: docs.jujucharms.com
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host = 'docs.jujucharms.com' ) {
       rewrite ^ https://jaas.ai/docs$request_uri? permanent;
     }
@@ -33,13 +29,7 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-  extraHosts:
-    - host:
-      - docs.staging.jujucharms.com
-      tlsSecret: docs-staging-jujucharms-com-tls
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     if ($host = 'docs.staging.jujucharms.com' ) {
       rewrite ^ https://staging.jaas.ai/docs$request_uri? permanent;

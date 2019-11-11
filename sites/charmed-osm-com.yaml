@@ -1,15 +1,10 @@
-name: charmed-osm-com
 domain: charmed-osm.com
 
-container:
-  image: prod-comms.docker-registry.canonical.com/charmed-osm.com
-
-globalEnvVars: "envvars"
-useSquid: true
+image: prod-comms.docker-registry.canonical.com/charmed-osm.com
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'charmed-osm.com' ) {
       rewrite ^ https://charmed-osm.com$request_uri? permanent;
     }
@@ -17,7 +12,6 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

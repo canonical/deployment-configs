@@ -1,17 +1,14 @@
-name: mir-server-io
 domain: mir-server.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/mir-server.io
+image: prod-comms.docker-registry.canonical.com/mir-server.io
+
+extraHosts:
+  - domain: mirserver.io
+    useParentTLS: True
 
 # Overrides for production
 production:
-  extraHosts:
-    - host:
-      - mirserver.io
-      - www.mirserver.io
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'mir-server.io' ) {
       rewrite ^ https://mir-server.io$request_uri? permanent;
     }
@@ -19,8 +16,6 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

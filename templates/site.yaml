@@ -1,0 +1,25 @@
+{% include 'service.yaml' %}
+
+{% for route in data.routes %}
+  {%- with
+      name=name ~ route.path|replace("/", "-"),
+      domain=domain ~ route.path|replace("/", "-"),
+      data=route
+  %}
+    {%- include 'service.yaml' %}
+  {% endwith %}
+{% endfor %}
+
+{% include 'deployment.yaml' %}
+
+{% for route in data.routes %}
+  {%- with
+      name=name ~ route.path|replace("/", "-"),
+      domain=domain ~ route.path|replace("/", "-"),
+      data=route
+  %}
+    {%- include 'deployment.yaml' %}
+  {% endwith %}
+{% endfor %}
+
+{% include 'ingress.yaml' %}

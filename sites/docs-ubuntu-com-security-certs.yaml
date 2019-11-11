@@ -1,8 +1,0 @@
-name: docs-ubuntu-com-security-certs
-domain: docs.ubuntu.com-security-certs
-noIngress: true
-
-container:
-  image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
-
-readinessPath: "/"

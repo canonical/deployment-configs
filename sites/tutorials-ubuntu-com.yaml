@@ -1,22 +1,16 @@
-name: tutorials-ubuntu-com
 domain: tutorials.ubuntu.com
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/tutorials.ubuntu.com
+image: prod-comms.docker-registry.canonical.com/tutorials.ubuntu.com
 
 readinessPath: "/"
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
 staging:
-  name: tutorials-staging-ubuntu-com
-  domain: tutorials.staging.ubuntu.com
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

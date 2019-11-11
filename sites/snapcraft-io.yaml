@@ -1,12 +1,8 @@
-name: snapcraft-io
 domain: snapcraft.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/snapcraft.io
+image: prod-comms.docker-registry.canonical.com/snapcraft.io
 
-useSquid: true
-
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 
@@ -35,16 +31,14 @@ envSecrets:
       key: google-custom-search-key
       name: google-api
 
-memory: 1Gi
+memoryLimit: 1Gi
+
+extraHosts:
+  - domain: docs.snapcraft.io
 
 # Overrides for production
 production:
-  extraHosts:
-    - host:
-      - docs.snapcraft.io
-      tlsSecret: docs-snapcraft-io-tls
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host = 'docs.snapcraft.io' ) {
       rewrite ^ https://snapcraft.io/docs$request_uri? permanent;
     }
@@ -55,16 +49,7 @@ production:
 
 # Overrides for staging
 staging:
-  name: staging-snapcraft-io
-  domain: staging.snapcraft.io
-  wwwPrefixHost: false
-
-  extraHosts:
-    - host:
-      - docs.staging.snapcraft.io
-      tlsSecret: docs-staging-snapcraft-io-tls
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host = 'docs.staging.snapcraft.io' ) {
       rewrite ^ https://staging.snapcraft.io/docs$request_uri? permanent;
     }

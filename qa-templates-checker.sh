@@ -38,43 +38,18 @@ printf "\n- Importing all previous configurations\n"
 git checkout master &> /dev/null
 TAG_TO_DEPLOY="latest"
 
-# Array to save k8s object names
-declare -a previous_sites
-
-
 # Import previous service and deployment objects
 for file in ./services/*.yaml; do
-  eval $(parse_yaml $file "old_config_")
-
-  # Append service name
-  if [[ ! " ${previous_sites[@]} " =~ " ${old_config_metadata_name} " ]]; then
-    previous_sites+=($old_config_metadata_name)
-  fi
-
   cat $file | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:latest|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | microk8s.kubectl apply --filename - --namespace default 1> /dev/null
 done
 
 # Import ingress for production
 for file in ./ingresses/production//*.yaml; do
-  eval $(parse_yaml $file "old_config_")
-
-  # Append ingress name
-  if [[ ! " ${previous_sites[@]} " =~ " ${old_config_metadata_name} " ]]; then
-    previous_sites+=($old_config_metadata_name)
-  fi
-
   cat $file | sed '/namespace:/d' | microk8s.kubectl apply --filename - --namespace default 1> /dev/null
 done
 
 # Import ingress for staging
 for file in ./ingresses/staging/*.yaml; do
-  eval $(parse_yaml $file "old_config_")
-
-  # Append ingress name
-  if [[ ! " ${previous_sites[@]} " =~ " ${old_config_metadata_name} " ]]; then
-    previous_sites+=($old_config_metadata_name)
-  fi
-
   cat $file | sed '/namespace:/d' | microk8s.kubectl apply --filename - --namespace default 1> /dev/null
 done
 
@@ -90,32 +65,6 @@ for file in ./sites/*.yaml; do
     # Print current project file
     printf "\n$filename\n"
 
-    config_name=""
-    config_staging_name=""
-
-    # read yaml file
-    eval $(parse_yaml $file "config_")
-
-    if [[ -z "${config_staging_name}" ]]; then
-        config_staging_name="staging-$config_name"
-    fi
-
-    # Check if this project has staging
-    staging_found=false
-    if [[ "${previous_sites[@]}" =~ "$config_staging_name" ]]; then
-      staging_found=true
-    fi
-
-    # Mark project as checked
-    delete=($config_name $config_staging_name)
-    for target in "${delete[@]}"; do
-      for i in "${!previous_sites[@]}"; do
-        if [[ ${previous_sites[i]} = $target ]]; then
-          unset 'previous_sites[i]'
-        fi
-      done
-    done
-
     # User kubectl diff to detect changes
     if ./konf.py --local-qa production $file | microk8s.kubectl diff -f - 1>> ./diff.log; then
         printf "\tProduction: Okay\n";
@@ -123,19 +72,9 @@ for file in ./sites/*.yaml; do
         printf "\tProduction: Changes detected!!!!\n";
     fi
 
-    if $staging_found; then
-        if ./konf.py --local-qa staging $file | microk8s.kubectl diff -f - 1>> ./diff.log; then
-            printf "\tStaging: Okay\n";
-        else
-            printf "\tStaging: Changes detected!!!!\n";
-        fi
+    if ./konf.py --local-qa staging $file | microk8s.kubectl diff -f - 1>> ./diff.log; then
+        printf "\tStaging: Okay\n";
     else
-        printf "\tStaging: Not used\n";
+        printf "\tStaging: Changes detected!!!!\n";
     fi
-done
-
-
-printf "\nMissing projects:\n"
-for site in ${previous_sites[@]}; do
-  echo $site
 done

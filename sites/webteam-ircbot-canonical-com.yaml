@@ -1,20 +1,15 @@
-name: webteam-ircbot-canonical-com
 domain: webteam-ircbot.canonical.com
 
-wwwPrefixHost: false
+image: prod-comms.docker-registry.canonical.com/webteam-ircbot.canonical.com
+replicas: 1
 
-useSquid: true
+readinessPath: false
 
-globalEnvVars: false
-readinessProbe: false
+containerPort: 8080
 
-container:
-  image: prod-comms.docker-registry.canonical.com/webteam-ircbot.canonical.com
-  port: 8080
+memoryLimit: 128Mi
 
-memory: 128Mi
-
-envSecrets:
+env:
   - name: HUBOT_IRC_NICK
     value: "webbot"
   - name: HUBOT_IRC_SERVER

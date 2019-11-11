@@ -1,22 +1,16 @@
-name: limenet-snapcraft-io
 domain: limenet.snapcraft.io
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/limenet.snapcraft.io
+image: prod-comms.docker-registry.canonical.com/limenet.snapcraft.io
 
-useSquid: false
+useProxy: false
 
-nginxConfig:  |
+memoryLimit: 512Mi
+
+nginxConfigurationSnippet: |
   more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
-
-memory: 512Mi
 
 # Overrides for staging
 staging:
-  name: limenet-staging-snapcraft-io
-  domain: limenet.staging.snapcraft.io
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

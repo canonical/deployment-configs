@@ -30,23 +30,14 @@ def create_site(domain):
     if not match:
         raise Exception(f"{domain} is a weird domain")
 
-    sub = match.group("subdomain")
-    apex = match.group("apex")
     name = domain.replace(".", "-")
-    staging_domain = f"{sub}.staging.{apex}" if sub else f"staging.{apex}"
 
     # Yaml data
-    data = {"name": name, "domain": domain, "container": {}}
-
-    data["container"]["image"] = (
-        "prod-comms.docker-registry.canonical.com/" + name
-    )
-
-    data["globalEnvVars"] = "envvars"
-    data["useSquid"]: True
+    data = {"name": name, "domain": domain}
+    data["image"] = "prod-comms.docker-registry.canonical.com/" + name
 
     # Add default production nginx config
-    data["nginxConfig"] = literal(
+    data["nginxConfigurationSnippet"] = literal(
         "if ($host != '" + domain + "' ) {\n"
         "  rewrite ^ https://" + domain + "$request_uri? permanent;\n"
         "}\n"
@@ -56,14 +47,8 @@ def create_site(domain):
 
     data["staging"] = {}
 
-    # Include staging name and domain if the staging domain doesn't
-    # follow the paconfigttern with just the "staging." prefix
-    if sub:
-        data["staging"]["name"] = staging_domain.replace(".", "-")
-        data["staging"]["domain"] = staging_domain
-
     # Add default staging nging config
-    data["staging"]["nginxConfig"] = literal(
+    data["staging"]["nginxConfigurationSnippet"] = literal(
         'more_set_headers "X-Robots-Tag: noindex";\n'
         'more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect;'
         ' crossorigin, <https://assets.ubuntu.com>; rel=preconnect";\n'

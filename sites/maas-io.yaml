@@ -1,12 +1,8 @@
-name: maas-io
 domain: maas.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/maas.io
+image: prod-comms.docker-registry.canonical.com/maas.io
 
-useSquid: true
-
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://66c89fd7773e4b408d3e25867d6899e9@sentry.is.canonical.com//6
 
@@ -15,14 +11,12 @@ envSecrets:
       key: google-custom-search-key
       name: google-api
 
+extraHosts:
+  - domain: docs.maas.io
+
 # Overrides for production
 production:
-  extraHosts:
-    - host:
-      - docs.maas.io
-      tlsSecret: docs-maas-io-tls
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host = 'docs.maas.io' ) {
       rewrite ^ https://maas.io/docs$request_uri? permanent;
     }
@@ -33,14 +27,7 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-
-  extraHosts:
-    - host:
-      - docs.staging.maas.io
-      tlsSecret: docs-staging-maas-io-tls
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host = 'docs.staging.maas.io' ) {
       rewrite ^ https://staging.maas.io/docs$request_uri? permanent;
     }

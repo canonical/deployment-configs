@@ -1,84 +1,76 @@
-{%- if not data.noIngress %}
+---
+
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ stagingPrefix('name', '-') }}
+  name: {{ getSiteName(True) }}
   namespace: {{ data.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    {%- if data.nginxConfig %}
+    {%- if data.nginxConfigurationSnippet %}
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      {{ data.nginxConfig | indent(6) }}
-    {%- endif %}
-    {%- if data.nginxSslRedirect is defined %}
-    nginx.ingress.kubernetes.io/ssl-redirect: "{{ data.nginxSslRedirect|lower }}"
+      {{ data.nginxConfigurationSnippet | indent(6) }}
     {%- endif %}
 
 spec:
   {%- if not data.noTls and data.noTls is not defined %}
   tls:
-  - secretName:
-    {%- if data.tlsSecretName %}
-      {{- " " + data.tlsSecretName | indent(1, true) }}
-    {% else %}
-      {{- stagingPrefix('name', '-') | indent(1, true) }}-tls
-    {%- endif %}
+  - secretName: {{ getSiteName(True) }}-tls
 
     hosts:
-      - {{ stagingPrefix('domain') }}
-    {%- if data.wwwPrefixHost != false %}
-      - www.{{ stagingPrefix('domain') }}
+      - {{ domain | siteDomain }}
+    {%- if (domain | siteDomain | isApexDomain) %}
+      - www.{{ domain | siteDomain }}
     {%- endif %}
 
     {%- for host in data.extraHosts %}
-      {%- if not host.tlsSecret and not host.noTls %}
-      {%- for domain in host.host %}
-      - {{ domain }}
-      {%- endfor %}
+      {%- if host.useParentTLS %}
+      - {{ host.domain | siteDomain }}
+      {%- if (host.domain | siteDomain | isApexDomain) %}
+      - www.{{ host.domain | siteDomain }}
+      {%- endif %}
       {%- endif %}
     {% endfor %}
   {%- endif %}
 
   {%- for host in data.extraHosts %}
-  {%- if host.tlsSecret %}
-  - secretName: {{ host.tlsSecret }}
+  {%- if not host.useParentTLS %}
+  - secretName: {{ host.domain | siteDomain | replace(".", "-") }}-tls
     hosts:
-      {%- for domain in host.host %}
-      - {{ domain }}
-      {% endfor %}
+      - {{ host.domain | siteDomain }}
+      {%- if (host.domain | siteDomain | isApexDomain) %}
+      - www.{{ host.domain | siteDomain }}
+      {%- endif %}
   {%- endif %}
   {% endfor %}
 
   rules:
-  - host: {{ stagingPrefix('domain') }}
+  - host: {{ domain | siteDomain }}
     http: &http_service
       paths:
-      {%- if data.includeRootPath != False %}
       - path: /
         backend:
-          serviceName: {{ name }}
-          servicePort: {{ data.port | default(80) }}
-      {%- endif %}
+          serviceName: {{ getSiteName() }}
+          servicePort: 80
 
-      {%- for path in data.extraPaths %}
-      - path: {{ path.path }}
+      {%- for route in data.routes %}
+      - path: {{ route.path }}
         backend:
-          serviceName: {{ path.serviceName }}
-          servicePort: {{ path.servicePort | default(80) }}
+          serviceName: {{ getSiteName() ~ route.path | replace("/", "-") }}
+          servicePort: 80
       {% endfor %}
 
-
-  {%- if data.wwwPrefixHost != false %}
-  - host: www.{{ stagingPrefix('domain') }}
+  {% if (domain | siteDomain | isApexDomain) %}
+  - host: www.{{ domain | siteDomain }}
     http: *http_service
   {%- endif %}
 
-  {%- for host in data.extraHosts %}
-  {%- for domain in host.host %}
-  {%- if host.pathRules != false %}
-  - host: {{ domain }}
+  {% for host in data.extraHosts %}
+  - host: {{ host.domain | siteDomain }}
     http: *http_service
-  {% endif %}
+
+  {%- if (host.domain | siteDomain | isApexDomain) %}
+  - host: www.{{ host.domain | siteDomain }}
+    http: *http_service
+  {%- endif %}
   {% endfor %}
-  {% endfor %}
-{% endif %}

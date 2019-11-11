@@ -1,27 +1,15 @@
-name: usn-ubuntu-com
 domain: usn.ubuntu.com
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/usn.ubuntu.com
+image: prod-comms.docker-registry.canonical.com/usn.ubuntu.com
+replicas: 9
 
 readinessPath: "/"
-terminationGracePeriodSeconds: 120
 
-lifecycle:
-  - preStopCommand:
-      - /usr/sbin/nginx
-      - -s
-      - quit
-
-nginxConfig: |
+nginxConfigurationSnippet: |
   more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
 staging:
-  name: usn-staging-ubuntu-com
-  domain: usn.staging.ubuntu.com
-
-  nginxConfig: |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

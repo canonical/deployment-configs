@@ -1,11 +1,8 @@
-name: webteam-kpi-webhook-canonical-com
 domain: webteam-kpi-webhook.canonical.com
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/webteam-kpi-webhook.canonical.com
+image: prod-comms.docker-registry.canonical.com/webteam-kpi-webhook.canonical.com
 
-envSecrets:
+env:
   - name: INFLUXDB_USER
     secretKeyRef:
       key: influxdb_user
@@ -32,8 +29,5 @@ envSecrets:
       name: github-webhook-token
 
 staging:
-  name: webteam-kpi-webhook-staging-canonical-com
-  domain: webteam-kpi-webhook.staging.canonical.com
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";

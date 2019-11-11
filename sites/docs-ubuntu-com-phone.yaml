@@ -1,8 +1,0 @@
-name: docs-ubuntu-com-phone
-domain: docs.ubuntu.com-phone
-noIngress: true
-
-container:
-  image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
-
-readinessPath: "/"

@@ -1,23 +1,18 @@
-name: developer-ubuntu-com
 domain: developer.ubuntu.com
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/developer.ubuntu.com
+image: prod-comms.docker-registry.canonical.com/developer.ubuntu.com
 
-useSquid: false
+useProxy: false
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'developer.ubuntu.com' ) {
       rewrite ^ https://developer.ubuntu.com$request_uri? permanent;
     }
 
 # Overrides for staging
 staging:
-  name: developer-staging-ubuntu-com
-  domain: developer.staging.ubuntu.com
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

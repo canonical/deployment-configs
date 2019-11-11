@@ -1,18 +1,12 @@
-name: staging-api-snapcraft-io
 domain: staging-api.snapcraft.io
 
-wwwPrefixHost: false
-
-container:
-  image: prod-comms.docker-registry.canonical.com/snapcraft.io
-
-useSquid: true
+image: prod-comms.docker-registry.canonical.com/snapcraft.io
 
 envFrom:
   - configMapRef:
       name: staging-api-snapcraft-io
 
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 
@@ -41,17 +35,8 @@ envSecrets:
       key: google-custom-search-key
       name: google-api
 
-memory: "512Mi"
+memoryLimit: "512Mi"
 
-# Overrides for production
-production:
-  noIngress: true
-
-# Overrides for staging
-staging:
-  name: staging-api-snapcraft-io
-  domain: staging-api.snapcraft.io
-
-  nginxConfig:  |
-    more_set_headers "X-Robots-Tag: noindex";
-    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+nginxConfigurationSnippet: |
+  more_set_headers "X-Robots-Tag: noindex";
+  more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

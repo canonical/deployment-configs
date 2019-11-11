@@ -1,22 +1,17 @@
-name: old-docs-jujucharms-com
 domain: old-docs.jujucharms.com
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/old-docs.jujucharms.com
+image: prod-comms.docker-registry.canonical.com/old-docs.jujucharms.com
 
 readinessPath: /
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
 staging:
-  name: old-docs-staging-jujucharms-com
-  domain: old-docs.staging.jujucharms.com
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

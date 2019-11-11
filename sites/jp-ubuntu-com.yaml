@@ -1,13 +1,10 @@
-name: jp-ubuntu-com
 domain: jp.ubuntu.com
-wwwPrefixHost: false
 
-container:
-  image: prod-comms.docker-registry.canonical.com/jp.ubuntu.com
+image: prod-comms.docker-registry.canonical.com/jp.ubuntu.com
 
-useSquid: false
+useProxy: false
 
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://5d270c51e9a946b6ae1bb0155498738d@sentry.is.canonical.com//12
 
@@ -15,13 +12,11 @@ readinessPath: "/"
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
 staging:
-  name: jp-staging-ubuntu-com
-  domain: jp.staging.ubuntu.com
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

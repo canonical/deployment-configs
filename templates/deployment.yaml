@@ -1,7 +1,9 @@
+---
+
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ name }}
+  name: {{ getSiteName() }}
   namespace: {{ data.namespace }}
 spec:
   replicas: {{ data.replicas | default(5) }}
@@ -10,37 +12,20 @@ spec:
       labels:
         app: {{ domain }}
     spec:
-      terminationGracePeriodSeconds: {{ data.terminationGracePeriodSeconds | default(30) }}
       containers:
-        - name: {{ name }}
-          image: {{ data.container.image }}:{{ data.container.tag | default("latest", true) }}
-
-          {%- if data.lifecycle %}
-          lifecycle:
-            {%- for lifecycle in data.lifecycle %}
-            {%- if lifecycle.preStopCommand %}
-            preStop:
-              exec:
-                command:
-                  {%- for command in lifecycle.preStopCommand %}
-                  - {{ command }}
-                  {%- endfor %}
-            {%- endif %}
-            {%- endfor %}
-          {%- endif %}
+        - name: {{ getSiteName() }}
+          image: {{ data.image }}:{{ data.tag | default("latest", true) }}
 
           ports:
             - name: http
-              containerPort: {{ data.container.port | default(80) }}
+              containerPort: {{ data.containerPort | default(80) }}
 
           envFrom:
-            {%- if data.globalEnvVars != false %}
             - configMapRef:
-                name: {{ data.globalEnvVars | default("global-envvars") }}
+                name: global-envvars
                 optional: true
-            {%- endif %}
 
-            {%- if data.useSquid %}
+            {%- if data.useProxy != False %}
             - configMapRef:
                 name: proxy-config
                 optional: true
@@ -53,9 +38,9 @@ spec:
             {%- endif %}
             {%- endfor %}
 
-          {%- if data.envSecrets %}
+          {%- if data.env %}
           env:
-            {%- for env in data.envSecrets %}
+            {%- for env in data.env %}
             - name: {{ env.name }}
               {%- if env.value %}
               value: "{{ env.value }}"
@@ -77,16 +62,15 @@ spec:
             {%- endfor %}
           {%- endif %}
 
-          {%- if data.readinessProbe != false %}
+          {%- if data.readinessPath != false %}
           readinessProbe:
             httpGet:
               path: {{ data.readinessPath | default("/_status/check") }}
-              port: {{ data.port | default(80) }}
-            periodSeconds: {{ data.readinessPeriodSeconds | default(5) }}
-            successThreshold: {{ data.readinessSuccessThreshold | default(1) }}
-            timeoutSeconds: {{ data.readinessTimeoutSeconds | default(3) }}
+              port: 80
+            periodSeconds: 5
+            timeoutSeconds: 3
           {%- endif %}
 
           resources:
             limits:
-              memory: {{ data.memory | default("256Mi") }}
+              memory: {{ data.memoryLimit | default("256Mi") }}

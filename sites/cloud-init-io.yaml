@@ -1,23 +1,18 @@
-name: cloud-init-io
 domain: cloud-init.io
 
-tlsSecretName: cloud-init-org-tls
+image: prod-comms.docker-registry.canonical.com/cloud-init.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/cloud-init.io
-
-useSquid: false
+useProxy: false
 
 readinessPath: "/"
 
+extraHosts:
+  - domain: cloud-init.org
+    useParentTLS: True
+
 # Overrides for production
 production:
-  extraHosts:
-    - host:
-      - cloud-init.org
-      - www.cloud-init.org
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'cloud-init.io' ) {
       rewrite ^ https://cloud-init.io$request_uri? permanent;
     }
@@ -25,9 +20,6 @@ production:
 
 # Overrides for staging
 staging:
-  wwwPrefixHost: false
-  tlsSecretName: staging-cloud-init-io-tls
-
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

@@ -1,18 +1,14 @@
-name: dqlite-io
 domain: dqlite.io
 
-container:
-  image: prod-comms.docker-registry.canonical.com/dqlite.io
+image: prod-comms.docker-registry.canonical.com/dqlite.io
 
-useSquid: true
-
-envSecrets:
+env:
   - name: SENTRY_DSN
     value: https://426397ba83be483a8a8d1ed92b0f0623@sentry.is.canonical.com//17
 
 # Overrides for production
 production:
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     if ($host != 'dqlite.io' ) {
       rewrite ^ https://dqlite.io$request_uri? permanent;
     }
@@ -20,9 +16,6 @@ production:
 
 # Overrides for staging
 staging:
-  name: staging-dqlite-io
-  domain: staging.dqlite.io
-  wwwPrefixHost: false
-  nginxConfig:  |
+  nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
