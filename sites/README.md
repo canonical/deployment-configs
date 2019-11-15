@@ -96,7 +96,7 @@ readinessPath: /
 
 **Default:** 256Mi
 
-It will define the container memoryLimit limit.
+It will define the container memory limit.
 
 Example:
 ```

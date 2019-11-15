@@ -17,12 +17,10 @@ All configurations for our projects can be found under the sites folder. Using t
 - deployment
 - ingress
 
-It is possible to generate only some of these objects, E.g.:
+E.g.:
 ``` bash
-./konf.py staging sites/canonical-com.yaml --templates ingress
+./konf.py staging sites/canonical-com.yaml
 ```
-
-[Here](sites/README.md) is a list of all possible values for a values file
 
 ## Deploying
 

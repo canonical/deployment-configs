@@ -33,8 +33,10 @@ def create_site(domain):
     name = domain.replace(".", "-")
 
     # Yaml data
-    data = {"name": name, "domain": domain}
-    data["image"] = "prod-comms.docker-registry.canonical.com/" + name
+    data = {
+        "domain": domain,
+        "image": "prod-comms.docker-registry.canonical.com/" + name,
+    }
 
     # Add default production nginx config
     data["nginxConfigurationSnippet"] = literal(
