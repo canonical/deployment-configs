@@ -21,25 +21,17 @@ spec:
               containerPort: {{ data.containerPort | default(80) }}
 
           envFrom:
-            - configMapRef:
-                name: global-envvars
-                optional: true
-
             {%- if data.useProxy != False %}
             - configMapRef:
                 name: proxy-config
                 optional: true
             {%- endif %}
 
-            {%- for env in data.envFrom %}
-            {%- if env.configMapRef %}
-            - configMapRef:
-                name: {{ env.configMapRef.name }}
-            {%- endif %}
-            {%- endfor %}
-
           {%- if data.env %}
           env:
+            - name: TALISKER_NETWORKS
+              value: 10.0.0.0/8
+
             {%- for env in data.env %}
             - name: {{ env.name }}
               {%- if env.value %}
