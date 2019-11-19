@@ -3,7 +3,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ getSiteName() }}
+  name: {{ get_site_name() }}
   namespace: {{ data.namespace }}
 spec:
   selector:

@@ -3,7 +3,7 @@
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ getSiteName(True) }}
+  name: {{ get_site_name(True) }}
   namespace: {{ data.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -13,21 +13,21 @@ metadata:
     {%- endif %}
 
 spec:
-  {%- if not data.noTls and data.noTls is not defined %}
+  {%- if not data.noTls %}
   tls:
-  - secretName: {{ getSiteName(True) }}-tls
+  - secretName: {{ get_site_name(True) }}-tls
 
     hosts:
-      - {{ domain | siteDomain }}
-    {%- if (domain | siteDomain | isApexDomain) %}
-      - www.{{ domain | siteDomain }}
+      - {{ domain | get_environment_domain }}
+    {%- if (domain | get_environment_domain | is_apex_domain) %}
+      - www.{{ domain | get_environment_domain }}
     {%- endif %}
 
     {%- for host in data.extraHosts %}
       {%- if host.useParentTLS %}
-      - {{ host.domain | siteDomain }}
-      {%- if (host.domain | siteDomain | isApexDomain) %}
-      - www.{{ host.domain | siteDomain }}
+      - {{ host.domain | get_environment_domain }}
+      {%- if (host.domain | get_environment_domain | is_apex_domain) %}
+      - www.{{ host.domain | get_environment_domain }}
       {%- endif %}
       {%- endif %}
     {% endfor %}
@@ -35,42 +35,42 @@ spec:
 
   {%- for host in data.extraHosts %}
   {%- if not host.useParentTLS %}
-  - secretName: {{ host.domain | siteDomain | replace(".", "-") }}-tls
+  - secretName: {{ host.domain | get_environment_domain | replace(".", "-") }}-tls
     hosts:
-      - {{ host.domain | siteDomain }}
-      {%- if (host.domain | siteDomain | isApexDomain) %}
-      - www.{{ host.domain | siteDomain }}
+      - {{ host.domain | get_environment_domain }}
+      {%- if (host.domain | get_environment_domain | is_apex_domain) %}
+      - www.{{ host.domain | get_environment_domain }}
       {%- endif %}
   {%- endif %}
   {% endfor %}
 
   rules:
-  - host: {{ domain | siteDomain }}
+  - host: {{ domain | get_environment_domain }}
     http: &http_service
       paths:
       - path: /
         backend:
-          serviceName: {{ getSiteName() }}
+          serviceName: {{ get_site_name() }}
           servicePort: 80
 
       {%- for route in data.routes %}
       - path: {{ route.path }}
         backend:
-          serviceName: {{ getSiteName() ~ route.path | replace("/", "-") }}
+          serviceName: {{ get_site_name() ~ route.path | replace("/", "-") }}
           servicePort: 80
       {% endfor %}
 
-  {% if (domain | siteDomain | isApexDomain) %}
-  - host: www.{{ domain | siteDomain }}
+  {% if (domain | get_environment_domain | is_apex_domain) %}
+  - host: www.{{ domain | get_environment_domain }}
     http: *http_service
   {%- endif %}
 
   {% for host in data.extraHosts %}
-  - host: {{ host.domain | siteDomain }}
+  - host: {{ host.domain | get_environment_domain }}
     http: *http_service
 
-  {%- if (host.domain | siteDomain | isApexDomain) %}
-  - host: www.{{ host.domain | siteDomain }}
+  {%- if (host.domain | get_environment_domain | is_apex_domain) %}
+  - host: www.{{ host.domain | get_environment_domain }}
     http: *http_service
   {%- endif %}
   {% endfor %}

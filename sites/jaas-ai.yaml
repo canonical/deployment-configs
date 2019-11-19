@@ -16,6 +16,8 @@ env:
 extraHosts:
   - domain: docs.jujucharms.com
 
+memoryLimit: 512Mi
+
 # Overrides for production
 production:
   nginxConfigurationSnippet: |

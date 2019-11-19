@@ -7,14 +7,15 @@ import argparse
 
 # Custom Jinja2 functions
 @jinja2.contextfunction
-def getSiteName(context, addStaginPrefix=False):
-    if context['data'].get('name'):
-        name = context['data'].get('name')
+def get_site_name(context, add_staging_prefix=False):
+    """Return the metadata name to use for the K8s objects."""
+    if context["data"].get("name"):
+        name = context["data"].get("name")
     else:
-        domain = context['domain'].split(".")
+        domain = context["domain"].split(".")
 
-        if addStaginPrefix and context["deploymentEnv"] == "staging":
-            domain.insert(-2, 'staging')
+        if add_staging_prefix and context["deployment_env"] == "staging":
+            domain.insert(-2, "staging")
 
         name = "-".join(domain)
 
@@ -22,40 +23,27 @@ def getSiteName(context, addStaginPrefix=False):
 
 
 @jinja2.contextfilter
-def siteDomain(context, s):
+def get_environment_domain(context, s):
+    """Return the domain with the staging prefix if needed."""
     domain = s.split(".")
 
-    if context["deploymentEnv"] == "staging":
-        domain.insert(-2, 'staging')
+    if context["deployment_env"] == "staging":
+        domain.insert(-2, "staging")
 
     return ".".join(domain)
 
 
 @jinja2.contextfilter
-def isApexDomain(context, s):
-    return s.count('.') == 1
+def is_apex_domain(context, s):
+    """Check if the given string is an apex/base domain"""
+    return s.count(".") == 1
 
 
 class Konf:
-    def __init__(
-        self,
-        values_file,
-        env,
-        local_qa=False,
-        docker_tag=None
-    ):
-        self.deploymentEnv = env
+    def __init__(self, values_file, env, local_qa=False, docker_tag=None):
+        self.deployment_env = env
 
-        # Init Jinja2 environment
-        templateLoader = jinja2.FileSystemLoader("./templates")
-        self.tplEnv = jinja2.Environment(loader=templateLoader)
-
-        # Add custom jinja2 functions and filters
-        self.tplEnv.globals['getSiteName'] = getSiteName
-        self.tplEnv.filters['siteDomain'] = siteDomain
-        self.tplEnv.filters['isApexDomain'] = isApexDomain
-
-        # Load project datadocker_tag
+        # Load project data
         self.load_values(values_file, local_qa, docker_tag)
 
     def load_values(self, values_file, local_qa=False, docker_tag=None):
@@ -74,34 +62,41 @@ class Konf:
         self.domain = self.values["domain"]
 
         # Environment overrides
-        self.values.update(self.values.get(self.deploymentEnv, {}))
+        self.values.update(self.values.get(self.deployment_env, {}))
 
         # Set deployment environment namespace
-        self.values["namespace"] = self.deploymentEnv
+        self.values["namespace"] = self.deployment_env
 
         # QA overrides
         if local_qa:
             qa_values = yaml.load(
                 open("qa-overrides.yaml"), Loader=yaml.FullLoader
             )
-            self.values.update(qa_values[self.deploymentEnv])
+            self.values.update(qa_values[self.deployment_env])
 
         if docker_tag:
             self.values["tag"] = docker_tag
 
     def render(self):
         """Returns templates rendered."""
-        output = ""
 
-        template = self.tplEnv.get_template("site.yaml")
-        output += template.render(
+        # Init Jinja2 environment
+        template_loader = jinja2.FileSystemLoader("./templates")
+        jinja_env = jinja2.Environment(loader=template_loader)
+
+        # Add custom jinja2 functions and filters
+        jinja_env.globals["get_site_name"] = get_site_name
+        jinja_env.filters["get_environment_domain"] = get_environment_domain
+        jinja_env.filters["is_apex_domain"] = is_apex_domain
+
+        template = jinja_env.get_template("site.yaml")
+
+        return template.render(
             name=self.name,
             domain=self.domain,
             data=self.values,
-            deploymentEnv=self.deploymentEnv,
+            deployment_env=self.deployment_env,
         )
-
-        return output
 
 
 if __name__ == "__main__":
@@ -131,7 +126,7 @@ if __name__ == "__main__":
         type=str,
         help="Docker tag to deploy",
         default="latest",
-        dest="docker_tag"
+        dest="docker_tag",
     )
 
     args = parser.parse_args()

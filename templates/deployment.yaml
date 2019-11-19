@@ -3,7 +3,7 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ getSiteName() }}
+  name: {{ get_site_name() }}
   namespace: {{ data.namespace }}
 spec:
   replicas: {{ data.replicas | default(5) }}
@@ -13,7 +13,7 @@ spec:
         app: {{ domain }}
     spec:
       containers:
-        - name: {{ getSiteName() }}
+        - name: {{ get_site_name() }}
           image: {{ data.image }}:{{ data.tag | default("latest", true) }}
 
           ports:

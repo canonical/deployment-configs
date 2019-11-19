@@ -42,7 +42,7 @@ image: prod-comms.docker-registry.canonical.com/canonical.com
 
 **Type:** Int
 
-**Default:** 5
+**Default:** `5`
 
 Number of replicas to use.
 
@@ -55,7 +55,7 @@ replicas: 2
 
 **Type:** Int
 
-**Default:** 80
+**Default:** `80`
 
 Port to expose from the container.
 
@@ -68,7 +68,7 @@ containerPort: 8080
 
 **Type:** Boolean
 
-**Default:** True
+**Default:** `True`
 
 This will use our ConfigMap object "proxy-config", you can take a look to this object here: `configmaps/proxy-config.yaml`
 
@@ -81,7 +81,7 @@ useProxy: False
 
 **Type:** String
 
-**Default:** /_status/check
+**Default:** `/_status/check`
 
 Define the URL path to do a readiness probe.
 
@@ -94,7 +94,7 @@ readinessPath: /
 
 **Type:** String
 
-**Default:** 256Mi
+**Default:** `256Mi`
 
 It will define the container memory limit.
 
@@ -107,7 +107,7 @@ memoryLimit: 512Mi
 
 **Type:** Boolean
 
-**Default:** False
+**Default:** `False`
 
 It will not add any TLS secret in the Ingress object.
 
@@ -171,7 +171,7 @@ extraHosts:
 
 **Type:** Boolean
 
-**Default:** False
+**Default:** `False`
 
 Use the same TLS name for this domain.
 
