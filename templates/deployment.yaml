@@ -20,17 +20,20 @@ spec:
             - name: http
               containerPort: {{ data.containerPort | default(80) }}
 
-          envFrom:
-            {%- if data.useProxy != False %}
-            - configMapRef:
-                name: proxy-config
-                optional: true
-            {%- endif %}
-
-          {%- if data.env %}
           env:
             - name: TALISKER_NETWORKS
               value: 10.0.0.0/8
+
+            {%- if data.useProxy != False %}
+            - name: HTTP_PROXY
+              value: "http://squid.internal:3128/"
+
+            - name: HTTPS_PROXY
+              value: "http://squid.internal:3128/"
+
+            - name: NO_PROXY
+              value: "ubuntu.com,.ubuntu.com,snapcraft.io,.snapcraft.io,jujucharms.com,.jujucharms.com,maas.io,.maas.io,conjure-up.io,.conjure-up.io,netplan.io,.netplan.io,canonical.com,.canonical.com,launchpad.net,.launchpad.net,linuxcontainers.org,.linuxcontainers.org,cloud-init.io,.cloud-init.io,vanillaframework.io,.vanillaframework.io"
+            {%- endif %}
 
             {%- for env in data.env %}
             - name: {{ env.name }}
@@ -52,7 +55,6 @@ spec:
                   name: {{ env.configMapKeyRef.name }}
               {%- endif %}
             {%- endfor %}
-          {%- endif %}
 
           {%- if data.readinessPath != false %}
           readinessProbe:
