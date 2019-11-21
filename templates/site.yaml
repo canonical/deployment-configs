@@ -2,7 +2,7 @@
 
 {% for route in data.routes %}
   {%- with
-      name=name ~ route.path|replace("/", "-"),
+      name=get_site_name() ~ route.path|replace("/", "-"),
       domain=domain ~ route.path|replace("/", "-"),
       data=route
   %}
@@ -14,7 +14,7 @@
 
 {% for route in data.routes %}
   {%- with
-      name=name ~ route.path|replace("/", "-"),
+      name=get_site_name() ~ route.path|replace("/", "-"),
       domain=domain ~ route.path|replace("/", "-"),
       data=route
   %}
