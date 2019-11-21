@@ -20,16 +20,16 @@ spec:
   - secretName: {{ get_site_name(True) }}-tls
 
     hosts:
-      - {{ domain | get_environment_domain }}
-    {%- if (domain | get_environment_domain | is_apex_domain) %}
-      - www.{{ domain | get_environment_domain }}
+      - {{ get_environment_domain() }}
+    {%- if (get_environment_domain() | is_apex_domain) %}
+      - www.{{ get_environment_domain() }}
     {%- endif %}
 
     {%- for host in data.extraHosts %}
       {%- if host.useParentTLS %}
-      - {{ host.domain | get_environment_domain }}
-      {%- if (host.domain | get_environment_domain | is_apex_domain) %}
-      - www.{{ host.domain | get_environment_domain }}
+      - {{ host.domain | add_environment_prefix }}
+      {%- if (host.domain | add_environment_prefix | is_apex_domain) %}
+      - www.{{ host.domain | add_environment_prefix }}
       {%- endif %}
       {%- endif %}
     {% endfor %}
@@ -37,17 +37,17 @@ spec:
 
   {%- for host in data.extraHosts %}
   {%- if not host.useParentTLS %}
-  - secretName: {{ host.domain | get_environment_domain | replace(".", "-") }}-tls
+  - secretName: {{ host.domain | add_environment_prefix | replace(".", "-") }}-tls
     hosts:
-      - {{ host.domain | get_environment_domain }}
-      {%- if (host.domain | get_environment_domain | is_apex_domain) %}
-      - www.{{ host.domain | get_environment_domain }}
+      - {{ host.domain | add_environment_prefix }}
+      {%- if (host.domain | add_environment_prefix | is_apex_domain) %}
+      - www.{{ host.domain | add_environment_prefix }}
       {%- endif %}
   {%- endif %}
   {% endfor %}
 
   rules:
-  - host: {{ domain | get_environment_domain }}
+  - host: {{ get_environment_domain() }}
     http: &http_service
       paths:
       - path: /
@@ -62,17 +62,17 @@ spec:
           servicePort: 80
       {% endfor %}
 
-  {% if (domain | get_environment_domain | is_apex_domain) %}
-  - host: www.{{ domain | get_environment_domain }}
+  {% if (get_environment_domain() | is_apex_domain) %}
+  - host: www.{{ get_environment_domain() }}
     http: *http_service
   {%- endif %}
 
   {% for host in data.extraHosts %}
-  - host: {{ host.domain | get_environment_domain }}
+  - host: {{ host.domain | add_environment_prefix }}
     http: *http_service
 
-  {%- if (host.domain | get_environment_domain | is_apex_domain) %}
-  - host: www.{{ host.domain | get_environment_domain }}
+  {%- if (host.domain | add_environment_prefix | is_apex_domain) %}
+  - host: www.{{ host.domain | add_environment_prefix }}
     http: *http_service
   {%- endif %}
   {% endfor %}

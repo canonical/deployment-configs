@@ -22,8 +22,23 @@ def get_site_name(context, add_staging_prefix=False):
     return name
 
 
+@jinja2.contextfunction
+def get_environment_domain(context):
+    """Return the environment domain."""
+    domain = context["domain"]
+
+    if context["deployment_env"] == "staging":
+        # Return the staging domain if there is one specified
+        if "domain" in context["data"].get("staging", {}):
+            domain = context["data"]["staging"]["domain"]
+        else:
+            domain = add_environment_prefix(context, domain)
+
+    return domain
+
+
 @jinja2.contextfilter
-def get_environment_domain(context, s):
+def add_environment_prefix(context, s):
     """Return the domain with the staging prefix if needed."""
     domain = s.split(".")
 
@@ -86,7 +101,8 @@ class Konf:
 
         # Add custom jinja2 functions and filters
         jinja_env.globals["get_site_name"] = get_site_name
-        jinja_env.filters["get_environment_domain"] = get_environment_domain
+        jinja_env.globals["get_environment_domain"] = get_environment_domain
+        jinja_env.filters["add_environment_prefix"] = add_environment_prefix
         jinja_env.filters["is_apex_domain"] = is_apex_domain
 
         template = jinja_env.get_template("site.yaml")

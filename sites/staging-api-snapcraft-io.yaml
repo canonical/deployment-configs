@@ -51,3 +51,7 @@ memoryLimit: "512Mi"
 nginxConfigurationSnippet: |
   more_set_headers "X-Robots-Tag: noindex";
   more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+staging:
+  name: staging-api-snapcraft-io
+  domain: staging-api.snapcraft.io
