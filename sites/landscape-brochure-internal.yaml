@@ -5,6 +5,8 @@ image: prod-comms.docker-registry.canonical.com/landscape-brochure.internal
 
 useProxy: false
 
+nginxSSLRedirect: False
+
 # Overrides for production
 production:
   nginxConfigurationSnippet: |

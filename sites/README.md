@@ -215,6 +215,19 @@ nginxConfigurationSnippet: |
   more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 ```
 
+## nginxSSLRedirect
+
+**Type:** Boolean
+
+**Default:** `False`
+
+By default the controller redirects (308) to HTTPS if TLS is enabled for that ingress. If you want to disable this behavior, you can use `nginxSSLRedirect: False`
+
+Example:
+```
+nginxSSLRedirect: False
+```
+
 ## production
 Under this level you can overwrite any of the above mentioned properties for this environment.
 

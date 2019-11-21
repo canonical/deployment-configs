@@ -11,7 +11,9 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       {{ data.nginxConfigurationSnippet | indent(6) }}
     {%- endif %}
-
+    {%- if data.nginxSSLRedirect == False %}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    {%- endif %}
 spec:
   {%- if not data.noTls %}
   tls:

@@ -47,6 +47,8 @@ production:
     }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";
 
+  nginxSSLRedirect: False
+
 # Overrides for staging
 staging:
   nginxConfigurationSnippet: |
