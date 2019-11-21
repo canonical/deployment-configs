@@ -9,17 +9,19 @@ import argparse
 @jinja2.contextfunction
 def get_site_name(context, add_staging_prefix=False):
     """Return the metadata name to use for the K8s objects."""
-    if context["data"].get("name"):
-        name = context["data"].get("name")
-    else:
-        domain = context["domain"].split(".")
+    domain = context["domain"].split(".")
 
-        if add_staging_prefix and context["deployment_env"] == "staging":
+    if add_staging_prefix and context["deployment_env"] == "staging":
+        # Return the staging name if there is one specified
+        if "name" in context["data"].get("staging", {}):
+            return context["data"]["staging"]["name"]
+        else:
             domain.insert(-2, "staging")
+    elif context["name"]:
+        # Return the production name if there is one specified
+        return context["name"]
 
-        name = "-".join(domain)
-
-    return name
+    return "-".join(domain)
 
 
 @jinja2.contextfunction
