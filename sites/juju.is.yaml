@@ -2,8 +2,6 @@ domain: juju.is
 
 image: prod-comms.docker-registry.canonical.com/juju.is
 
-globalEnvVars: false
-
 env:
   - name: SENTRY_DSN
     value: https://a9c1a18b2a0a40bdae6177bb29331a2a@sentry.is.canonical.com//20
