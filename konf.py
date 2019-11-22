@@ -86,10 +86,11 @@ class Konf:
 
         # QA overrides
         if local_qa:
-            qa_values = yaml.load(
-                open("qa-overrides.yaml"), Loader=yaml.FullLoader
-            )
-            self.values.update(qa_values[self.deployment_env])
+            self.values["namespace"] = "default"
+            self.values["replicas"] = 1
+
+            for route in self.values.get("routes", []):
+                route.update({"replicas": 1})
 
         if docker_tag:
             self.values["tag"] = docker_tag
