@@ -70,7 +70,12 @@ containerPort: 8080
 
 **Default:** `True`
 
-This will use our ConfigMap object "proxy-config", you can take a look to this object here: `configmaps/proxy-config.yaml`
+This will set the following environment variables:
+- HTTP_PROXY
+- HTTPS_PROXY
+- NO_PROXY
+
+You can take a look to the template `templates/deployment.yaml` to see the actual values.
 
 Example:
 ```
