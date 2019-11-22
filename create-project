@@ -57,7 +57,7 @@ def create_site(domain):
     )
 
     # Save file
-    with open("./sites/" + name + ".yaml", "w") as file:
+    with open("./sites/" + domain + ".yaml", "w") as file:
         yaml.dump(data, file, default_flow_style=False, sort_keys=False)
 
 
