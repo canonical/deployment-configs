@@ -82,11 +82,11 @@ class Konf:
         self.values.update(self.values.get(self.deployment_env, {}))
 
         # Set deployment environment namespace
-        self.values["namespace"] = self.deployment_env
+        self.namespace = self.deployment_env
 
         # QA overrides
         if local_qa:
-            self.values["namespace"] = "default"
+            self.namespace = "default"
             self.values["replicas"] = 1
 
             for route in self.values.get("routes", []):
@@ -114,6 +114,7 @@ class Konf:
             name=self.name,
             domain=self.domain,
             data=self.values,
+            namespace=self.namespace,
             deployment_env=self.deployment_env,
         )
 
