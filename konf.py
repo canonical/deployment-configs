@@ -93,7 +93,7 @@ class Konf:
                 route.update({"replicas": 1})
 
         if docker_tag:
-            self.values["tag"] = docker_tag
+            self.tag = docker_tag
 
     def render(self):
         """Returns templates rendered."""
@@ -113,6 +113,7 @@ class Konf:
         return template.render(
             name=self.name,
             domain=self.domain,
+            tag=self.tag,
             data=self.values,
             namespace=self.namespace,
             deployment_env=self.deployment_env,

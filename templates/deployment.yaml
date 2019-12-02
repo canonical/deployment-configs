@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: {{ get_site_name() }}
-          image: {{ data.image }}:{{ data.tag | default("latest", true) }}
+          image: {{ data.image }}:{{ tag | default("latest", true) }}
 
           ports:
             - name: http
