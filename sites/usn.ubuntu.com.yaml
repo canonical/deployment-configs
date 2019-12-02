@@ -1,0 +1,15 @@
+domain: usn.ubuntu.com
+
+image: prod-comms.docker-registry.canonical.com/usn.ubuntu.com
+replicas: 9
+
+readinessPath: "/"
+
+nginxConfigurationSnippet: |
+  more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

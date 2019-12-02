@@ -1,0 +1,12 @@
+domain: releases.demo.haus
+
+image: prod-comms.docker-registry.canonical.com/releases.demo.haus
+replicas: 2
+
+memoryLimit: 128Mi
+
+noTls: true
+
+nginxConfigurationSnippet: |
+  more_set_headers "X-Robots-Tag: noindex";
+  more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

@@ -1,0 +1,19 @@
+domain: netplan.io
+
+image: prod-comms.docker-registry.canonical.com/netplan.io
+
+readinessPath: /
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host != 'netplan.io' ) {
+      rewrite ^ https://netplan.io$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

@@ -1,0 +1,28 @@
+domain: manager.assets.ubuntu.com
+
+image: prod-comms.docker-registry.canonical.com/manager.assets.ubuntu.com
+replicas: 2
+
+env:
+  - name: ASSET_SERVER_URL
+    value: https://assets.ubuntu.com/v1/
+
+  - name: ASSET_SERVER_TOKEN
+    secretKeyRef:
+      key: asset_server_token
+      name: manager-assets-ubuntu-com
+
+  - name: SECRET_KEY
+    secretKeyRef:
+      key: secret_key
+      name: manager-assets-ubuntu-com
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";

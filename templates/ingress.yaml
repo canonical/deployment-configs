@@ -1,0 +1,78 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ get_site_name(True) }}
+  namespace: {{ data.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    {%- if data.nginxConfigurationSnippet %}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      {{ data.nginxConfigurationSnippet | indent(6) }}
+    {%- endif %}
+    {%- if data.nginxSSLRedirect == False %}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    {%- endif %}
+spec:
+  {%- if not data.noTls %}
+  tls:
+  - secretName: {{ get_site_name(True) }}-tls
+
+    hosts:
+      - {{ get_environment_domain() }}
+    {%- if (get_environment_domain() | is_apex_domain) %}
+      - www.{{ get_environment_domain() }}
+    {%- endif %}
+
+    {%- for host in data.extraHosts %}
+      {%- if host.useParentTLS %}
+      - {{ host.domain | add_environment_prefix }}
+      {%- if (host.domain | add_environment_prefix | is_apex_domain) %}
+      - www.{{ host.domain | add_environment_prefix }}
+      {%- endif %}
+      {%- endif %}
+    {% endfor %}
+  {%- endif %}
+
+  {%- for host in data.extraHosts %}
+  {%- if not host.useParentTLS %}
+  - secretName: {{ host.domain | add_environment_prefix | replace(".", "-") }}-tls
+    hosts:
+      - {{ host.domain | add_environment_prefix }}
+      {%- if (host.domain | add_environment_prefix | is_apex_domain) %}
+      - www.{{ host.domain | add_environment_prefix }}
+      {%- endif %}
+  {%- endif %}
+  {% endfor %}
+
+  rules:
+  - host: {{ get_environment_domain() }}
+    http: &http_service
+      paths:
+      {%- for route in data.routes %}
+      - path: {{ route.path }}
+        backend:
+          serviceName: {{ get_site_name() ~ route.path | replace("/", "-") }}
+          servicePort: 80
+      {% endfor %}
+
+      - path: /
+        backend:
+          serviceName: {{ get_site_name() }}
+          servicePort: 80
+
+  {% if (get_environment_domain() | is_apex_domain) %}
+  - host: www.{{ get_environment_domain() }}
+    http: *http_service
+  {%- endif %}
+
+  {% for host in data.extraHosts %}
+  - host: {{ host.domain | add_environment_prefix }}
+    http: *http_service
+
+  {%- if (host.domain | add_environment_prefix | is_apex_domain) %}
+  - host: www.{{ host.domain | add_environment_prefix }}
+    http: *http_service
+  {%- endif %}
+  {% endfor %}

@@ -6,16 +6,12 @@ set -euo pipefail
 USAGE="Usage
 ===
 
-  $ ./qa-deploy --production PRODUCTION_URL [--tag IMAGE_TAG] [--staging STAGING_URL]
+  $ ./qa-deploy (production|staging) file [IMAGE_TAG]
 
 
 Description
 ---
 Deploy locally to microk8s.
-
---production: Deploy this ingress from the ingresses/production folder
---staging: Deploy this ingress from the ingresses/staging folder
---tag: Deploy the service for the 'production' domain from the services/ folder, at this Docker tag
 "
 
 function invalid() {
@@ -104,59 +100,24 @@ function enable_ingress() {
     fi
 }
 
-function deploy_service() {
-    service="${1}"
-    tag="${2}"
+function deploy_locally() {
+    environment="${1}"
+    values_file="${2}"
+    tag="${3}"
 
-    echo "Deploying service ${service}"
-    cat "services/${service//./-}.yaml" | sed "s|[:][$][{]TAG_TO_DEPLOY[_aa-zA-Z]*[}]|:${tag}|" | sed 's|replicas: [0-9][0-9]*|replicas: 1|' | microk8s.kubectl apply --filename -
-}
-
-function deploy_ingress() {
-    ingress="${1}"
-    tag="${2}"
-
-    ingress_file="ingresses/${ingress//./-}.yaml"
-
-    # Find the services in the ingress
-    services=$(grep 'serviceName' ${ingress_file} | sed -E 's/^ +serviceName: +([^ ]+)$/\1/')
-
-    for service in ${services}; do
-        deploy_service "${service}" "${tag}"
-    done
-
-    # Create the ingress domains
-    cat "${ingress_file}" | sed '/namespace:/d' | microk8s.kubectl apply --filename -
+    echo "Deploying project ${values_file}"
+    ./konf.py --local-qa ${environment} ${values_file} --tag ${tag} | microk8s.kubectl apply --filename -
 }
 
 function run() {
     # Arguments
-    while [[ -n "${1:-}" ]] && [[ "${1:0:1}" == "-" ]]; do
-        key="$1"
-        case $key in
-            -t|--tag)
-                if [ -z "${2:-}" ]; then invalid "Missing image tag. Usage: --tag XXXX"; fi
-                tag_to_deploy=${2}
-                shift
-            ;;
-            -p|--production)
-                if [ -z "${2:-}" ]; then invalid "Missing production. Usage: --production XXXX"; fi
-                production=${2}
-                shift
-            ;;
-            -s|--staging)
-                if [ -z "${2:-}" ]; then invalid "Missing staging. Usage: --staging XXXX"; fi
-                staging=${2}
-                shift
-            ;;
-            *) invalid "Option '${key}' not recognised." ;;
-        esac
-        shift
-    done
+    environment="$1"
+    values_file="$2"
+    tag_to_deploy=${3:-latest}
 
     # Mandatory arguments
-    if [ -z "${production:-}" ]; then invalid "No production domain specified (e.g. 'example.com')"; fi
-    if [ -z "${tag_to_deploy:-}" ]; then tag_to_deploy="latest"; fi
+    if [ -z "${environment:-}" ]; then invalid "No environment specified (e.g. 'production')"; fi
+    if [ -z "${values_file:-}" ]; then invalid "No values file specified (e.g. 'sites/canonical-com.yaml')"; fi
 
     run_microk8s
     # The configuration needs to run before the ingress controller starts
@@ -167,9 +128,9 @@ function run() {
 
     add_docker_credentials_microk8s
 
-    deploy_ingress "production/${production}" "${tag_to_deploy}"
+    deploy_locally "${environment}" "${values_file}" "${tag_to_deploy}"
 
-    if [ -n "${staging:-}" ]; then deploy_ingress "staging/${staging}" "${tag_to_deploy}"; fi
+    if [ -n "${staging:-}" ]; then deploy_locally "${environment}" "${values_file}" "${tag_to_deploy}"; fi
 }
 
 run ${@}

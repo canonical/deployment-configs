@@ -1,0 +1,59 @@
+domain: ubuntu.com
+
+image: prod-comms.docker-registry.canonical.com/ubuntu.com
+
+env:
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
+  - name: SENTRY_DSN
+    value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+
+memoryLimit: 512Mi
+
+routes:
+  - path: /blog
+    image: prod-comms.docker-registry.canonical.com/ubuntu.com
+    memoryLimit: 512Mi
+    env:
+    - name: SEARCH_API_KEY
+      secretKeyRef:
+        key: google-custom-search-key
+        name: google-api
+
+    - name: SENTRY_DSN
+      value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+
+extraHosts:
+  - domain: ubuntu.net
+  - domain: blog.ubuntu.com
+  - domain: insights.ubuntu.com
+  - domain: ubunut.com
+  - domain: ubuntulinux.org
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host = 'blog.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+    }
+    if ($host = 'insights.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+    }
+    if ($host != 'ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";
+
+  nginxSSLRedirect: False
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    if ($host != 'staging.ubuntu.com' ) {
+      rewrite ^ https://staging.ubuntu.com$request_uri? permanent;
+    }
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";

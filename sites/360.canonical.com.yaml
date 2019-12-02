@@ -1,0 +1,32 @@
+name: threesixty-canonical-com
+domain: 360.canonical.com
+
+image: prod-comms.docker-registry.canonical.com/360.canonical.com
+
+readinessPath: "/_status/ping"
+
+env:
+  - name: DATABASE_URL
+    secretKeyRef:
+      key: database_url
+      name: threesixty-database-url
+
+  - name: SECRET_KEY
+    secretKeyRef:
+      key: secret_key
+      name: threesixty
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host != '360.canonical.com' ) {
+      rewrite ^ https://360.canonical.com$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  name: threesixty-staging-canonical-com
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

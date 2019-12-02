@@ -1,0 +1,21 @@
+domain: kubeflow-news.com
+
+image: prod-comms.docker-registry.canonical.com/kubeflow-news.com
+
+env:
+  - name: SENTRY_DSN
+    value: https://3bbe58ab41ea43329b32292ccfd09d5e@sentry.is.canonical.com//15
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host != 'kubeflow-news.com' ) {
+      rewrite ^ https://kubeflow-news.com$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

@@ -1,0 +1,15 @@
+domain: vanillaframework.io
+
+image: prod-comms.docker-registry.canonical.com/vanillaframework.io
+
+nginxConfigurationSnippet: |
+  if ($host != 'vanillaframework.io' ) {
+    rewrite ^ https://vanillaframework.io$request_uri? permanent;
+  }
+
+  more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

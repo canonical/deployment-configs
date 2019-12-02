@@ -1,55 +1,15 @@
 ---
 
 kind: Service
-apiVersion: v1  # See https://bit.ly/2KdOtrZ
+apiVersion: v1
 metadata:
-  name: {service_name}
+  name: {{ get_site_name() }}
+  namespace: {{ data.namespace }}
 spec:
   selector:
-    app: {domain}
+    app: {{ domain }}
   ports:
     - name: http
       protocol: TCP
       port: 80
       targetPort: http
-
----
-
-kind: Deployment
-apiVersion: extensions/v1beta1  # See https://bit.ly/2KdOtrZ
-metadata:
-  name: {service_name}
-spec:
-  replicas: 5
-  template:
-    metadata:
-      labels:
-        app: {domain}
-    spec:
-      containers:
-        - name: {service_name}
-          image: prod-comms.docker-registry.canonical.com/{domain}:${TAG_TO_DEPLOY}
-          ports:
-            - name: http
-              containerPort: 80
-          envFrom:
-            - configMapRef:
-                name: envvars
-                optional: true
-            - configMapRef:
-                name: proxy-config
-                optional: true
-          env:
-            - name: SENTRY_DSN
-              value: {sentry_dsn}
-          readinessProbe:
-            httpGet:
-              path: /_status/check
-              port: 80
-            timeoutSeconds: 3
-            periodSeconds: 5
-          resources:
-            limits:
-              memory: "256Mi"
-
----

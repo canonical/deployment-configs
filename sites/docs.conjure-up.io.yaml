@@ -1,0 +1,18 @@
+domain: docs.conjure-up.io
+
+image: prod-comms.docker-registry.canonical.com/docs.conjure-up.io
+
+useProxy: false
+
+readinessPath: "/"
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

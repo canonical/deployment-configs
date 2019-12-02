@@ -1,0 +1,39 @@
+domain: jaas.ai
+
+image: prod-comms.docker-registry.canonical.com/jaas.ai
+
+useProxy: false
+
+env:
+  - name: SENTRY_DSN
+    value: https://5b54e6946be34749935c4dd2d9d01cb8@sentry.is.canonical.com//7
+
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
+extraHosts:
+  - domain: docs.jujucharms.com
+
+memoryLimit: 512Mi
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host = 'docs.jujucharms.com' ) {
+      rewrite ^ https://jaas.ai/docs$request_uri? permanent;
+    }
+    if ($host != 'jaas.ai' ) {
+      rewrite ^ https://jaas.ai$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    if ($host = 'docs.staging.jujucharms.com' ) {
+      rewrite ^ https://staging.jaas.ai/docs$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

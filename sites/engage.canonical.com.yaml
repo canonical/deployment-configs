@@ -1,0 +1,23 @@
+domain: engage.canonical.com
+
+image: prod-comms.docker-registry.canonical.com/engage.canonical.com
+replicas: 2
+
+useProxy: false
+
+env:
+  - name: SECRET_KEY
+    secretKeyRef:
+      key: secret_key
+      name: prototype-secret-key
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

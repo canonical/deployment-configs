@@ -1,0 +1,29 @@
+domain: docs.ubuntu.com
+
+image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com
+
+useProxy: false
+
+readinessPath: "/"
+
+routes:
+  - path: /core
+    image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
+    readinessPath: "/"
+  - path: /phone
+    image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
+    readinessPath: "/"
+  - path: /security-certs
+    image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
+    readinessPath: "/"
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

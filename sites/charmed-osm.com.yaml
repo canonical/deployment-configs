@@ -1,0 +1,17 @@
+domain: charmed-osm.com
+
+image: prod-comms.docker-registry.canonical.com/charmed-osm.com
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host != 'charmed-osm.com' ) {
+      rewrite ^ https://charmed-osm.com$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

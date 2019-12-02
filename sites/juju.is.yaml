@@ -1,0 +1,21 @@
+domain: juju.is
+
+image: prod-comms.docker-registry.canonical.com/juju.is
+
+env:
+  - name: SENTRY_DSN
+    value: https://a9c1a18b2a0a40bdae6177bb29331a2a@sentry.is.canonical.com//20
+
+# Overrides for production
+production:
+  nginxConfigurationSnippet: |
+    if ($host != 'juju.is' ) {
+      rewrite ^ https://juju.is$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

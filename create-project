@@ -1,79 +1,72 @@
 #! /usr/bin/env python3
 
 import re
-import sys
-from shutil import copyfile
+import yaml
+import argparse
 
 
-def create_service(domain):
-    service_name = domain.replace('.', '-')
-    copyfile('templates/service.yaml', f'services/{service_name}.yaml')
-    sentry_dsn = input("What's the SENTRY_DSN string? ").strip()
-    update_file(
-        f'services/{service_name}.yaml',
-        {
-            'service_name': service_name,
-            'domain': domain,
-            'sentry_dsn': sentry_dsn
-        }
+class literal(str):
+    """Class to support to yaml multi-line string literals"""
+
+    pass
+
+
+def literal_presenter(dumper, data):
+    """Add support to yaml multi-line string literals"""
+    return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
+
+
+# Add representer for multi-line string literals
+yaml.add_representer(literal, literal_presenter)
+
+
+def create_site(domain):
+    """Create a new yaml file under the sites folder for this domain"""
+
+    match = re.match(
+        r"((?P<subdomain>[\w-]+)\.)?(?P<apex>[\w-]+\.\w+)", domain
     )
-
-
-def create_ingresses(domain):
-    match = re.match(r"((?P<subdomain>[\w-]+)\.)?(?P<apex>[\w-]+\.\w+)", domain)
 
     if not match:
         raise Exception(f"{domain} is a weird domain")
 
-    sub = match.group('subdomain')
-    apex = match.group('apex')
-    ingress_name = domain.replace('.', '-')
-    service_name = domain.replace('.', '-')
-    production_filename = f'ingresses/production/{ingress_name}.yaml'
-    staging_domain = f'{sub}.staging.{apex}' if sub else f'staging.{apex}'
-    staging_ingress_name = staging_domain.replace('.', '-')
-    staging_filename = f'ingresses/staging/{staging_ingress_name}.yaml'
+    name = domain.replace(".", "-")
 
-    # Create staging ingress config file
-    copyfile('templates/staging.yaml', staging_filename)
-    update_file(
-        staging_filename,
-        {
-            'ingress_name': staging_ingress_name,
-            'domain': staging_domain,
-            'service_name': service_name
-        }
+    # Yaml data
+    data = {
+        "domain": domain,
+        "image": "prod-comms.docker-registry.canonical.com/" + name,
+    }
+
+    # Add default production nginx config
+    data["nginxConfigurationSnippet"] = literal(
+        "if ($host != '" + domain + "' ) {\n"
+        "  rewrite ^ https://" + domain + "$request_uri? permanent;\n"
+        "}\n"
+        'more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect;'
+        'crossorigin, <https://assets.ubuntu.com>; rel=preconnect";\n'
     )
 
-    # Create production ingress config file
-    if sub:
-        copyfile('templates/production-subdomain.yaml', production_filename)
-    else:
-        copyfile('templates/production-apex.yaml', production_filename)
+    data["staging"] = {}
 
-    update_file(
-        production_filename,
-        {
-            'ingress_name': ingress_name,
-            'domain': domain,
-            'service_name': service_name
-        }
+    # Add default staging nging config
+    data["staging"]["nginxConfigurationSnippet"] = literal(
+        'more_set_headers "X-Robots-Tag: noindex";\n'
+        'more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect;'
+        ' crossorigin, <https://assets.ubuntu.com>; rel=preconnect";\n'
     )
 
-
-def update_file(file_name, context):
-    with open(file_name) as file_handle:
-        file_contents = file_handle.read()
-
-    for key, value in context.items():
-        file_contents = file_contents.replace('{' + key + '}', value)
-
-    with open(file_name, 'w') as file_handle:
-        file_handle.write(file_contents)
+    # Save file
+    with open("./sites/" + domain + ".yaml", "w") as file:
+        yaml.dump(data, file, default_flow_style=False, sort_keys=False)
 
 
 if __name__ == "__main__":
-    domain = sys.argv[1]
+    parser = argparse.ArgumentParser(
+        description="Create a basic new yaml file with the values"
+    )
 
-    create_service(domain)
-    create_ingresses(domain)
+    parser.add_argument("domain", type=str, help="Site domain")
+
+    args = parser.parse_args()
+    create_site(args.domain)
