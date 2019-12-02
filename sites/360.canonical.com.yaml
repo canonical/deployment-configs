@@ -3,9 +3,21 @@ domain: 360.canonical.com
 
 image: prod-comms.docker-registry.canonical.com/360.canonical.com
 
+useProxy: false
+
 readinessPath: "/_status/ping"
 
 env:
+  - name: COMPLETED_PAGE_AUTH_USERS
+    value: eywoods,abbie-bennett,peterm-ubuntu,neilfrench
+
+  - name: MINIMUM_WORKING_PERIOD
+    value: "134"
+
+  - name: STATS_PAGE_AUTH_USERS
+    value: eywoods,abbie-bennett,peterm-ubuntu,neilfrench
+
+  # Secrets
   - name: DATABASE_URL
     secretKeyRef:
       key: database_url
