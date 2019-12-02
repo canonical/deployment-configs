@@ -4,7 +4,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ get_site_name() }}
-  namespace: {{ data.namespace }}
+  namespace: {{ namespace }}
 spec:
   selector:
     app: {{ domain }}

@@ -4,7 +4,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: {{ get_site_name(True) }}
-  namespace: {{ data.namespace }}
+  namespace: {{ namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
     {%- if data.nginxConfigurationSnippet %}
