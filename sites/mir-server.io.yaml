@@ -10,6 +10,7 @@ extraHosts:
 
 # Overrides for production
 production:
+  replicas: 5
   nginxConfigurationSnippet: |
     if ($host != 'mir-server.io' ) {
       rewrite ^ https://mir-server.io$request_uri? permanent;
@@ -18,6 +19,7 @@ production:
 
 # Overrides for staging
 staging:
+  replicas: 3
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

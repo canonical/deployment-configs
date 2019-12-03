@@ -6,24 +6,45 @@ useProxy: false
 
 readinessPath: "/"
 
-routes:
-  - path: /core
-    image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
-    readinessPath: "/"
-  - path: /phone
-    image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
-    readinessPath: "/"
-  - path: /security-certs
-    image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
-    readinessPath: "/"
-
 # Overrides for production
 production:
+  replicas: 5
+
+  routes:
+    - path: /core
+      image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
+      replicas: 5
+      readinessPath: "/"
+    - path: /phone
+      image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
+      replicas: 5
+      readinessPath: "/"
+    - path: /security-certs
+      image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
+      replicas: 5
+      readinessPath: "/"
+
   nginxConfigurationSnippet: |
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
 staging:
+  replicas: 3
+
+  routes:
+    - path: /core
+      image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
+      replicas: 3
+      readinessPath: "/"
+    - path: /phone
+      image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
+      replicas: 3
+      readinessPath: "/"
+    - path: /security-certs
+      image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
+      replicas: 3
+      readinessPath: "/"
+
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

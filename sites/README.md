@@ -39,6 +39,7 @@ image: prod-comms.docker-registry.canonical.com/canonical.com
 ```
 
 ## replicas
+**(Mandatory)**
 
 **Type:** Int
 

@@ -8,6 +8,7 @@ readinessPath: /
 
 # Overrides for production
 production:
+  replicas: 5
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     if ($host != 'old-docs.maas.io' ) {
@@ -17,6 +18,7 @@ production:
 
 # Overrides for staging
 staging:
+  replicas: 3
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     if ($host != 'old-docs.staging.maas.io' ) {
