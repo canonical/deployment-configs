@@ -15,7 +15,7 @@
 {% include 'deployment.yaml' %}
 
 {% if "routes" in data %}
-  {% for route in data.routes %}
+  {%- for route in data.routes %}
     {%- with
         name=get_site_name() ~ route.path|replace("/", "-"),
         domain=domain ~ route.path|replace("/", "-"),
