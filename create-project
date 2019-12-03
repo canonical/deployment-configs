@@ -38,8 +38,11 @@ def create_site(domain):
         "image": "prod-comms.docker-registry.canonical.com/" + name,
     }
 
+    data["production"] = {}
+    data["production"]["replicas"] = 5
+
     # Add default production nginx config
-    data["nginxConfigurationSnippet"] = literal(
+    data["production"]["nginxConfigurationSnippet"] = literal(
         "if ($host != '" + domain + "' ) {\n"
         "  rewrite ^ https://" + domain + "$request_uri? permanent;\n"
         "}\n"
@@ -48,6 +51,7 @@ def create_site(domain):
     )
 
     data["staging"] = {}
+    data["staging"]["replicas"] = 3
 
     # Add default staging nging config
     data["staging"]["nginxConfigurationSnippet"] = literal(

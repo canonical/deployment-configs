@@ -1,7 +1,6 @@
 domain: manager.assets.ubuntu.com
 
 image: prod-comms.docker-registry.canonical.com/manager.assets.ubuntu.com
-replicas: 2
 
 env:
   - name: ASSET_SERVER_URL
@@ -19,10 +18,12 @@ env:
 
 # Overrides for production
 production:
+  replicas: 2
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
 
 # Overrides for staging
 staging:
+  replicas: 2
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";

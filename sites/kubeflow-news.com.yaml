@@ -8,6 +8,7 @@ env:
 
 # Overrides for production
 production:
+  replicas: 5
   nginxConfigurationSnippet: |
     if ($host != 'kubeflow-news.com' ) {
       rewrite ^ https://kubeflow-news.com$request_uri? permanent;
@@ -16,6 +17,7 @@ production:
 
 # Overrides for staging
 staging:
+  replicas: 3
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";

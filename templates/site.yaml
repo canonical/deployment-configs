@@ -1,25 +1,29 @@
 {% include 'service.yaml' %}
 
-{% for route in data.routes %}
-  {%- with
-      name=get_site_name() ~ route.path|replace("/", "-"),
-      domain=domain ~ route.path|replace("/", "-"),
-      data=route
-  %}
-    {%- include 'service.yaml' %}
-  {% endwith %}
-{% endfor %}
+{% if "routes" in data %}
+  {%- for route in data.routes %}
+    {%- with
+        name=get_site_name() ~ route.path|replace("/", "-"),
+        domain=domain ~ route.path|replace("/", "-"),
+        data=route
+    %}
+      {%- include 'service.yaml' %}
+    {% endwith %}
+  {% endfor %}
+{% endif %}
 
 {% include 'deployment.yaml' %}
 
-{% for route in data.routes %}
-  {%- with
-      name=get_site_name() ~ route.path|replace("/", "-"),
-      domain=domain ~ route.path|replace("/", "-"),
-      data=route
-  %}
-    {%- include 'deployment.yaml' %}
-  {% endwith %}
-{% endfor %}
+{% if "routes" in data %}
+  {% for route in data.routes %}
+    {%- with
+        name=get_site_name() ~ route.path|replace("/", "-"),
+        domain=domain ~ route.path|replace("/", "-"),
+        data=route
+    %}
+      {%- include 'deployment.yaml' %}
+    {% endwith %}
+  {% endfor %}
+{% endif %}
 
 {% include 'ingress.yaml' %}

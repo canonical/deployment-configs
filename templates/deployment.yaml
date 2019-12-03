@@ -6,7 +6,7 @@ metadata:
   name: {{ get_site_name() }}
   namespace: {{ namespace }}
 spec:
-  replicas: {{ data.replicas | default(5) }}
+  replicas: {{ data.replicas }}
   template:
     metadata:
       labels:
@@ -24,7 +24,7 @@ spec:
             - name: TALISKER_NETWORKS
               value: 10.0.0.0/8
 
-            {%- if data.useProxy != False %}
+            {%- if data.useProxy is not defined or data.useProxy != False %}
             - name: HTTP_PROXY
               value: "http://squid.internal:3128/"
 
@@ -35,28 +35,30 @@ spec:
               value: "ubuntu.com,.ubuntu.com,snapcraft.io,.snapcraft.io,jujucharms.com,.jujucharms.com,maas.io,.maas.io,conjure-up.io,.conjure-up.io,netplan.io,.netplan.io,canonical.com,.canonical.com,launchpad.net,.launchpad.net,linuxcontainers.org,.linuxcontainers.org,cloud-init.io,.cloud-init.io,vanillaframework.io,.vanillaframework.io"
             {%- endif %}
 
+            {%- if "env" in data %}
             {%- for env in data.env %}
             - name: {{ env.name }}
-              {%- if env.value %}
+              {%- if "value" in env %}
               value: "{{ env.value }}"
               {%- endif %}
 
-              {%- if env.secretKeyRef %}
+              {%- if "secretKeyRef" in env %}
               valueFrom:
                 secretKeyRef:
                   key: {{ env.secretKeyRef.key }}
                   name: {{ env.secretKeyRef.name }}
               {%- endif %}
 
-              {%- if env.configMapKeyRef %}
+              {%- if "configMapKeyRef" in env %}
               valueFrom:
                 configMapKeyRef:
                   key: {{ env.configMapKeyRef.key }}
                   name: {{ env.configMapKeyRef.name }}
               {%- endif %}
             {%- endfor %}
+            {%- endif %}
 
-          {%- if data.readinessPath != false %}
+          {%- if data.readinessPath is not defined or data.readinessPath != false %}
           readinessProbe:
             httpGet:
               path: {{ data.readinessPath | default("/_status/check") }}

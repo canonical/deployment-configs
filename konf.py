@@ -100,7 +100,9 @@ class Konf:
 
         # Init Jinja2 environment
         template_loader = jinja2.FileSystemLoader("./templates")
-        jinja_env = jinja2.Environment(loader=template_loader)
+        jinja_env = jinja2.Environment(
+            loader=template_loader, undefined=jinja2.StrictUndefined
+        )
 
         # Add custom jinja2 functions and filters
         jinja_env.globals["get_site_name"] = get_site_name
