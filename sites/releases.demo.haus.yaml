@@ -3,6 +3,8 @@ domain: releases.demo.haus
 image: prod-comms.docker-registry.canonical.com/releases.demo.haus
 replicas: 2
 
+useProxy: false
+
 memoryLimit: 128Mi
 
 noTls: true

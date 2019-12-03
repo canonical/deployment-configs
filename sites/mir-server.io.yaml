@@ -2,6 +2,8 @@ domain: mir-server.io
 
 image: prod-comms.docker-registry.canonical.com/mir-server.io
 
+useProxy: false
+
 extraHosts:
   - domain: mirserver.io
     useParentTLS: True

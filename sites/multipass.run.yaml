@@ -2,6 +2,8 @@ domain: multipass.run
 
 image: prod-comms.docker-registry.canonical.com/multipass.run
 
+useProxy: false
+
 # Overrides for production
 production:
   nginxConfigurationSnippet: |

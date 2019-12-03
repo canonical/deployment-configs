@@ -2,6 +2,8 @@ domain: vanillaframework.io
 
 image: prod-comms.docker-registry.canonical.com/vanillaframework.io
 
+useProxy: false
+
 nginxConfigurationSnippet: |
   if ($host != 'vanillaframework.io' ) {
     rewrite ^ https://vanillaframework.io$request_uri? permanent;
