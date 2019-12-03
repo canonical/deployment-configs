@@ -2,6 +2,8 @@ domain: old-docs.maas.io
 
 image: prod-comms.docker-registry.canonical.com/old-docs.maas.io
 
+useProxy: false
+
 readinessPath: /
 
 # Overrides for production

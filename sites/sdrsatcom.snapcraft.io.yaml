@@ -2,6 +2,8 @@ domain: sdrsatcom.snapcraft.io
 
 image: prod-comms.docker-registry.canonical.com/sdrsatcom.snapcraft.io
 
+useProxy: false
+
 memoryLimit: 512Mi
 
 # Overrides for production

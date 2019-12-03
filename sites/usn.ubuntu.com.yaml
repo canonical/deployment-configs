@@ -3,6 +3,8 @@ domain: usn.ubuntu.com
 image: prod-comms.docker-registry.canonical.com/usn.ubuntu.com
 replicas: 9
 
+useProxy: false
+
 readinessPath: "/"
 
 nginxConfigurationSnippet: |

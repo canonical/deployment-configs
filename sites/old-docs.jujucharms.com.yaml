@@ -2,6 +2,8 @@ domain: old-docs.jujucharms.com
 
 image: prod-comms.docker-registry.canonical.com/old-docs.jujucharms.com
 
+useProxy: false
+
 readinessPath: /
 
 # Overrides for production

@@ -2,6 +2,8 @@ domain: netplan.io
 
 image: prod-comms.docker-registry.canonical.com/netplan.io
 
+useProxy: false
+
 readinessPath: /
 
 # Overrides for production
