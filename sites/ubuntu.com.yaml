@@ -74,6 +74,12 @@ staging:
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
+    if ($host = 'blog.staging.ubuntu.com' ) {
+      rewrite ^ https://staging.ubuntu.com/blog$request_uri? permanent;
+    }
+    if ($host = 'insights.staging.ubuntu.com' ) {
+      rewrite ^ https://staging.ubuntu.com/blog$request_uri? permanent;
+    }
     if ($host != 'staging.ubuntu.com' ) {
       rewrite ^ https://staging.ubuntu.com$request_uri? permanent;
     }
