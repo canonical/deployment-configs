@@ -43,8 +43,6 @@ image: prod-comms.docker-registry.canonical.com/canonical.com
 
 **Type:** Int
 
-**Default:** `5`
-
 Number of replicas to use.
 
 Example:
