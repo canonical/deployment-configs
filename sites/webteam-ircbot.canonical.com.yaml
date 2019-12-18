@@ -24,6 +24,10 @@ env:
     value: "#web-team,#is-outage"
   - name: HUBOT_IRC_DEBUG
     value: "true"
+  - name: HUBOT_SPREADSHEET_CLIENT_EMAIL
+    value: "webbotac@webbot-262415.iam.gserviceaccount.com"
+  - name: HUBOT_SPREADSHEET_ID
+    value: "1nNk4typDnOfDEYRzlEjtd58zk-aOd3_NNp6eufthZHM"
   - name: HUBOT_AUTH_ADMIN
     secretKeyRef:
       key: hubot-auth-admin
@@ -35,4 +39,8 @@ env:
   - name: HUBOT_RELEASE_NOTIFICATION_SECRET
     secretKeyRef:
       key: hubot-release-notification-secret
+      name: irc-secrets
+  - name: HUBOT_SPREADSHEET_PRIVATE_KEY
+    secretKeyRef:
+      key: hubot-spreadsheet-private-key
       name: irc-secrets
