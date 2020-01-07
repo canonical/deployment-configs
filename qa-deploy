@@ -1,12 +1,12 @@
 #! /usr/bin/env bash
 
 # Bash strict mode
-set -euo pipefail
+set -eo pipefail
 
 USAGE="Usage
 ===
 
-  $ ./qa-deploy (production|staging) file [IMAGE_TAG]
+  $ ./qa-deploy (production|staging) file [DOCKER_IMAGE_TAG]
 
 
 Description
@@ -117,7 +117,16 @@ function run() {
 
     # Mandatory arguments
     if [ -z "${environment:-}" ]; then invalid "No environment specified (e.g. 'production')"; fi
-    if [ -z "${values_file:-}" ]; then invalid "No values file specified (e.g. 'sites/canonical-com.yaml')"; fi
+    if [ -z "${values_file:-}" ]; then invalid "No values file specified (e.g. 'sites/canonical.com.yaml')"; fi
+
+    # Validate arguments
+    if [[ ! "$environment" =~ ^(production|staging)$ ]]; then
+        invalid "You need to specify a valid environment: 'production' or 'staging'"
+    fi
+
+    if [[ ! -f $values_file ]] ; then
+        invalid "File '${values_file}' doesn't exits, aborting."
+    fi
 
     run_microk8s
     # The configuration needs to run before the ingress controller starts
