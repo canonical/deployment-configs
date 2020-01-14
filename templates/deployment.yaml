@@ -3,17 +3,17 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ get_site_name() }}
+  name: {{ data.get('name') or get_site_name() }}
   namespace: {{ namespace }}
 spec:
   replicas: {{ data.replicas }}
   template:
     metadata:
       labels:
-        app: {{ domain }}
+        app: {{ data.get('app_name') or domain }}
     spec:
       containers:
-        - name: {{ get_site_name() }}
+        - name: {{ data.get('name') or get_site_name() }}
           image: {{ data.image }}:{{ tag | default("latest", true) }}
 
           ports:

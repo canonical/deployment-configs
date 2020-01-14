@@ -2,11 +2,7 @@
 
 {% if "routes" in data %}
   {%- for route in data.routes %}
-    {%- with
-        name=get_site_name() ~ route.path|replace("/", "-"),
-        domain=domain ~ route.path|replace("/", "-"),
-        data=route
-    %}
+    {%- with app_name=route.name, data=route %}
       {%- include 'service.yaml' %}
     {% endwith %}
   {% endfor %}
@@ -16,11 +12,7 @@
 
 {% if "routes" in data %}
   {%- for route in data.routes %}
-    {%- with
-        name=get_site_name() ~ route.path|replace("/", "-"),
-        domain=domain ~ route.path|replace("/", "-"),
-        data=route
-    %}
+    {%- with app_name=route.name, data=route %}
       {%- include 'deployment.yaml' %}
     {% endwith %}
   {% endfor %}

@@ -3,11 +3,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ get_site_name() }}
+  name: {{ data.get('name') or get_site_name() }}
   namespace: {{ namespace }}
 spec:
   selector:
-    app: {{ domain }}
+    app: {{ data.get('app_name') or domain }}
   ports:
     - name: http
       protocol: TCP

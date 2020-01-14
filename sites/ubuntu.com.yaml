@@ -25,7 +25,9 @@ production:
   replicas: 5
 
   routes:
-    - path: /blog
+    - paths: [/blog]
+      name: ubuntu-com-blog
+      app_name: ubuntu.com-blog
       image: prod-comms.docker-registry.canonical.com/ubuntu.com
       replicas: 5
       memoryLimit: 512Mi
@@ -60,7 +62,9 @@ staging:
   replicas: 3
 
   routes:
-    - path: /blog
+    - path: [/blog]
+      name: ubuntu-com-blog
+      app_name: ubuntu.com-blog
       image: prod-comms.docker-registry.canonical.com/ubuntu.com
       replicas: 3
       memoryLimit: 512Mi
