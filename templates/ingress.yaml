@@ -56,10 +56,12 @@ spec:
       paths:
       {% if "routes" in data %}
       {%- for route in data.routes %}
-      - path: {{ route.path }}
+      {%- for path in route.paths %}
+      - path: {{ path }}
         backend:
-          serviceName: {{ get_site_name() ~ route.path | replace("/", "-") }}
+          serviceName: {{ route.name }}
           servicePort: 80
+      {% endfor %}
       {% endfor %}
       {% endif %}
 

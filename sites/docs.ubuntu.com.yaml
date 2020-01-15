@@ -11,15 +11,21 @@ production:
   replicas: 5
 
   routes:
-    - path: /core
+    - paths: [/core]
+      name: docs-ubuntu-com-core
+      app_name: docs.ubuntu.com-core
       image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
       replicas: 5
       readinessPath: "/"
-    - path: /phone
+    - paths: [/phone]
+      name: docs-ubuntu-com-phone
+      app_name: docs.ubuntu.com-phone
       image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
       replicas: 5
       readinessPath: "/"
-    - path: /security-certs
+    - paths: [/security-certs]
+      name: docs-ubuntu-com-security-certs
+      app_name: docs.ubuntu.com-security-certs
       image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
       replicas: 5
       readinessPath: "/"
@@ -32,15 +38,21 @@ staging:
   replicas: 3
 
   routes:
-    - path: /core
+    - paths: [/core]
+      name: docs-ubuntu-com-core
+      app_name: docs.ubuntu.com-core
       image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-core
       replicas: 3
       readinessPath: "/"
-    - path: /phone
+    - paths: [/phone]
+      name: docs-ubuntu-com-phone
+      app_name: docs.ubuntu.com-phone
       image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-phone
       replicas: 3
       readinessPath: "/"
-    - path: /security-certs
+    - paths: [/security-certs]
+      name: docs-ubuntu-com-security-certs
+      app_name: docs.ubuntu.com-security-certs
       image: prod-comms.docker-registry.canonical.com/docs.ubuntu.com-security-certs
       replicas: 3
       readinessPath: "/"

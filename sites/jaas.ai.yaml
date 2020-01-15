@@ -30,6 +30,13 @@ production:
     }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
+  routes:
+    - paths: [/models, /static, /controllers]
+      name: jaas-ai-dashboard
+      app_name: jaas.ai-dashboard
+      image: prod-comms.docker-registry.canonical.com/jaas.ai-dashboard
+      replicas: 5
+
 # Overrides for staging
 staging:
   replicas: 3
@@ -39,3 +46,10 @@ staging:
       rewrite ^ https://staging.jaas.ai/docs$request_uri? permanent;
     }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+  routes:
+    - paths: [/models, /static, /controllers]
+      name: jaas-ai-dashboard
+      app_name: jaas.ai-dashboard
+      image: prod-comms.docker-registry.canonical.com/jaas.ai-dashboard
+      replicas: 3
