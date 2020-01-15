@@ -62,7 +62,7 @@ staging:
   replicas: 3
 
   routes:
-    - path: [/blog]
+    - paths: [/blog]
       name: ubuntu-com-blog
       app_name: ubuntu.com-blog
       image: prod-comms.docker-registry.canonical.com/ubuntu.com
