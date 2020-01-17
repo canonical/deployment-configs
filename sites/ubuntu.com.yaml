@@ -40,6 +40,21 @@ production:
       - name: SENTRY_DSN
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
+    - paths: [/tutorials]
+      name: ubuntu-com-tutorials
+      app_name: ubuntu.com-tutorials
+      image: prod-comms.docker-registry.canonical.com/ubuntu.com
+      replicas: 5
+      memoryLimit: 512Mi
+      env:
+      - name: SEARCH_API_KEY
+        secretKeyRef:
+          key: google-custom-search-key
+          name: google-api
+
+      - name: SENTRY_DSN
+        value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+
   nginxConfigurationSnippet: |
     if ($host = 'blog.ubuntu.com' ) {
       rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
@@ -73,7 +88,20 @@ staging:
         secretKeyRef:
           key: google-custom-search-key
           name: google-api
+      - name: SENTRY_DSN
+        value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
+    - paths: [/tutorials]
+      name: ubuntu-com-tutorials
+      app_name: ubuntu.com-tutorials
+      image: prod-comms.docker-registry.canonical.com/ubuntu.com
+      replicas: 3
+      memoryLimit: 512Mi
+      env:
+      - name: SEARCH_API_KEY
+        secretKeyRef:
+          key: google-custom-search-key
+          name: google-api
       - name: SENTRY_DSN
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
