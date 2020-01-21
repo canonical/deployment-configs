@@ -1,0 +1,38 @@
+name: validate
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install system dependencies
+      run: sudo apt update && sudo apt install -y --no-install-recommends python3-setuptools
+
+    - name: Install Konf.py dependencies
+      run: pip3 install -r requirements.txt
+
+    - name: Install Kubeval
+      run: |
+        wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+        tar xf kubeval-linux-amd64.tar.gz
+        sudo cp kubeval /usr/local/bin
+
+    - name: Validate all sites
+      run: |
+        set -e
+        set -o pipefail
+        for site in sites/*.yaml; do
+          echo "Validating $site"
+          ./konf.py staging "$site" | kubeval -f -
+          ./konf.py production "$site" | kubeval -f -
+        done
