@@ -29,8 +29,7 @@ jobs:
 
     - name: Validate all sites
       run: |
-        set -e
-        set -o pipefail
+        set -eo pipefail
         for site in sites/*.yaml; do
           echo "Validating $site"
           ./konf.py staging "$site" | kubeval -f -
