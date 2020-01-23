@@ -15,6 +15,7 @@ memoryLimit: 512Mi
 
 extraHosts:
   - domain: ubuntu.net
+  - domain: tutorials.ubuntu.com
   - domain: blog.ubuntu.com
   - domain: insights.ubuntu.com
   - domain: ubunut.com
@@ -56,6 +57,9 @@ production:
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
+    if ($host = 'tutorials.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/tutorials$request_uri? permanent;
+    }
     if ($host = 'blog.ubuntu.com' ) {
       rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
     }
@@ -106,6 +110,9 @@ staging:
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
+    if ($host = 'tutorials.staging.ubuntu.com' ) {
+      rewrite ^ https://staging.ubuntu.com/tutorials$request_uri? permanent;
+    }
     if ($host = 'blog.staging.ubuntu.com' ) {
       rewrite ^ https://staging.ubuntu.com/blog$request_uri? permanent;
     }
