@@ -2,6 +2,12 @@ domain: docs.vanillaframework.io
 
 image: prod-comms.docker-registry.canonical.com/docs.vanillaframework.io
 
+env:
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
 useProxy: false
 
 readinessPath: "/"
