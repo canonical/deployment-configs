@@ -20,6 +20,7 @@ extraHosts:
   - domain: insights.ubuntu.com
   - domain: ubunut.com
   - domain: ubuntulinux.org
+  - domain: download.ubuntu.com
 
 # Overrides for production
 production:
@@ -57,6 +58,9 @@ production:
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
+    if ($host = 'download.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/download$request_uri? permanent;
+    }
     if ($host = 'tutorials.ubuntu.com' ) {
       rewrite ^ https://ubuntu.com/tutorials$request_uri? permanent;
     }
