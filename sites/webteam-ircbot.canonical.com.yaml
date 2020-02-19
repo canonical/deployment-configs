@@ -19,7 +19,7 @@ env:
   - name: HUBOT_IRC_USESSL
     value: "true"
   - name: HUBOT_IRC_ROOMS
-    value: "#sukha,#web-team,#is-outage"
+    value: "#sukha,#web-team,#is-outage,#maas"
   - name: HUBOT_RELEASE_NOTIFICATION_ROOMS
     value: "#web-team,#is-outage"
   - name: HUBOT_IRC_DEBUG
