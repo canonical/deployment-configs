@@ -4,6 +4,12 @@ image: prod-comms.docker-registry.canonical.com/vanillaframework.io
 
 useProxy: false
 
+env:
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
 extraHosts:
   - domain: docs.vanillaframework.io
 
