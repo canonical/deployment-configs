@@ -34,6 +34,11 @@ production:
       replicas: 5
       memoryLimit: 512Mi
       env:
+      - name: DATABASE_URL
+        secretKeyRef:
+          key: database_url
+          name: usn-db-url
+
       - name: SEARCH_API_KEY
         secretKeyRef:
           key: google-custom-search-key
@@ -49,6 +54,11 @@ production:
       replicas: 5
       memoryLimit: 512Mi
       env:
+      - name: DATABASE_URL
+        secretKeyRef:
+          key: database_url
+          name: usn-db-url
+
       - name: SEARCH_API_KEY
         secretKeyRef:
           key: google-custom-search-key
@@ -92,10 +102,16 @@ staging:
       replicas: 3
       memoryLimit: 512Mi
       env:
+      - name: DATABASE_URL
+        secretKeyRef:
+          key: database_url
+          name: usn-db-url
+
       - name: SEARCH_API_KEY
         secretKeyRef:
           key: google-custom-search-key
           name: google-api
+
       - name: SENTRY_DSN
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
@@ -106,10 +122,16 @@ staging:
       replicas: 3
       memoryLimit: 512Mi
       env:
+      - name: DATABASE_URL
+        secretKeyRef:
+          key: database_url
+          name: usn-db-url
+
       - name: SEARCH_API_KEY
         secretKeyRef:
           key: google-custom-search-key
           name: google-api
+
       - name: SENTRY_DSN
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
