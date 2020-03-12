@@ -5,8 +5,6 @@ replicas: 1
 
 readinessPath: false
 
-containerPort: 8080
-
 memoryLimit: 128Mi
 
 env:
