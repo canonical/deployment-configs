@@ -3,6 +3,11 @@ domain: ubuntu.com
 image: prod-comms.docker-registry.canonical.com/ubuntu.com
 
 env:
+  - name: DATABASE_URL
+    secretKeyRef:
+      key: database_url
+      name: usn-db-url
+
   - name: SEARCH_API_KEY
     secretKeyRef:
       key: google-custom-search-key
