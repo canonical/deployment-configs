@@ -6,6 +6,11 @@ env:
   - name: SENTRY_DSN
     value: https://a9c1a18b2a0a40bdae6177bb29331a2a@sentry.is.canonical.com//20
 
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
 # Overrides for production
 production:
   replicas: 5
