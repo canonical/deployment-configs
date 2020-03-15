@@ -42,3 +42,7 @@ env:
     secretKeyRef:
       key: hubot-spreadsheet-private-key
       name: irc-secrets
+  - name: HUBOT_GITHUB_TOKEN
+    secretKeyRef:
+      key: hubot-github-token
+      name: irc-secrets
