@@ -11,6 +11,44 @@ env:
       key: greenhouse_api_key
       name: canonical-com
 
+extraHosts:
+  - domain: canonical.asia
+  - domain: canonical.at
+  - domain: canonical.be
+  - domain: canonical.bg
+  - domain: canonical.bz
+  - domain: canonical.ca
+  - domain: canonical.ch
+  - domain: canonical.co.il
+  - domain: canonical.co.in
+  - domain: canonical.com.au
+  - domain: canonical.com.es
+  - domain: canonical.com.mx
+  - domain: canonical.com.my
+  - domain: canonical.com.pl
+  - domain: canonical.com.tw
+  - domain: canonical.cz
+  - domain: canonical.es
+  - domain: canonical.fi
+  - domain: canonical.fr
+  - domain: canonical.gen.in
+  - domain: canonical.hk
+  - domain: canonical.ie
+  - domain: canonical.in
+  - domain: canonical.it
+  - domain: canonical.jp
+  - domain: canonical.kr
+  - domain: canonical.my
+  - domain: canonical.net.cn
+  - domain: canonical.no
+  - domain: canonical.org.cn
+  - domain: canonical.pl
+  - domain: canonical.sg
+  - domain: canonical.tm
+  - domain: canonical.tw
+  - domain: canonical.vc
+  - domain: canonical.vg
+
 # Overrides for production
 production:
   replicas: 5
