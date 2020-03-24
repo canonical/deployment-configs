@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ data.name }}
+  namespace: {{ namespace }}
+spec:
+  schedule: "{{ data.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ data.name }}
+            image: {{ data.image }}:{{ tag | default("latest", true) }}
+            {%- if data.run %}
+            args:
+            - /bin/sh
+            - -c
+            - {{ data.run }}
+            {%- endif %}
+          restartPolicy: Never

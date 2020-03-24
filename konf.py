@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
 
-import yaml
-import jinja2
 import argparse
+
+import jinja2
+import yaml
 
 
 # Custom Jinja2 functions
@@ -63,6 +64,64 @@ class Konf:
         # Load project data
         self.load_values(values_file, local_qa, docker_tag)
 
+    def render(self, template_file):
+        """Returns templates rendered."""
+
+        # Init Jinja2 environment
+        template_loader = jinja2.FileSystemLoader("./templates")
+        jinja_env = jinja2.Environment(
+            loader=template_loader, undefined=jinja2.StrictUndefined
+        )
+
+        # Add custom jinja2 functions and filters
+        jinja_env.globals["get_site_name"] = get_site_name
+        jinja_env.globals["get_environment_domain"] = get_environment_domain
+        jinja_env.filters["add_environment_prefix"] = add_environment_prefix
+        jinja_env.filters["is_apex_domain"] = is_apex_domain
+
+        template = jinja_env.get_template(template_file)
+
+        return template.render(
+            name=self.name,
+            domain=self.domain,
+            tag=self.tag,
+            data=self.values,
+            namespace=self.namespace,
+            deployment_env=self.deployment_env,
+        )
+
+
+class KonfCronJob(Konf):
+    def load_values(self, values_file, local_qa=False, docker_tag=None):
+        """This reads the cronjob values from the yaml file
+
+        Parameters:
+        values_file (io.TextIOWrapper): project values
+        env (string): production or staging
+        local_qa (boolean): Override values for local qa
+        docker_tag (string): Override docker tag value
+        """
+
+        self.values = yaml.load(values_file, Loader=yaml.FullLoader)
+
+        self.name = self.values.get("name")
+        self.domain = None
+
+        # Set deployment environment namespace
+        self.namespace = self.deployment_env
+
+        # QA overrides
+        if local_qa:
+            self.namespace = "default"
+
+        if docker_tag:
+            self.tag = docker_tag
+
+    def render(self, template_file="cronjob.yaml"):
+        return super(KonfCronJob, self).render(template_file)
+
+
+class KonfSite(Konf):
     def load_values(self, values_file, local_qa=False, docker_tag=None):
         """This reads the project values from the yaml file
 
@@ -95,36 +154,21 @@ class Konf:
         if docker_tag:
             self.tag = docker_tag
 
-    def render(self):
-        """Returns templates rendered."""
-
-        # Init Jinja2 environment
-        template_loader = jinja2.FileSystemLoader("./templates")
-        jinja_env = jinja2.Environment(
-            loader=template_loader, undefined=jinja2.StrictUndefined
-        )
-
-        # Add custom jinja2 functions and filters
-        jinja_env.globals["get_site_name"] = get_site_name
-        jinja_env.globals["get_environment_domain"] = get_environment_domain
-        jinja_env.filters["add_environment_prefix"] = add_environment_prefix
-        jinja_env.filters["is_apex_domain"] = is_apex_domain
-
-        template = jinja_env.get_template("site.yaml")
-
-        return template.render(
-            name=self.name,
-            domain=self.domain,
-            tag=self.tag,
-            data=self.values,
-            namespace=self.namespace,
-            deployment_env=self.deployment_env,
-        )
+    def render(self, template_file="site.yaml"):
+        return super(KonfSite, self).render(template_file)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Render kubernetes configurations for each projects"
+    )
+
+    parser.add_argument(
+        "--type",
+        type=str,
+        help="Type of deployment configuration to generate",
+        choices=["Site", "CronJob"],
+        default="Site",
     )
 
     parser.add_argument(
@@ -152,6 +196,7 @@ if __name__ == "__main__":
         dest="docker_tag",
     )
 
-    args = parser.parse_args()
-    projectConfig = Konf(**vars(args))
+    args = vars(parser.parse_args())
+    type = args.pop("type")
+    projectConfig = globals()[f"Konf{type}"](**args)
     print(projectConfig.render())
