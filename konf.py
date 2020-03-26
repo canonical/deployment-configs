@@ -169,6 +169,7 @@ if __name__ == "__main__":
         help="Type of deployment configuration to generate",
         choices=["Site", "CronJob"],
         default="Site",
+        dest="konf_type",
     )
 
     parser.add_argument(
@@ -197,6 +198,6 @@ if __name__ == "__main__":
     )
 
     args = vars(parser.parse_args())
-    type = args.pop("type")
-    projectConfig = globals()[f"Konf{type}"](**args)
+    konf_type = args.pop("konf_type")
+    projectConfig = globals()["Konf" + konf_type](**args)
     print(projectConfig.render())
