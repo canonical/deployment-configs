@@ -12,7 +12,32 @@ spec:
           containers:
           - name: {{ data.name }}
             image: {{ data.image }}:{{ tag | default("latest", true) }}
-            {%- if data.run %}
+
+            {%- if "env" in data %}
+            env:
+            {%- for env in data.env %}
+            - name: {{ env.name }}
+              {%- if "value" in env %}
+              value: "{{ env.value }}"
+              {%- endif %}
+
+              {%- if "secretKeyRef" in env %}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ env.secretKeyRef.key }}
+                  name: {{ env.secretKeyRef.name }}
+              {%- endif %}
+
+              {%- if "configMapKeyRef" in env %}
+              valueFrom:
+                configMapKeyRef:
+                  key: {{ env.configMapKeyRef.key }}
+                  name: {{ env.configMapKeyRef.name }}
+              {%- endif %}
+            {%- endfor %}
+            {%- endif %}
+
+            {%- if "run" in data %}
             args:
             - /bin/sh
             - -c
