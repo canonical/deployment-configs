@@ -11,10 +11,24 @@ env:
       key: greenhouse_api_key
       name: canonical-com
 
+extraHosts:
+  - domain: blog.canonical.com
+  - domain: design.canonical.com
+  - domain: partners.canonical.com
+
 # Overrides for production
 production:
   replicas: 5
   nginxConfigurationSnippet: |
+    if ($host = 'blog.canonical.com' ) {
+      rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+    }
+    if ($host = 'design.canonical.com' ) {
+      rewrite ^ https://ubuntu.com/blog/topics/design permanent;
+    }
+    if ($host = 'partners.canonical.com' ) {
+      rewrite ^ https://canonical.com permanent;
+    }
     if ($host != 'canonical.com' ) {
       rewrite ^ https://canonical.com$request_uri? permanent;
     }
