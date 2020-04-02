@@ -33,7 +33,7 @@ extraHosts:
   - domain: release-blog.ubuntu.com
   - domain: tour.ubuntu.com
   - domain: webapps.ubuntu.com
-  - domain: www.ubuntuserver.org
+  - domain: ubuntuserver.org
 
 # Overrides for production
 production:
@@ -114,7 +114,7 @@ production:
     if ($host = 'webapps.ubuntu.com' ) {
       rewrite ^ https://partners.ubuntu.com/programmes/software$request_uri? permanent;
     }
-    if ($host = 'www.ubuntuserver.org' ) {
+    if ($host = 'ubuntuserver.org' ) {
       rewrite ^ https://ubuntu.com/server$request_uri? permanent;
     }
     if ($host != 'ubuntu.com' ) {
