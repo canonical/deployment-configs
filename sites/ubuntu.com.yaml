@@ -26,6 +26,14 @@ extraHosts:
   - domain: ubunut.com
   - domain: ubuntulinux.org
   - domain: download.ubuntu.com
+  - domain: apps.ubuntu.com
+  - domain: cloud.ubuntu.com
+  - domain: font.ubuntu.com
+  - domain: jobs.ubuntu.com
+  - domain: release-blog.ubuntu.com
+  - domain: tour.ubuntu.com
+  - domain: webapps.ubuntu.com
+  - domain: www.ubuntuserver.org
 
 # Overrides for production
 production:
@@ -73,6 +81,12 @@ production:
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
+    if ($host = 'apps.ubuntu.com' ) {
+      rewrite ^ https://snapcraft.io/store permanent;
+    }
+    if ($host = 'cloud.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/public-cloud$request_uri? permanent;
+    }
     if ($host = 'download.ubuntu.com' ) {
       rewrite ^ https://ubuntu.com/download$request_uri? permanent;
     }
@@ -84,6 +98,24 @@ production:
     }
     if ($host = 'insights.ubuntu.com' ) {
       rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+    }
+    if ($host = 'font.ubuntu.com' ) {
+      rewrite ^ https://design.ubuntu.com/font$request_uri? permanent;
+    }
+    if ($host = 'jobs.ubuntu.com' ) {
+      rewrite ^ https://canonical.com/careers$request_uri? permanent;
+    }
+    if ($host = 'release-blog.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/blog$request_uri? permanent;
+    }
+    if ($host = 'tour.ubuntu.com' ) {
+      rewrite ^ https://ubuntu.com/desktop/features$request_uri? permanent;
+    }
+    if ($host = 'webapps.ubuntu.com' ) {
+      rewrite ^ https://partners.ubuntu.com/programmes/software$request_uri? permanent;
+    }
+    if ($host = 'www.ubuntuserver.org' ) {
+      rewrite ^ https://ubuntu.com/server$request_uri? permanent;
     }
     if ($host != 'ubuntu.com' ) {
       rewrite ^ https://ubuntu.com$request_uri? permanent;
@@ -141,6 +173,9 @@ staging:
         value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
+    if ($host = 'staging.cloud.ubuntu.com' ) {
+      rewrite ^ https://staging.ubuntu.com/public-cloud$request_uri? permanent;
+    }
     if ($host = 'tutorials.staging.ubuntu.com' ) {
       rewrite ^ https://staging.ubuntu.com/tutorials$request_uri? permanent;
     }

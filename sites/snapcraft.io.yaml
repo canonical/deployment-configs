@@ -70,6 +70,7 @@ memoryLimit: 1Gi
 
 extraHosts:
   - domain: docs.snapcraft.io
+  - domain: snapstore.io
 
 # Overrides for production
 production:
