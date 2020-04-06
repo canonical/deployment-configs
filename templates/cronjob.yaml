@@ -13,28 +13,42 @@ spec:
           - name: {{ data.name }}
             image: {{ data.image }}:{{ tag | default("latest", true) }}
 
-            {%- if "env" in data %}
             env:
-            {%- for env in data.env %}
-            - name: {{ env.name }}
-              {%- if "value" in env %}
-              value: "{{ env.value }}"
+              - name: TALISKER_NETWORKS
+                value: 10.0.0.0/8
+
+              {%- if data.useProxy is not defined or data.useProxy != False %}
+              - name: HTTP_PROXY
+                value: "http://squid.internal:3128/"
+
+              - name: HTTPS_PROXY
+                value: "http://squid.internal:3128/"
+
+              - name: NO_PROXY
+                value: "ubuntu.com,.ubuntu.com,snapcraft.io,.snapcraft.io,jujucharms.com,.jujucharms.com,maas.io,.maas.io,conjure-up.io,.conjure-up.io,netplan.io,.netplan.io,canonical.com,.canonical.com,launchpad.net,.launchpad.net,linuxcontainers.org,.linuxcontainers.org,cloud-init.io,.cloud-init.io,vanillaframework.io,.vanillaframework.io,anbox-cloud.io,.anbox-cloud.io,juju.is,.juju.is"
               {%- endif %}
 
-              {%- if "secretKeyRef" in env %}
-              valueFrom:
-                secretKeyRef:
-                  key: {{ env.secretKeyRef.key }}
-                  name: {{ env.secretKeyRef.name }}
-              {%- endif %}
+              {%- if "env" in data %}
+              {%- for env in data.env %}
+              - name: {{ env.name }}
+                {%- if "value" in env %}
+                value: "{{ env.value }}"
+                {%- endif %}
 
-              {%- if "configMapKeyRef" in env %}
-              valueFrom:
-                configMapKeyRef:
-                  key: {{ env.configMapKeyRef.key }}
-                  name: {{ env.configMapKeyRef.name }}
-              {%- endif %}
-            {%- endfor %}
+                {%- if "secretKeyRef" in env %}
+                valueFrom:
+                  secretKeyRef:
+                    key: {{ env.secretKeyRef.key }}
+                    name: {{ env.secretKeyRef.name }}
+                {%- endif %}
+
+                {%- if "configMapKeyRef" in env %}
+                valueFrom:
+                  configMapKeyRef:
+                    key: {{ env.configMapKeyRef.key }}
+                    name: {{ env.configMapKeyRef.name }}
+                {%- endif %}
+              {%- endfor %}
             {%- endif %}
 
             {%- if "run" in data %}
