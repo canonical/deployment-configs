@@ -6,10 +6,20 @@ useProxy: false
 
 readinessPath: "/"
 
+extraHosts:
+  - domain: font.ubuntu.com
+  - domain: www.font.ubuntu.com
+
 # Overrides for production
 production:
   replicas: 5
   nginxConfigurationSnippet: |
+    if ($host = 'font.ubuntu.com' ) {
+      rewrite ^ https://design.ubuntu.com/font$request_uri? permanent;
+    }
+    if ($host = 'www.font.ubuntu.com' ) {
+      rewrite ^ https://design.ubuntu.com/font$request_uri? permanent;
+    }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
