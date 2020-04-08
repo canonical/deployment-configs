@@ -1,9 +1,14 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 
 import argparse
+import os
 
 import jinja2
 import yaml
+
+
+BASE_DIR = os.getenv("SNAP", ".")
+TEMPLATES_DIR = BASE_DIR + "/templates"
 
 
 # Custom Jinja2 functions
@@ -68,7 +73,7 @@ class Konf:
         """Returns templates rendered."""
 
         # Init Jinja2 environment
-        template_loader = jinja2.FileSystemLoader("./templates")
+        template_loader = jinja2.FileSystemLoader(TEMPLATES_DIR)
         jinja_env = jinja2.Environment(
             loader=template_loader, undefined=jinja2.StrictUndefined
         )
