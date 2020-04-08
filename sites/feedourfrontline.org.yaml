@@ -1,0 +1,11 @@
+domain: feedourfrontline.org
+
+image: prod-comms.docker-registry.canonical.com/feedourfrontline.org
+
+# Overrides for production
+production:
+  replicas: 5
+
+# Overrides for staging
+staging:
+  replicas: 3
