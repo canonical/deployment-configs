@@ -25,14 +25,8 @@ spec:
               value: 10.0.0.0/8
 
             {%- if data.useProxy is not defined or data.useProxy != False %}
-            - name: HTTP_PROXY
-              value: "http://squid.internal:3128/"
-
-            - name: HTTPS_PROXY
-              value: "http://squid.internal:3128/"
-
-            - name: NO_PROXY
-              value: "ubuntu.com,.ubuntu.com,snapcraft.io,.snapcraft.io,jujucharms.com,.jujucharms.com,maas.io,.maas.io,conjure-up.io,.conjure-up.io,netplan.io,.netplan.io,canonical.com,.canonical.com,launchpad.net,.launchpad.net,linuxcontainers.org,.linuxcontainers.org,cloud-init.io,.cloud-init.io,vanillaframework.io,.vanillaframework.io,anbox-cloud.io,.anbox-cloud.io,juju.is,.juju.is"
+            {% macro proxy_settings() %}{% include 'proxy-settings.yaml' %}{% endmacro %}
+            {{ proxy_settings() | indent(12) }}
             {%- endif %}
 
             {%- if "env" in data %}
