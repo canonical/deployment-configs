@@ -12,11 +12,8 @@ env:
   - name: LOGIN_URL
     value: https://login.staging.ubuntu.com
 
-  - name: SNAPCRAFT_IO_API
-    value: https://api.staging.snapcraft.io/api/v1/
-
-  - name: SNAPCRAFT_IO_API_V2
-    value: https://api.staging.snapcraft.io/v2/
+  - name: SNAPSTORE_API_URL
+    value: https://api.staging.snapcraft.io/
 
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
