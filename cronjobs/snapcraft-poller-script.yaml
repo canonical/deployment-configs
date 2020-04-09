@@ -6,6 +6,9 @@ env:
   - name: SENTRY_DSN
     value: https://d920c219edb44a349c683174e37d26c7@sentry.is.canonical.com//25
 
+  - name: SMTP_SERVER
+    value: smtp.internal
+
   - name: LP_API_TOKEN
     secretKeyRef:
       key: lp-api-token
