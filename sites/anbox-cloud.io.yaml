@@ -6,11 +6,6 @@ env:
   - name: SENTRY_DSN
     value: https://37706e022f2841448dbb094990420522@sentry.is.canonical.com//23
 
-  - name: SECRET_KEY
-    secretKeyRef:
-      key: secret_key
-      name: anbox-cloud-io-secret
-
 production:
   replicas: 5
   nginxConfigurationSnippet: |

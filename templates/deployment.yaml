@@ -24,6 +24,11 @@ spec:
             - name: TALISKER_NETWORKS
               value: 10.0.0.0/8
 
+            - name: SECRET_KEY
+              secretKeyRef:
+                key: {{ data.get('name') or get_site_name() }}
+                name: secret-keys
+
             {%- if data.useProxy is not defined or data.useProxy != False %}
             {% macro proxy_settings() %}{% include 'proxy-settings.yaml' %}{% endmacro %}
             {{ proxy_settings() | indent(12) }}
