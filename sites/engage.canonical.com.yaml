@@ -4,12 +4,6 @@ image: prod-comms.docker-registry.canonical.com/engage.canonical.com
 
 useProxy: false
 
-env:
-  - name: SECRET_KEY
-    secretKeyRef:
-      key: secret_key
-      name: prototype-secret-key
-
 # Overrides for production
 production:
   replicas: 2

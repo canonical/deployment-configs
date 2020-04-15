@@ -17,11 +17,6 @@ env:
       key: database_url
       name: threesixty-database-url
 
-  - name: SECRET_KEY
-    secretKeyRef:
-      key: secret_key
-      name: threesixty
-
 # Overrides for production
 production:
   replicas: 5

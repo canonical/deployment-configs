@@ -23,11 +23,6 @@ env:
       key: environment
       name: environment
 
-  - name: SECRET_KEY
-    secretKeyRef:
-      key: secret_key
-      name: snapcraft-io
-
   - name: MARKETO_CLIENT_ID
     secretKeyRef:
       key: marketo_client_id

@@ -11,11 +11,6 @@ env:
       key: asset_server_token
       name: manager-assets-ubuntu-com
 
-  - name: SECRET_KEY
-    secretKeyRef:
-      key: secret_key
-      name: manager-assets-ubuntu-com
-
 # Overrides for production
 production:
   replicas: 2
