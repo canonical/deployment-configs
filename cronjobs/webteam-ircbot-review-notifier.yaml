@@ -1,0 +1,13 @@
+name: webteam-ircbot-review-notifier
+schedule: "0 9 * * 1-5"
+image: prod-comms.docker-registry.canonical.com/task-runner
+
+env:
+  - name: HUBOT_RELEASE_NOTIFICATION_SECRET
+    secretKeyRef:
+      key: hubot-release-notification-secret
+      name: irc-secrets
+
+run: |
+  curl --request POST -F "secret=$HUBOT_RELEASE_NOTIFICATION_SECRET" "https://webteam-ircbot.canonical.com/hubot/gh-pull-request-notification?rooms=%23web-team"
+  curl --request POST -F "secret=$HUBOT_RELEASE_NOTIFICATION_SECRET" "https://webteam-ircbot.canonical.com/hubot/gh-pull-request-notification?rooms=%23base-squad&authors=tbille,jkfran,jpmartinspt,nottrobin,carkod"

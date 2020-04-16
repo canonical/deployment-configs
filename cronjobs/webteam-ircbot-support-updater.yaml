@@ -1,0 +1,12 @@
+name: webteam-ircbot-support-updater
+schedule: "0 8 * * *"
+image: prod-comms.docker-registry.canonical.com/task-runner
+
+env:
+  - name: HUBOT_RELEASE_NOTIFICATION_SECRET
+    secretKeyRef:
+      key: hubot-release-notification-secret
+      name: irc-secrets
+
+run: |
+  curl --request POST -F "secret=$HUBOT_RELEASE_NOTIFICATION_SECRET" "https://webteam-ircbot.canonical.com/hubot/update-support?rooms=%23web-team"
