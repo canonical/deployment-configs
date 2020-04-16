@@ -49,6 +49,7 @@ spec:
             args:
             - /bin/sh
             - -c
-            - {{ data.run }}
+            - |
+              {{ data.run | indent(14) }}
             {%- endif %}
           restartPolicy: Never
