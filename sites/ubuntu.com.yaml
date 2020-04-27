@@ -13,6 +13,16 @@ env:
       key: google-custom-search-key
       name: google-api
 
+  - name: LAUNCHPAD_TOKEN
+    secretKeyRef:
+      key: token
+      name: launchpad-imagebuild
+
+  - name: LAUNCHPAD_SECRET
+    secretKeyRef:
+      key: secret
+      name: launchpad-imagebuild
+
   - name: SENTRY_DSN
     value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
@@ -47,18 +57,18 @@ production:
       replicas: 5
       memoryLimit: 512Mi
       env:
-      - name: DATABASE_URL
-        secretKeyRef:
-          key: database_url
-          name: usn-db-url
+        - name: DATABASE_URL
+          secretKeyRef:
+            key: database_url
+            name: usn-db-url
 
-      - name: SEARCH_API_KEY
-        secretKeyRef:
-          key: google-custom-search-key
-          name: google-api
+        - name: SEARCH_API_KEY
+          secretKeyRef:
+            key: google-custom-search-key
+            name: google-api
 
-      - name: SENTRY_DSN
-        value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+        - name: SENTRY_DSN
+          value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
     - paths: [/tutorials]
       name: ubuntu-com-tutorials
@@ -67,18 +77,18 @@ production:
       replicas: 5
       memoryLimit: 512Mi
       env:
-      - name: DATABASE_URL
-        secretKeyRef:
-          key: database_url
-          name: usn-db-url
+        - name: DATABASE_URL
+          secretKeyRef:
+            key: database_url
+            name: usn-db-url
 
-      - name: SEARCH_API_KEY
-        secretKeyRef:
-          key: google-custom-search-key
-          name: google-api
+        - name: SEARCH_API_KEY
+          secretKeyRef:
+            key: google-custom-search-key
+            name: google-api
 
-      - name: SENTRY_DSN
-        value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+        - name: SENTRY_DSN
+          value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
     if ($host = 'apps.ubuntu.com' ) {
@@ -125,8 +135,6 @@ production:
     }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect";
 
-  nginxSSLRedirect: False
-
 # Overrides for staging
 staging:
   replicas: 3
@@ -139,18 +147,18 @@ staging:
       replicas: 3
       memoryLimit: 512Mi
       env:
-      - name: DATABASE_URL
-        secretKeyRef:
-          key: database_url
-          name: usn-db-url
+        - name: DATABASE_URL
+          secretKeyRef:
+            key: database_url
+            name: usn-db-url
 
-      - name: SEARCH_API_KEY
-        secretKeyRef:
-          key: google-custom-search-key
-          name: google-api
+        - name: SEARCH_API_KEY
+          secretKeyRef:
+            key: google-custom-search-key
+            name: google-api
 
-      - name: SENTRY_DSN
-        value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+        - name: SENTRY_DSN
+          value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
     - paths: [/tutorials]
       name: ubuntu-com-tutorials
@@ -159,18 +167,18 @@ staging:
       replicas: 3
       memoryLimit: 512Mi
       env:
-      - name: DATABASE_URL
-        secretKeyRef:
-          key: database_url
-          name: usn-db-url
+        - name: DATABASE_URL
+          secretKeyRef:
+            key: database_url
+            name: usn-db-url
 
-      - name: SEARCH_API_KEY
-        secretKeyRef:
-          key: google-custom-search-key
-          name: google-api
+        - name: SEARCH_API_KEY
+          secretKeyRef:
+            key: google-custom-search-key
+            name: google-api
 
-      - name: SENTRY_DSN
-        value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
+        - name: SENTRY_DSN
+          value: https://0293bb7fc3104e56bafd2422e155790c@sentry.is.canonical.com//13
 
   nginxConfigurationSnippet: |
     if ($host = 'staging.cloud.ubuntu.com' ) {
