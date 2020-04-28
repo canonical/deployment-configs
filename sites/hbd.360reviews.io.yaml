@@ -1,0 +1,58 @@
+domain: hbd.360reviews.io
+image: prod-comms.docker-registry.canonical.com/hbd-360reviews-io
+
+production:
+  replicas: 2
+  env:
+    - name: MINIMUM_WORKING_PERIOD
+      value: "1"
+
+    - name: DATA_SPREADSHEET_ID
+      value: 18xtbmDs9rIzOfhlr-1FpT7-na3o3w9U1H6wLDYv_32Y
+
+    - name: SHEETS_PROJECT_ID
+      value: quickstart-1584560449861
+    
+    - name: SHEETS_CLIENT_ID
+      value: 930162830942-6uvqpk0g7q0ddumnsq9u1rgjpspfqegh.apps.googleusercontent.com
+
+    - name: EMAIL_FROM_ADDRESS
+      value: noreply@hbd.360reviews.io
+
+    - name: DATABASE_URL
+      secretKeyRef:
+        key: database-url
+        name: hbd-database-url
+
+  nginxConfigurationSnippet: |
+    if ($host != 'hbd.360reviews.io' ) {
+      rewrite ^ https://hbd.360reviews.io$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect;crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+staging:
+  replicas: 1
+  env:
+    - name: MINIMUM_WORKING_PERIOD
+      value: "1"
+
+    - name: DATA_SPREADSHEET_ID
+      value: 18xtbmDs9rIzOfhlr-1FpT7-na3o3w9U1H6wLDYv_32Y
+
+    - name: SHEETS_PROJECT_ID
+      value: quickstart-1584560449861
+    
+    - name: SHEETS_CLIENT_ID
+      value: 930162830942-6uvqpk0g7q0ddumnsq9u1rgjpspfqegh.apps.googleusercontent.com
+
+    - name: EMAIL_FROM_ADDRESS
+      value: noreply@hbd.staging.360reviews.io
+
+    - name: DATABASE_URL
+      secretKeyRef:
+        key: database-url
+        name: hbd-database-url
+
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
