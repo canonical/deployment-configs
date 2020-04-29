@@ -24,6 +24,16 @@ production:
         key: database-url
         name: hbd-database-url
 
+    - name: GOOGLE_SERVICE_ACCOUNT_EMAIL
+      secretKeyRef:
+        key: google-service-account-email
+        name: hbd-google-service-account
+
+    - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
+      secretKeyRef:
+        key: google-service-account-private-key
+        name: hbd-google-service-account
+
   nginxConfigurationSnippet: |
     if ($host != 'hbd.360reviews.io' ) {
       rewrite ^ https://hbd.360reviews.io$request_uri? permanent;
@@ -52,6 +62,16 @@ staging:
       secretKeyRef:
         key: database-url
         name: hbd-database-url
+
+    - name: GOOGLE_SERVICE_ACCOUNT_EMAIL
+      secretKeyRef:
+        key: google-service-account-email
+        name: hbd-google-service-account
+
+    - name: GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
+      secretKeyRef:
+        key: google-service-account-private-key
+        name: hbd-google-service-account
 
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
