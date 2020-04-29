@@ -1,6 +1,10 @@
 domain: sdrsatcom.snapcraft.io
 
-image: prod-comms.docker-registry.canonical.com/sdrsatcom.snapcraft.io
+image: prod-comms.docker-registry.canonical.com/snapcraft.io
+
+env:
+  - name: WEBAPP
+    value: sdrsatcom
 
 useProxy: false
 

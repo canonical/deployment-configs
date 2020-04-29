@@ -1,6 +1,10 @@
 domain: limenet.snapcraft.io
 
-image: prod-comms.docker-registry.canonical.com/limenet.snapcraft.io
+image: prod-comms.docker-registry.canonical.com/snapcraft.io
+
+env:
+  - name: WEBAPP
+    value: limenet
 
 useProxy: false
 
