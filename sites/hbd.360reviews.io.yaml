@@ -1,5 +1,5 @@
 domain: hbd.360reviews.io
-image: prod-comms.docker-registry.canonical.com/hbd-360reviews-io
+image: prod-comms.docker-registry.canonical.com/hbd.360reviews.io
 
 production:
   replicas: 2
