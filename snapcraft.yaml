@@ -1,23 +1,27 @@
 name: konf
 base: core18
-version: '0.1'
-summary: K8s config generator
-description: K8s config generator
-grade: devel
-confinement: classic
+
+version: "1.0.0"
+
+summary: Kubernetes template system for Canonical websites.
+
+description: |
+  A command-line tool to generate K8s configs
+  from Canonical's webteam
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: amd64
+    run-on: amd64
 
 parts:
-  konf-src:
-    source: .
-    plugin: dump
-    stage:
-      - templates/
-    prime:
-      - templates/
-  konf-python:
+  konf:
     source: .
     plugin: python
 
 apps:
   konf:
     command: konf.py
+    plugs:
+      - home
