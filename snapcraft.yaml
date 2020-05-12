@@ -1,7 +1,7 @@
 name: konf
 base: core18
 
-version: "1.0.0"
+version: git
 
 summary: Kubernetes template system for Canonical websites.
 
@@ -16,7 +16,14 @@ architectures:
     run-on: amd64
 
 parts:
-  konf:
+  konf-templates:
+    source: .
+    plugin: dump
+    stage:
+      - templates/
+    prime:
+      - templates/
+  konf-python:
     source: .
     plugin: python
 
