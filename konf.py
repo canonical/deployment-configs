@@ -164,11 +164,24 @@ class KonfSite(Konf):
             for route in self.values.get("routes", []):
                 route.update({"replicas": 1})
 
-        if (
-            self.deployment_env == "demo"
-            and "nginxConfigurationSnippet" in self.values
-        ):
-            del self.values["nginxConfigurationSnippet"]
+        if self.deployment_env == "demo":
+            # Remove SENTRY_DSN environemtn
+            self.values["env"] = [
+                env
+                for env in self.values.get("env")
+                if env["name"] != "SENTRY_DSN"
+            ]
+
+            # Remove extra hosts
+            self.values.pop("extraHosts", None)
+
+            # Simplify nginx snippet
+            self.values["nginxConfigurationSnippet"] = (
+                'more_set_headers "X-Robots-Tag: noindex";\n'
+                'more_set_headers "Link: <https://assets.ubuntu.com>;'
+                "rel=preconnect; crossorigin, <https://assets.ubuntu.com>;"
+                'rel=preconnect";"'
+            )
 
         if docker_tag:
             self.tag = docker_tag

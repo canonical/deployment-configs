@@ -27,7 +27,7 @@ spec:
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  key: {{ get_site_name() }}
+                  key: {{ data.get('secretKey') or get_site_name() }}
                   name: secret-keys
 
             {%- if data.useProxy is not defined or data.useProxy != False %}
