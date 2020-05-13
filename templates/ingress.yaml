@@ -17,7 +17,7 @@ metadata:
 spec:
   {%- if data.noTls is not defined or not data.noTls %}
   tls:
-  - secretName: {{ get_site_name(True) }}-tls
+  - secretName: {{ data.get('tlsName') or get_site_name(True) }}-tls
 
     hosts:
       - {{ get_environment_domain() }}

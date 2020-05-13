@@ -63,11 +63,11 @@ def is_apex_domain(context, s):
 
 
 class Konf:
-    def __init__(self, values_file, env, local_qa=False, docker_tag=None):
+    def __init__(self, values_file, env, local_qa, docker_tag, overrides):
         self.deployment_env = env
 
         # Load project data
-        self.load_values(values_file, local_qa, docker_tag)
+        self.load_values(values_file, local_qa, docker_tag, overrides)
 
     def render(self, template_file):
         """Returns templates rendered."""
@@ -97,7 +97,7 @@ class Konf:
 
 
 class KonfCronJob(Konf):
-    def load_values(self, values_file, local_qa=False, docker_tag=None):
+    def load_values(self, values_file, local_qa, docker_tag, overrides):
         """This reads the cronjob values from the yaml file
 
         Parameters:
@@ -108,6 +108,10 @@ class KonfCronJob(Konf):
         """
 
         self.values = yaml.load(values_file, Loader=yaml.FullLoader)
+
+        for override in overrides:
+            key, value = override.split("=")
+            self.values[key] = value
 
         self.name = self.values.get("name")
         self.domain = None
@@ -127,7 +131,7 @@ class KonfCronJob(Konf):
 
 
 class KonfSite(Konf):
-    def load_values(self, values_file, local_qa=False, docker_tag=None):
+    def load_values(self, values_file, local_qa, docker_tag, overrides):
         """This reads the project values from the yaml file
 
         Parameters:
@@ -139,6 +143,10 @@ class KonfSite(Konf):
 
         self.values = yaml.load(values_file, Loader=yaml.FullLoader)
 
+        for override in overrides:
+            key, value = override.split("=")
+            self.values[key] = value
+
         self.name = self.values.get("name")
         self.domain = self.values["domain"]
 
@@ -149,12 +157,31 @@ class KonfSite(Konf):
         self.namespace = self.deployment_env
 
         # QA overrides
-        if local_qa:
+        if local_qa or self.deployment_env == "demo":
             self.namespace = "default"
             self.values["replicas"] = 1
 
             for route in self.values.get("routes", []):
                 route.update({"replicas": 1})
+
+        if self.deployment_env == "demo":
+            # Remove SENTRY_DSN environemtn
+            self.values["env"] = [
+                env
+                for env in self.values.get("env")
+                if env["name"] != "SENTRY_DSN"
+            ]
+
+            # Remove extra hosts
+            self.values.pop("extraHosts", None)
+
+            # Simplify nginx snippet
+            self.values["nginxConfigurationSnippet"] = (
+                'more_set_headers "X-Robots-Tag: noindex";\n'
+                'more_set_headers "Link: <https://assets.ubuntu.com>;'
+                "rel=preconnect; crossorigin, <https://assets.ubuntu.com>;"
+                'rel=preconnect";"'
+            )
 
         if docker_tag:
             self.tag = docker_tag
@@ -185,7 +212,7 @@ if __name__ == "__main__":
         "env",
         type=str,
         help="Deployment environment.",
-        choices=["production", "staging"],
+        choices=["production", "staging", "demo"],
     )
 
     parser.add_argument(
@@ -200,6 +227,10 @@ if __name__ == "__main__":
         help="Docker tag to deploy",
         default="latest",
         dest="docker_tag",
+    )
+
+    parser.add_argument(
+        "-o", type=str, nargs="+", default=[], dest="overrides",
     )
 
     args = vars(parser.parse_args())
