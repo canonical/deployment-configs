@@ -10,6 +10,9 @@ env:
   - name: CHARMSTORE_API_URL
     value: https://api.staging.snapcraft.io/
 
+  - name: LOGIN_LAUNCHPAD_TEAM
+    value: canonical
+
 # Overrides for production
 production:
   replicas: 5
