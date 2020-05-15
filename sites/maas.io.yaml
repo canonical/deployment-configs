@@ -13,11 +13,19 @@ env:
 
 extraHosts:
   - domain: docs.maas.io
+  - domain: maas.ubuntu.com
+  - domain: maas.ubunut.com
 
 # Overrides for production
 production:
   replicas: 5
   nginxConfigurationSnippet: |
+    if ($host = 'maas.ubuntu.com' ) {
+      rewrite ^ https://maas.io/legacy$request_uri? permanent;
+    }
+    if ($host = 'maas.ubunut.com' ) {
+      rewrite ^ https://maas.io/legacy$request_uri? permanent;
+    }
     if ($host = 'docs.maas.io' ) {
       rewrite ^ https://maas.io/docs$request_uri? permanent;
     }
@@ -30,6 +38,12 @@ production:
 staging:
   replicas: 3
   nginxConfigurationSnippet: |
+    if ($host = 'maas.staging.ubuntu.com' ) {
+      rewrite ^ https://staging.maas.io/legacy$request_uri? permanent;
+    }
+    if ($host = 'maas.staging.ubunut.com' ) {
+      rewrite ^ https://staging.maas.io/legacy$request_uri? permanent;
+    }
     if ($host = 'docs.staging.maas.io' ) {
       rewrite ^ https://staging.maas.io/docs$request_uri? permanent;
     }
