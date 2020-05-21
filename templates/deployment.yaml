@@ -1,12 +1,15 @@
 ---
 
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: {{ data.get('name') or get_site_name() }}
   namespace: {{ namespace }}
 spec:
   replicas: {{ data.replicas }}
+  selector:
+    matchLabels:
+      app: {{ data.get('app_name') or domain }}
   template:
     metadata:
       labels:
