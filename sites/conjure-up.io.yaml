@@ -6,6 +6,11 @@ useProxy: false
 
 readinessPath: "/"
 
+extraHosts:
+  - domain: conjure-up.com
+  - domain: conjure-up.net
+  - domain: conjure-up.org
+
 # Overrides for production
 production:
   replicas: 5
