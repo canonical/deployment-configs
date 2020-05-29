@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      # https://github.com/actions/virtual-environments/issues/937
+      - name: Temporal fix
+        run: |
+          curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+          echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+
+      - name: Install Snapcraft
+        run: |
+          sudo snap install snapcraft --classic
+          sudo chown root:root /
+      - name: Build konf snap
+        run: |
+          /snap/bin/snapcraft --destructive-mode
+          sudo snap install --dangerous *.snap
+      - name: Publish snap
+        run: |
+          echo "$SNAPCRAFT_LOGIN_FILE" | base64 --decode --ignore-garbage > snapcraft.login
+          /snap/bin/snapcraft login --with snapcraft.login
+          /snap/bin/snapcraft push *.snap --release stable
+        env:
+          SNAPCRAFT_LOGIN_FILE: ${{ secrets.SNAPCRAFT_LOGIN_FILE }}
