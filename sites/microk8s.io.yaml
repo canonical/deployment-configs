@@ -15,6 +15,11 @@ production:
       rewrite ^ https://microk8s.io$request_uri? permanent;
     }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+  nginxServerSnippet: |
+    location /install/ {
+      rewrite ^/install/(.*).exe /ubuntu/microk8s/releases/download/installer-$1/microk8s-installer.exe break;
+      proxy_pass https://github.com/;
+    }
 
 # Overrides for staging
 staging:
@@ -22,3 +27,8 @@ staging:
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+  nginxServerSnippet: |
+    location /install/ {
+      rewrite ^/install/(.*).exe /ubuntu/microk8s/releases/download/installer-$1/microk8s-installer.exe break;
+      proxy_pass https://github.com/;
+    }

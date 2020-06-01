@@ -11,6 +11,10 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       {{ data.nginxConfigurationSnippet | indent(6) }}
     {%- endif %}
+    {%- if "nginxServerSnippet" in data %}
+    nginx.ingress.kubernetes.io/server-snippet: |
+      {{ data.nginxServerSnippet | indent(6) }}
+    {%- endif %}
     {%- if data.nginxSSLRedirect is defined and not data.nginxSSLRedirect %}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     {%- endif %}
