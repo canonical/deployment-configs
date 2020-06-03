@@ -6,10 +6,18 @@ useProxy: false
 
 readinessPath: "/"
 
+extraHosts:
+  - domain: docs.conjure-up.com
+  - domain: docs.conjure-up.net
+  - domain: docs.conjure-up.org
+
 # Overrides for production
 production:
   replicas: 5
   nginxConfigurationSnippet: |
+    if ($host != 'docs.conjure-up.io' ) {
+      rewrite ^ https://docs.conjure-up.io$request_uri? permanent;
+    }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
 
 # Overrides for staging
