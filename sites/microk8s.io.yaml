@@ -2,7 +2,7 @@ domain: microk8s.io
 
 image: prod-comms.docker-registry.canonical.com/microk8s.io
 
-useProxy: false
+useProxy: true
 
 extraHosts:
   - domain: microk8s.com
