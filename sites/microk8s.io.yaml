@@ -7,6 +7,10 @@ useProxy: false
 extraHosts:
   - domain: microk8s.com
 
+env:
+  - name: SENTRY_DSN
+    value: https://3c9a25a1976d4a97981997bb5a1ca7b4@sentry.is.canonical.com//28
+
 # Overrides for production
 production:
   replicas: 5
