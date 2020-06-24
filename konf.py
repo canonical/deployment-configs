@@ -63,11 +63,24 @@ def is_apex_domain(context, s):
 
 
 class Konf:
-    def __init__(self, values_file, env, local_qa, docker_tag, overrides):
+    def __init__(
+        self,
+        values_file,
+        env,
+        local_qa,
+        docker_tag,
+        overrides,
+        demo_database_url,
+    ):
         self.deployment_env = env
+        self.values_file = values_file
+        self.local_qa = local_qa
+        self.docker_tag = docker_tag
+        self.overrides = overrides
+        self.demo_database_url = demo_database_url
 
         # Load project data
-        self.load_values(values_file, local_qa, docker_tag, overrides)
+        self.load_values()
 
     def render(self, template_file):
         """Returns templates rendered."""
@@ -89,7 +102,7 @@ class Konf:
         return template.render(
             name=self.name,
             domain=self.domain,
-            tag=self.tag,
+            tag=self.docker_tag,
             data=self.values,
             namespace=self.namespace,
             deployment_env=self.deployment_env,
@@ -97,7 +110,7 @@ class Konf:
 
 
 class KonfCronJob(Konf):
-    def load_values(self, values_file, local_qa, docker_tag, overrides):
+    def load_values(self):
         """This reads the cronjob values from the yaml file
 
         Parameters:
@@ -107,9 +120,9 @@ class KonfCronJob(Konf):
         docker_tag (string): Override docker tag value
         """
 
-        self.values = yaml.load(values_file, Loader=yaml.FullLoader)
+        self.values = yaml.load(self.values_file, Loader=yaml.FullLoader)
 
-        for override in overrides:
+        for override in self.overrides:
             key, value = override.split("=")
             self.values[key] = value
 
@@ -120,11 +133,8 @@ class KonfCronJob(Konf):
         self.namespace = self.deployment_env
 
         # QA overrides
-        if local_qa:
+        if self.local_qa:
             self.namespace = "default"
-
-        if docker_tag:
-            self.tag = docker_tag
 
     def render(self, template_file="cronjob.yaml"):
         return super(KonfCronJob, self).render(template_file)
@@ -161,11 +171,12 @@ class KonfSite(Konf):
             self.namespace = "default"
             self.values["replicas"] = 1
 
+            import ipdb
+
+            ipdb.set_trace()
+
             for route in self.values.get("routes", []):
                 route.update({"replicas": 1})
-
-        if docker_tag:
-            self.tag = docker_tag
 
     def render(self, template_file="site.yaml"):
         return super(KonfSite, self).render(template_file)
@@ -211,10 +222,17 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-o", type=str, nargs="+", default=[], dest="overrides",
+        "-o", type=str, nargs="+", default=[], dest="overrides"
     )
+
+    parser.add_argument("--demo-database-url", type=str, default=None)
 
     args = vars(parser.parse_args())
     konf_type = args.pop("konf_type")
-    projectConfig = globals()["Konf" + konf_type](**args)
+
+    if konf_type == "Site":
+        projectConfig = KonfSite(**args)
+    elif konf_type == "CronJob":
+        projectConfig = KonfCronJob(**args)
+
     print(projectConfig.render())
