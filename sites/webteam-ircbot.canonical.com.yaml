@@ -46,3 +46,7 @@ env:
     secretKeyRef:
       key: hubot-github-token
       name: irc-secrets
+  - name: MATTERMOST_TOKEN
+    secretKeyRef:
+      key: hubot-mattermost-token
+      name: irc-secrets
