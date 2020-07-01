@@ -9,4 +9,4 @@ env:
       name: irc-secrets
 
 run: |
-  curl --request POST -F "secret=$HUBOT_RELEASE_NOTIFICATION_SECRET" "https://webteam-ircbot.canonical.com/hubot/update-support?rooms=%23web-team"
+  curl --request POST -F "secret=$HUBOT_RELEASE_NOTIFICATION_SECRET" "https://webteam-ircbot.canonical.com/hubot/update-support?rooms=web--design"
