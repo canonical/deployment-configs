@@ -1,0 +1,29 @@
+domain: partners.ubuntu.com
+image: prod-comms.docker-registry.canonical.com/partners.ubuntu.com
+
+production:
+  replicas: 5
+  env:
+    - name: SENTRY_DSN
+      value: https://063fdd4992a54aab90789b1306f18259@sentry.is.canonical.com//26
+
+    - name: DATABASE_URL
+      secretKeyRef:
+        name: database-urls
+        key: partners.ubuntu.com
+
+  nginxConfigurationSnippet: |
+    if ($host != 'partners.ubuntu.com' ) {
+      rewrite ^ https://partners.ubuntu.com$request_uri? permanent;
+    }
+
+staging:
+  replicas: 2
+  env:
+    - name: DATABASE_URL
+      secretKeyRef:
+        key: database-urls
+        name: partners.staging.ubuntu.com
+
+  nginxConfigurationSnippet: |
+    more_set_headers "X-Robots-Tag: noindex";
