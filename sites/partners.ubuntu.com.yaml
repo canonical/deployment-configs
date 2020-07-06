@@ -9,8 +9,8 @@ production:
 
     - name: DATABASE_URL
       secretKeyRef:
-        key: database-url
-        name: partners-database-url
+        name: database-urls
+        key: partners.ubuntu.com
 
   nginxConfigurationSnippet: |
     if ($host != 'partners.ubuntu.com' ) {
@@ -22,8 +22,8 @@ staging:
   env:
     - name: DATABASE_URL
       secretKeyRef:
-        key: database-url
-        name: partners-database-url
+        key: database-urls
+        name: partners.staging.ubuntu.com
 
   nginxConfigurationSnippet: |
     more_set_headers "X-Robots-Tag: noindex";
