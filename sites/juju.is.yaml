@@ -2,6 +2,9 @@ domain: juju.is
 
 image: prod-comms.docker-registry.canonical.com/juju.is
 
+extraHosts:
+  - domain: cloud-init.io
+
 env:
   - name: SENTRY_DSN
     value: https://a9c1a18b2a0a40bdae6177bb29331a2a@sentry.is.canonical.com//20
