@@ -63,11 +63,29 @@ def is_apex_domain(context, s):
 
 
 class Konf:
-    def __init__(self, values_file, env, local_qa, docker_tag, overrides):
+    def __init__(
+        self, values_file, env, local_qa, docker_tag, database_url, overrides
+    ):
         self.deployment_env = env
+        self.values_file = values_file
+        self.local_qa = local_qa
+        self.docker_tag = docker_tag
+        self.database_url = database_url
+        self.overrides = overrides
 
         # Load project data
-        self.load_values(values_file, local_qa, docker_tag, overrides)
+        self.load_values()
+
+        # Try to replace database URL
+        if database_url and (envs := self.values.get("env")):
+            for index, env in enumerate(envs):
+                if "DATABASE_URL" in env["name"]:
+                    envs.pop(index)
+                    break
+            envs.append({"name": "DATABASE_URL", "value": database_url})
+
+    def load_values(self):
+        raise NotImplementedError
 
     def render(self, template_file):
         """Returns templates rendered."""
@@ -97,7 +115,7 @@ class Konf:
 
 
 class KonfCronJob(Konf):
-    def load_values(self, values_file, local_qa, docker_tag, overrides):
+    def load_values(self):
         """This reads the cronjob values from the yaml file
 
         Parameters:
@@ -107,9 +125,9 @@ class KonfCronJob(Konf):
         docker_tag (string): Override docker tag value
         """
 
-        self.values = yaml.load(values_file, Loader=yaml.FullLoader)
+        self.values = yaml.load(self.values_file, Loader=yaml.FullLoader)
 
-        for override in overrides:
+        for override in self.overrides:
             key, value = override.split("=")
             self.values[key] = value
 
@@ -120,18 +138,18 @@ class KonfCronJob(Konf):
         self.namespace = self.deployment_env
 
         # QA overrides
-        if local_qa:
+        if self.local_qa:
             self.namespace = "default"
 
-        if docker_tag:
-            self.tag = docker_tag
+        if self.docker_tag:
+            self.tag = self.docker_tag
 
     def render(self, template_file="cronjob.yaml"):
         return super(KonfCronJob, self).render(template_file)
 
 
 class KonfSite(Konf):
-    def load_values(self, values_file, local_qa, docker_tag, overrides):
+    def load_values(self):
         """This reads the project values from the yaml file
 
         Parameters:
@@ -141,9 +159,9 @@ class KonfSite(Konf):
         docker_tag (string): Override docker tag value
         """
 
-        self.values = yaml.load(values_file, Loader=yaml.FullLoader)
+        self.values = yaml.load(self.values_file, Loader=yaml.FullLoader)
 
-        for override in overrides:
+        for override in self.overrides:
             key, value = override.split("=")
             self.values[key] = value
 
@@ -157,15 +175,15 @@ class KonfSite(Konf):
         self.namespace = self.deployment_env
 
         # QA overrides
-        if local_qa or self.deployment_env == "demo":
+        if self.local_qa or self.deployment_env == "demo":
             self.namespace = "default"
             self.values["replicas"] = 1
 
             for route in self.values.get("routes", []):
                 route.update({"replicas": 1})
 
-        if docker_tag:
-            self.tag = docker_tag
+        if self.docker_tag:
+            self.tag = self.docker_tag
 
     def render(self, template_file="site.yaml"):
         return super(KonfSite, self).render(template_file)
@@ -209,6 +227,8 @@ if __name__ == "__main__":
         default="latest",
         dest="docker_tag",
     )
+
+    parser.add_argument("--database-url", type=str, default=None)
 
     parser.add_argument(
         "-o", type=str, nargs="+", default=[], dest="overrides",
