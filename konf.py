@@ -76,14 +76,25 @@ class Konf:
         # Load project data
         self.load_values()
 
-        # Try to replace database URL
-        envs = self.values.get("env")
-        if database_url and envs:
-            for index, env in enumerate(envs):
-                if "DATABASE_URL" in env["name"]:
-                    envs.pop(index)
-                    break
-            envs.append({"name": "DATABASE_URL", "value": database_url})
+        if self.database_url:
+            # Replace database URL in main deployment and in routes
+            def _replace_database_url(envs, database_url):
+                for index, env in enumerate(envs):
+                    if "DATABASE_URL" in env["name"]:
+                        envs.pop(index)
+                        break
+                envs.append({"name": "DATABASE_URL", "value": database_url})
+
+            # Replace in top level "env" definition
+            _replace_database_url(
+                self.values.get("env", []), self.database_url
+            )
+
+            # Replace in routes "env" definitions
+            if self.deployment_env in self.values:
+                routes = self.values[self.deployment_env].get("routes", [])
+                for route in routes:
+                    _replace_database_url(route.get("env"), self.database_url)
 
     def load_values(self):
         raise NotImplementedError
