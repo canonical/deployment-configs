@@ -24,6 +24,11 @@ jobs:
       - name: Install konf snap
         run: sudo snap install --dangerous konf_*.snap
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: konf-snap
+          path: konf_*.snap
+
   lint-python:
     runs-on: ubuntu-latest
 
