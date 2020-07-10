@@ -77,7 +77,8 @@ class Konf:
         self.load_values()
 
         # Try to replace database URL
-        if database_url and (envs := self.values.get("env")):
+        envs = self.values.get("env")
+        if database_url and envs:
             for index, env in enumerate(envs):
                 if "DATABASE_URL" in env["name"]:
                     envs.pop(index)
