@@ -1,0 +1,9 @@
+name: snapcraft-monthly-stats-email
+schedule: "30 12 * * *"
+image: prod-comms.docker-registry.canonical.com/snapcraft-monthly-stats-email
+
+env:
+  - name: MARKETO_SECRET
+    secretKeyRef:
+      key: monthly-stats-email-marketo-secret
+      name: snapcraft-io
