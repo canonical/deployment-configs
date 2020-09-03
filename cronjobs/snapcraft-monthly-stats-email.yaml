@@ -3,7 +3,32 @@ schedule: "30 12 * * *"
 image: prod-comms.docker-registry.canonical.com/snapcraft-monthly-stats-email
 
 env:
+  - name: WEBTEAM_ACCOUNT_EMAIL
+    secretKeyRef:
+      key: snapcraft-account-email
+      name: snapcraft-monthly-stats-email
+
+  - name: WEBTEAM_ROOT_MACAROON
+    secretKeyRef:
+      key: snapcraft-root-macaroon
+      name: snapcraft-monthly-stats-email
+
+  - name: WEBTEAM_DISCHARGE_MACAROON
+    secretKeyRef:
+      key: snapcraft-discharge-macaroon
+      name: snapcraft-monthly-stats-email
+
+  - name: MARKETO_REST_DOMAIN
+    secretKeyRef:
+      key: marketo-rest-domain
+      name: snapcraft-monthly-stats-email
+
+  - name: MARKETO_CLIENT_ID
+    secretKeyRef:
+      key: marketo-client-id
+      name: snapcraft-monthly-stats-email
+
   - name: MARKETO_SECRET
     secretKeyRef:
-      key: monthly-stats-email-marketo-secret
-      name: snapcraft-io
+      key: marketo-secret
+      name: snapcraft-monthly-stats-email
