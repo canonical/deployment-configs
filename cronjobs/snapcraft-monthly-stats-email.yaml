@@ -1,4 +1,4 @@
-name: snapcraft-monthly-stats-email
+name: cronjob-snapcraft-monthly-stats-email
 schedule: "30 12 * * *"
 image: prod-comms.docker-registry.canonical.com/snapcraft-monthly-stats-email
 
