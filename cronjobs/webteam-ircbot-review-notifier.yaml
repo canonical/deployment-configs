@@ -1,4 +1,4 @@
-name: webteam-ircbot-review-notifier
+name: cronjob-webteam-ircbot-review-notifier
 schedule: "0 9 * * 1-5"
 image: prod-comms.docker-registry.canonical.com/task-runner
 

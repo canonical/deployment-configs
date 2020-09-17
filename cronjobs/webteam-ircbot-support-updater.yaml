@@ -1,4 +1,4 @@
-name: webteam-ircbot-support-updater
+name: cronjob-webteam-ircbot-support-updater
 schedule: "0 8 * * *"
 image: prod-comms.docker-registry.canonical.com/task-runner
 

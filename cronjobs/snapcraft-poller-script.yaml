@@ -1,4 +1,4 @@
-name: snapcraft-poller-script
+name: cronjob-snapcraft-poller-script
 schedule: "0 5 * * *"
 image: prod-comms.docker-registry.canonical.com/snapcraft-poller-script
 
