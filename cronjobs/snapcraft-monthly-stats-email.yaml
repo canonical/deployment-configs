@@ -3,6 +3,9 @@ schedule: "30 12 * * *"
 image: prod-comms.docker-registry.canonical.com/snapcraft-monthly-stats-email
 
 env:
+  - name: SENTRY_DSN
+    value: https://5f9288ae5c0d41379a913b03977b6e27@sentry.is.canonical.com//44
+
   - name: WEBTEAM_ACCOUNT_EMAIL
     secretKeyRef:
       key: snapcraft-account-email
