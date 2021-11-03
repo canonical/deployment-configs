@@ -7,7 +7,19 @@ env:
     value: https://d920c219edb44a349c683174e37d26c7@sentry.is.canonical.com//25
 
   - name: SMTP_SERVER
-    value: smtp.internal
+    secretKeyRef:
+      key: snapcraft-poller-server
+      name: smtp-auth
+
+  - name: SMTP_USER
+    secretKeyRef:
+      key: snapcraft-poller-user
+      name: smtp-auth
+
+  - name: SMTP_PASS
+    secretKeyRef:
+      key: snapcraft-poller-password
+      name: smtp-auth
 
   - name: LP_API_TOKEN
     secretKeyRef:
