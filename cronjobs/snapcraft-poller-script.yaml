@@ -1,6 +1,6 @@
 name: cronjob-snapcraft-poller-script
 schedule: "0 5 * * *"
-image: prod-comms.docker-registry.canonical.com/snapcraft-poller-script
+image: prod-comms.ps5.docker-registry.canonical.com/snapcraft-poller-script
 
 env:
   - name: SENTRY_DSN
