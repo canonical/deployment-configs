@@ -1,6 +1,6 @@
 name: cronjob-snapcraft-monthly-stats-email
 schedule: "30 12 * * *"
-image: prod-comms.docker-registry.canonical.com/snapcraft-monthly-stats-email
+image: prod-comms.ps5.docker-registry.canonical.com/snapcraft-monthly-stats-email
 
 env:
   - name: SENTRY_DSN

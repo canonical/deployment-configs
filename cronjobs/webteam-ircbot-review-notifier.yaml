@@ -1,6 +1,6 @@
 name: cronjob-webteam-ircbot-review-notifier
 schedule: "0 9 * * 1-5"
-image: prod-comms.docker-registry.canonical.com/task-runner
+image: prod-comms.ps5.docker-registry.canonical.com/task-runner
 
 env:
   - name: HUBOT_RELEASE_NOTIFICATION_SECRET
